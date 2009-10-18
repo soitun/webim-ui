@@ -1,7 +1,7 @@
-//测试模式使用 
-//webim.log.enable();打开log记录
-//webim.log.disable();关闭记录
-//webim.log(log,action);记录log
+//log
+//webim.log.enable();
+//webim.log.disable();
+//webim.log(log,action);
 webim.log = log;
 var _logable = true;
 function log(str, action){

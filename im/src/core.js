@@ -9,11 +9,15 @@ extend(webim,{
 	idsArray:idsArray
 });
 
+var _toString = Object.prototype.toString;
+
 function returnFalse(){
 	return false;
 }
 
-var _toString = Object.prototype.toString;
+function now() {
+	return (new Date).getTime();
+}
 
 function isFunction( obj ){
 	return _toString.call(obj) === "[object Function]";
@@ -41,7 +45,7 @@ function checkUpdate (old, add){
         }
         return added;
 }
-function makeArray( array ) {
+function makeArray( array ){
 		var ret = [];
 		if( array != null ){
 			var i = array.length;

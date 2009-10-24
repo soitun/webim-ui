@@ -1,4 +1,8 @@
 /*连接connection 
+* Depends:
+* 	core.js
+* 	ajax.js
+*
  只负责长连接. 不处理数据 不自动重连 无数据发送成功事件 只实现功能 不负责业务处理
  connection:
  attributes：
@@ -22,7 +26,7 @@
 
  */
 /* comet */
-webim.comet = function(element, options){
+function comet(element, options){
         var self = this;
         self._setting();
         self.options = {
@@ -36,9 +40,9 @@ webim.comet = function(element, options){
                         send: null
                 }
         };
-        $.extend(self.options, options);
-};
-$.extend(webim.comet.prototype, objectExtend, {
+        extend(self.options, options);
+}
+extend(comet.prototype, objectExtend, {
         _setting: function(){
                 var self = this;
                 self.connected = false;//是否已连接 只读属性
@@ -51,12 +55,12 @@ $.extend(webim.comet.prototype, objectExtend, {
         connect: function(options){
                 //连接
                 var self = this;
-                $.extend(self.options, options);
+                extend(self.options, options);
                 if (self._connecting) 
                 return self;
                 self._connecting = true;
                 var options = self.options, error = false, text = [];
-                $.each(['server', 'ticket', 'domain'], function(n, v){
+                each(['server', 'ticket', 'domain'], function(n, v){
                         if (!options[v]) {
                                 text.push(v);
                                 text.push(' required.');
@@ -122,13 +126,16 @@ $.extend(webim.comet.prototype, objectExtend, {
                         success: self._onPollSuccess,
                         error: self._onPollError
                 };
-                if(options.jsonp)
-                $.extend(o,{
-                        timeout: 20000,
-                        dataType: 'jsonp',
-                        jsonp: 'callback'
-                });
-                $.ajax(o);
+                if(options.jsonp){
+                	extend(o,{
+                	        timeout: 20000,
+                	        dataType: 'jsonp',
+                	        jsonp: 'callback'
+                	});
+			jsonp(o);
+		}
+		else
+                ajax(o);
         },
 
         _onPollSuccess: function(d){

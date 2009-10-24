@@ -25,7 +25,7 @@ var objectExtend = webim.objectExtend = {
 	trigger: function(type, args){
 		var self = this, _events = self._events = self._events || {}, fns = _events[type];
 		if (!fns) return this;
-		args = isArray(args) ? args : null;
+		args = isArray(args) ? args : makeArray(args);
 		for (var i = 0, l = fns.length; i < l; i++){
 			fns[i].apply(this, args);
 		}

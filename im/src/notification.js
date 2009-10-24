@@ -17,18 +17,18 @@ var _grepNotiMsg = function(val, n){
 webim.notification = function(data, options){
         var self = this;
         self.data = [];
-        self.options = $.extend({}, webim.notification.defaults, options);
+        self.options = extend({}, webim.notification.defaults, options);
 };
 
-$.extend(webim.notification.prototype, objectExtend, {
+extend(webim.notification.prototype, objectExtend, {
         handle: function(data){
                 var self = this.self || this;
-                data = $.grep($.makeArray(data), _grepNotiMsg);
+                data = grep(makeArray(data), _grepNotiMsg);
                 if(data.length)self.trigger("data", [data]);
         },
         load: function(){
                 var self = this, options = self.options;
-                $.ajax({
+                ajax({
                         url: options.url,
                         cache: false,
                         dataType: "json",

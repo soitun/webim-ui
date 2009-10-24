@@ -1,10 +1,10 @@
 /*
- * 状态(cookie临时存储[刷新页面有效])
- * webim.status.init(status);//初始化状态
- * webim.status.all //所有状态
- * webim.status(key);//get
- * webim.status(key,value);//set
- */
+* 状态(cookie临时存储[刷新页面有效])
+* webim.status.init(status);//初始化状态
+* webim.status.all //所有状态
+* webim.status(key);//get
+* webim.status(key,value);//set
+*/
 //var d = {
 //        tabs:{1:{n:5}}, // n -> notice count
 //        tabIds:[1],
@@ -13,39 +13,42 @@
 //        b:0, //is buddy open
 //        o:0 //has offline
 //}
+model("status",{
+	key:"_webim"
+},{
+	_init:function(){
+		var self = this, data = self.data;
+		if (!data){
+			var c = cookie(self.options.key);
+			self.data = c ? toJSON(c) : {};
+		}else{
+			self._save(data);
+		}
+	},
+	set: function(key, value){
+		var options = key, self = this;
+		if (typeof key == "string") {
+			options = {};
+			options[key] = value;
+		}
+		var old = self.data;
+		if (checkUpdate(old, options)) {
+			var _new = extend({}, old, options);
+			self._save(_new);
+		}
+	},
+	get: function(key){
+		return this.data[key];
+	},
+	clear:function(){
+		this._save({});
+	},
+	_save: function(data){
+		this.data = data;
+		cookie(this.options.key, JSON.stringify(data), {
+			path: '/',
+			domain: window.document.domain
+		});
+	}
+});
 
-webim.status = function(key, value){
-    var options = key;
-    if (typeof key == "string") {
-        if (value === undefined) {
-            return webim.status.all[key];
-        }
-        options = {};
-        options[key] = value;
-    }
-    var old_status = webim.status.all;
-    if (checkUpdate(old_status, options)) {
-        var new_status = $.extend({}, old_status, options);
-        webim.status.all = new_status;
-        $.cookie(webim.status.cookieName, toString(new_status), {
-            path: '/',
-            domain: window.document.domain
-        });
-    }
-};
-webim.status.cookieName = "_webim";
-webim.status.all = {};
-webim.status.init = function(status){
-    if (!status){
-                var c = $.cookie(webim.status.cookieName);
-                status = c ? toJSON(c) : null;
-    }
-    $.extend(webim.status.all, status);
-};
-webim.status.clear = function(){
-        webim.status.all = {};
-        $.cookie(webim.status.cookieName, "", {
-            path: '/',
-            domain: window.document.domain
-        });
-};

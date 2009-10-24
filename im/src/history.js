@@ -13,21 +13,20 @@
     data //id,data
     clear //
 */
-
 webim.history = function(data, options){
         var self = this;
         self.data = data || {};
-        self.options = $.extend({}, webim.history.defaults, options);
+        self.options = extend({}, webim.history.defaults, options);
         //self._init();
 };
 
-$.extend(webim.history.prototype, objectExtend, {
+extend(webim.history.prototype, objectExtend, {
         get: function(id){
                 return this.data[id];
         },
         handle:function(addData){
                 var self = this, data = self.data, cache = {};
-                addData = $.makeArray(addData);
+                addData = makeArray(addData);
                 var l = addData.length , v, id, userId = self.options.userInfo.id;
                 if(!l)return;
                 for(var i = 0; i < l; i++){
@@ -66,7 +65,7 @@ $.extend(webim.history.prototype, objectExtend, {
                                 self.data[id] = [];
                                 self.trigger("clear", [id]);
                         }
-                        $.ajax({
+                        ajax({
                                 url: options.urls.clear,
                                 cache: false,
                                 dataType: "json",
@@ -90,7 +89,7 @@ $.extend(webim.history.prototype, objectExtend, {
                         for(var i = 0; i < ids.length; i++){
                                 self.data[ids[i]] = [];
                         }
-                        $.ajax({
+                        ajax({
                                 url: options.urls.load,
                                 cache: false,
                                 dataType: "json",

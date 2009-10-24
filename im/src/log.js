@@ -1,8 +1,7 @@
 //log
-//webim.log.enable();
-//webim.log.disable();
-//webim.log(log,action);
-webim.log = log;
+//log.enable();
+//log.disable();
+//log(log,action);
 var _logable = true;
 function log(str, action){
         if (!_logable) 

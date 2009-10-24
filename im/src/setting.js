@@ -8,7 +8,7 @@
 * 	
 */
 model("setting",{
-	url:"/webim/setting"
+	url:"/webim/setting",
 	data:{
 		play_sound:true,
 		buddy_sticky:true,

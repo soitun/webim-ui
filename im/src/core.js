@@ -167,19 +167,3 @@ function map( elems, callback ) {
 
 	return ret.concat.apply( [], ret );
 }
-
-// util
-
-//function mapId(a){ return isObject(a) ? a.id : a }
-//var mapFrom = function(a){ return a.from; };
-//var _idsHashToArray = function(ids){
-//        var _ids = [];
-//        for(var k in ids){
-//                if(ids[k]) _ids.push(k);
-//        }
-//        return _ids;
-//};
-//var idsArray = webim.idsArray = function(ids){
-//        return ids ? (ids.split ? ids.split(",") : (isObject(ids) ?  _idsHashToArray(ids) : ($.isArray(ids) ? $.map(ids, mapId) : $.makeArray(ids)))) : [];
-//};
-//

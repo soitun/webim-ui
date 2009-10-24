@@ -9,7 +9,7 @@ function param( a ) {
 	var s = [];
 	if ( typeof a == "object"){
 		for (var key in a) {
-			s[ s.length ] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+			s[ s.length ] = encodeURIComponent(key) + '=' + encodeURIComponent(a[key]);
 		}
 		// Return the resulting serialization
 		return s.join("&").replace(r20, "+");

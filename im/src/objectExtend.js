@@ -1,4 +1,4 @@
-var objectExtend = webim.objectExtend = {
+var objectExtend = {
 	option: function(key, value) {
 		var options = key, self = this;
 		self.options = self.options || {};

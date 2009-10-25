@@ -1,6 +1,3 @@
-//function returnFalse(){
-//	return false;
-//}
 function now() {
 	return (new Date).getTime();
 }

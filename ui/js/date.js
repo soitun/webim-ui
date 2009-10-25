@@ -1,16 +1,16 @@
 //格式化时间输出，消除本地时间和服务器时间差，以计算机本地时间为准
-//webim.date.init(serverTime);设置时差
-//webim.date()
-webim.date = function(time){
+//date.init(serverTime);设置时差
+//date()
+function date(time){
         var date = (new Date());
-        date.setTime(time ? (parseFloat(time) + webim.date.timeSkew) : (new Date()).getTime());
+        date.setTime(time ? (parseFloat(time) + date.timeSkew) : (new Date()).getTime());
         this.date = date;
 };
-webim.date.timeSkew = 0;
-webim.date.init = function(serverTime){//设置本地时间和服务器时间差
-    webim.date.timeSkew = (new Date()).getTime() - parseFloat(serverTime);
+date.timeSkew = 0;
+date.init = function(serverTime){//设置本地时间和服务器时间差
+    date.timeSkew = (new Date()).getTime() - parseFloat(serverTime);
 };
-$.extend(webim.date.prototype, {
+extend(date.prototype, {
     getTime: function(){
             var date = this.date;
         var hours = date.getHours();

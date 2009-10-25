@@ -15,6 +15,7 @@ var _countDisplay = function(element, count){
 	}
 	return count;
 };
+
 var plugin = {
 	add: function(module, option, set) {
 		var proto = webimUI[module].prototype;
@@ -62,6 +63,20 @@ var keyCode = {
 	TAB: 9,
 	UP: 38
 };
+function mapElements(obj){
+	var elements = obj.getElementsByTagName("*"), el, id, need = {};
+	for(var i = elements.length -1; i > -1; i--){
+		el = elements[i];
+		id = el.id;
+		if(id)need[id.replace("webim-","")] = el;
+	}
+	return need;
+}
+function createElement(str){
+	var el = document.createElement("div");
+	el.innerHTML = trim(str);
+	return el.firstChild;
+}
 var _widgetId = 1;
 function widget(name,defaults, prototype){
 	var m = function(element, options){
@@ -136,11 +151,11 @@ function grepOffline(msg){
 function grepOnline(msg){
         return msg.type == "online";
 }
-$.extend(webim.prototype, objectExtend, {
+extend(webim.prototype, objectExtend, {
         _init:function(element,options){
                 speedUp("im");
                 var self = this;
-                options = self.options = $.extend({}, webim.defaults, options);
+                options = self.options = extend({}, webim.defaults, options);
                 if(!element){
                         element = $(tpl(options.template));
                 }
@@ -220,7 +235,7 @@ speedDown("buddyUI");
                 });
                 speedDown("apps");
                 speedUp("config.tag");
-                $.each(config.all, function(k,v){
+                each(config.all, function(k,v){
                         configUI.check_tag(k, v);
                         im._updateConfig(k, v, true);
                 });
@@ -253,7 +268,7 @@ speedDown("buddyUI");
                 //some buddies offline.
                 buddy.bind("offline", function(e, data){
                         log(data, "buddy.offline");
-                        buddyUI.remove($.map(data, mapId));
+                        buddyUI.remove(map(data, mapId));
                         layout.updateChat(data);
                         buddyUI.notice("count", buddy.count({presence:"online"}));
                 });
@@ -295,15 +310,15 @@ speedDown("buddyUI");
                 });
                 im.bind("presence",function(e,data){
                         log(data,"presence");
-                        offline = $.grep(data, grepOffline);
-                        online = $.grep(data, grepOnline);
-                        buddy.online($.map(online, mapFrom), buddyUI.window.isMinimize());
-                        buddy.offline($.map(offline, mapFrom));
+                        offline = grep(data, grepOffline);
+                        online = grep(data, grepOnline);
+                        buddy.online(map(online, mapFrom), buddyUI.window.isMinimize());
+                        buddy.offline(map(offline, mapFrom));
                         online.length && buddyUI.notice("buddyOnline", online.pop()["nick"]);
                 });
                 im.bind("status",function(e,data){
                         log(data,"status");
-                	$.each(data,function(n,msg){
+                	each(data,function(n,msg){
                                 var userId = im.data.user.id;
             		        var id = msg['from'];
             		        if (userId != msg.to && userId != msg.from) {
@@ -390,7 +405,7 @@ speedDown("buddyUI");
                 //ui start
                 buddyUI.notice("count", buddy.count({presence:"online"}));
                 if(data.setting)
-                $.each(config.all,function(k,v){
+                each(config.all,function(k,v){
                         configUI.check_tag(k, v);
                         im._updateConfig(k, v, true);
                 });
@@ -400,7 +415,7 @@ speedDown("buddyUI");
                         var tabs = status("tabs"), tabIds = status("tabIds");
                         var p = status("p"), a = status("a");
                         if(tabIds && tabIds.length && tabs){
-                                $.each(tabs, function(k,v){
+                                each(tabs, function(k,v){
                                         im.addChat(k, null,{ isMinimize: true});
                                         layout.chat(k).window.notifyUser("information", v["n"]);
                                 });
@@ -433,13 +448,13 @@ speedDown("buddyUI");
                 var self = this, layout = self.layout, history = self.history, buddy = self.buddy;
                         var h = history.get(id), info = buddy.get(id);
                         var buddyInfo = info || {id:id, name: id};
-                        layout.addChat(buddyInfo, $.extend({history: h}, options), winOptions);
+                        layout.addChat(buddyInfo, extend({history: h}, options), winOptions);
                         if(!info) buddy.update(id);
                         if(!h) history.load(id);
         },
         _updateStatus: function(){
                 var self = this, layout = self.layout, _tabs = {};
-                $.each(layout.tabs, function(n, v){
+                each(layout.tabs, function(n, v){
                         _tabs[n] = {
                                 n: v._count()
                                 };
@@ -478,7 +493,7 @@ speedDown("buddyUI");
         sendMsg: function(msg){
                 var self = this;
                 msg.ticket = self.data.connection.ticket;
-                $.ajax({
+                ajax({
                         type: 'post',
                         url: self.options.urls.message,
                         type: 'post',
@@ -489,7 +504,7 @@ speedDown("buddyUI");
         sendStatus: function(msg){
                 var self = this;
                 msg.ticket = self.data.connection.ticket;
-                $.ajax({
+                ajax({
                         type: 'post',
                         url: self.options.urls.status,
                         type: 'post',
@@ -499,7 +514,7 @@ speedDown("buddyUI");
         },
 //        online_list:function(){
 //                var self = this;
-//                $.ajax({
+//                ajax({
 //                        type:"post",
 //                        dataType: "json",
 //                        url: self.options.urls.online_list,
@@ -520,7 +535,7 @@ speedDown("buddyUI");
                 var self = this, status = self.status, ids = idsArray(status("tabIds"));
                 status("o", false);
                 self.ready();
-                $.ajax({
+                ajax({
                         type:"post",
                         dataType: "json",
                         data:{
@@ -534,7 +549,7 @@ speedDown("buddyUI");
                         			self.stop(null, "online error");
                                 	log(data, "online:error");
                         		}else{
-                        			data.user = $.extend(self.data.user, data.user);
+                        			data.user = extend(self.data.user, data.user);
                                 	self.data = data;
                                 	self.go();
                         		}
@@ -553,7 +568,7 @@ speedDown("buddyUI");
                 self.connection.close();
                 self.layout.removeAllChat();
                 self.stop();
-                $.ajax({
+                ajax({
                         type: 'post',
                         url: self.options.urls.offline,
                         type: 'post',
@@ -568,7 +583,7 @@ speedDown("buddyUI");
         refresh:function(){
                 var self = this, data = self.data;
                 if(!data || !data.connection || !data.connection.ticket) return;
-                $.ajax({
+                ajax({
                         type: 'post',
                         url: self.options.urls.refresh,
                         type: 'post',

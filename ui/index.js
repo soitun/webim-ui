@@ -17,7 +17,7 @@ webim.history.defaults.urls = {
 };
 webim.buddy.defaults.url = path + "webim/buddies.php";
 webim.notification.defaults.url = path + "webim/notifications.php";
-var im = new webim();
+//var im = new webim();
 
 //webim.layout.webapi.defaults.shortcuts = menu;
 //webim.defaults.soundUrls = {

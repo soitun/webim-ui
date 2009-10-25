@@ -38,7 +38,7 @@ widget("window", {
         count: 0, // notifyUser if count > 0
         template:'<div class="webim-window ui-widget">\
                                             <div class="webim-window-tab-wrap">\
-                                            <div class="webim-window-tab ui-state-default">\
+                                            <div id="webim-window-tab" class="webim-window-tab ui-state-default">\
                                             <div class="webim-window-tab-inner">\
                                                     <div class="webim-window-tab-tip">\
                                                             <strong>{{tooltip}}</strong>\
@@ -76,8 +76,14 @@ widget("window", {
 		return this.ui.content.html(str);
 	},
 	_init: function(element, options){
-		var self = this;
-		options = self.options = $.extend({},options);
+		var self = this, options = self.options;
+		var el = document.createElement("div");
+		el.innerHTML = options.template;
+		el = el.firstChild;
+		//log($);
+		//log(self.element);
+		return;
+		options = self.options = extend({},options);
 		self.changeElement($(element));
 		element = self.element;
 		element.data("window", self);
@@ -89,7 +95,7 @@ widget("window", {
 			actions: element.find(".webim-window-actions:first"),
 			resize_se: element.find(".webim-resizable-se:first")
 		};
-		$.extend(ui,{
+		extend(ui,{
 			minimize: ui.actions.find(".webim-window-minimize"),
 			maximize: ui.actions.find(".webim-window-maximize"),
 			close: ui.actions.find(".webim-window-close").add(ui.tab.find(".webim-window-close")),
@@ -215,7 +221,7 @@ widget("window", {
 			e.stopPropagation();
 			e.preventDefault();
 		};
-		$.each(["minimize", "maximize", "close"], function(n,v){
+		each(["minimize", "maximize", "close"], function(n,v){
 			ui[v].bind("click", function(e){
 				if(!this.disabled)self[v]();
 				stop(e);
@@ -259,6 +265,8 @@ var winManager = (function(){
 		win.bind("activate", activate);
 		win.bind("deactivate", deactivate);
 	};
+	///////////
+	return;
 	$(function(){
 		$(document).bind("mousedown",function(e){
 			var el = $(e.target);

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>javascript: function</title>
+		<script type="text/javascript" src="../benchmark/benchmark.js"></script>
+		<script type="text/javascript" src="../benchmark/benchmark_perlish.js"></script>
+		<link rel="stylesheet" href="../benchmark/benchmark.css" type="text/css" />
+
+		<!-- base start -->
+		<script type="text/javascript" src="../../im/src/core.js" ></script>
+		<script type="text/javascript" src="../../im/src/objectExtend.js" ></script>
+		<script type="text/javascript" src="../../im/src/ajax.js" ></script>
+		<script type="text/javascript" src="../../im/src/json2.js" ></script>
+		<script type="text/javascript" src="../../im/src/comet.js" ></script>
+		<script type="text/javascript" src="../../im/src/cookie.js" ></script>
+		<script type="text/javascript" src="../../im/src/log.js" ></script>
+		<!-- base end -->
+		<!-- webim start -->
+		<script type="text/javascript" src="../../im/src/webim.js" ></script>
+		<script type="text/javascript" src="../../im/src/setting.js" ></script>
+		<script type="text/javascript" src="../../im/src/status.js" ></script>
+		<script type="text/javascript" src="../../im/src/buddy.js" ></script>
+		<script type="text/javascript" src="../../im/src/notification.js" ></script>
+		<script type="text/javascript" src="../../im/src/history.js" ></script>
+		<!-- webim end -->
+		<!-- webim ui start -->
+		<link href="css/core.css" media="all" type="text/css" rel="stylesheet"/>
+		<script type="text/javascript" src="../../js/core.js" ></script>
+		<script type="text/javascript" src="../../js/date.js" ></script>
+		<script type="text/javascript" src="../../js/notice.js" ></script>
+		<script type="text/javascript" src="../../js/i18n.js" ></script>
+		<script type="text/javascript" src="../../js/ui.js" ></script>
+		<script type="text/javascript" src="../../js/ui.window.js" ></script>
+		<!-- webim ui end -->
+
+
+		<script type="text/javascript">
+			var test1, test2;
+			var methods = {
+				"innerHTML": function(){
+					var win = new webimUI.window();
+					//test1.appendChild(win.element);
+					//test1.removeChild(win.element);
+				},
+				"im": function(){
+					var win = new webimUI.window();
+					//test2.appendChild(win.element);
+					//test2.removeChild(win.element);
+				}
+			};
+window.onload = function(){
+	test1 = document.createElement("div");
+	test2 = $("test");
+	//var win = new webimUI.window();
+	var win = new webimUI.window();
+	//console.log((content));
+	//new Benchmark(methods, { iterations: -1});
+}
+</script>
+	</head>
+	<body class="test">
+		<div id="test"></div>
+		<div id="body">
+			<h1>
+				js:str
+			</h1>
+	</div>																																		    </body>
+</html>
+

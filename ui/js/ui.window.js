@@ -40,28 +40,28 @@ widget("window", {
                                             <div class="webim-window-tab-wrap">\
                                             <div id="webim-window-tab" class="webim-window-tab ui-state-default">\
                                             <div class="webim-window-tab-inner">\
-                                                    <div class="webim-window-tab-tip">\
-                                                            <strong>{{tooltip}}</strong>\
+                                                    <div id="webim-window-tabTip" class="webim-window-tab-tip">\
+                                                            <strong id="webim-window-tabTipC"><%=tooltip%></strong>\
                                                     </div>\
-                                                    <a title="{{close}}" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close">{{close}}</em></a>\
-                                                    <div class="webim-window-tab-count">\
+                                                    <a id="webim-window-tabClose" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
+                                                    <div id="webim-window-tabCount" class="webim-window-tab-count">\
                                                             0\
                                                     </div>\
-                                                    <em class="webim-icon webim-icon-chat"></em>\
-                                                    <h4>{{title}}</h4>\
+                                                    <em id="webim-window-tabIcon" class="webim-icon webim-icon-chat"></em>\
+                                                    <h4 id="webim-window-tabTitle"><%=title%></h4>\
                                             </div>\
                                             </div>\
                                             </div>\
                                             <div class="webim-window-window">\
-                                                    <div class="webim-window-header ui-widget-header ui-corner-top">\
-                                                            <span class="webim-window-actions">\
-                                                                    <a title="{{minimize}}" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus">{{minimize}}</em></a>\
-                                                                    <a title="{{maximize}}" class="webim-window-maximize" href="#maximize"><em class="ui-icon ui-icon-plus">{{maximize}}</em></a>\
-                                                                    <a title="{{close}}" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close">{{close}}</em></a>\
+                                                    <div id="webim-window-header" class="webim-window-header ui-widget-header ui-corner-top">\
+                                                            <span id="webim-window-actions" class="webim-window-actions">\
+                                                                    <a id="webim-window-minimize" title="<%=minimize%>" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\
+                                                                    <a id="webim-window-maximize" title="<%=maximize%>" class="webim-window-maximize" href="#maximize"><em class="ui-icon ui-icon-plus"><%=maximize%></em></a>\
+                                                                    <a id="webim-window-close" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
                                                             </span>\
-                                                            <h4>{{title}}</h4>\
+                                                            <h4 id="webim-window-headerTitle"><%=title%></h4>\
                                                     </div>\
-                                                    <div class="webim-window-content ui-widget-content">\
+                                                    <div id="webim-window-content" class="webim-window-content ui-widget-content">\
                                                     </div>\
                                             </div>\
                                             </div>'
@@ -77,13 +77,9 @@ widget("window", {
 	},
 	_init: function(element, options){
 		var self = this, options = self.options;
-		var el = document.createElement("div");
-		el.innerHTML = options.template;
-		el = el.firstChild;
 		//log($);
 		//log(self.element);
 		return;
-		options = self.options = extend({},options);
 		self.changeElement($(element));
 		element = self.element;
 		element.data("window", self);

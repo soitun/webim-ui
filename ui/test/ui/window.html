@@ -4,9 +4,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>javascript: function</title>
-		<script type="text/javascript" src="../benchmark/benchmark.js"></script>
-		<script type="text/javascript" src="../benchmark/benchmark_perlish.js"></script>
-		<link rel="stylesheet" href="../benchmark/benchmark.css" type="text/css" />
+		<script type="text/javascript" src="../qunit/qunit.js"></script>
+		<link rel="stylesheet" href="../qunit/qunit.css" type="text/css" />
 
 		<!-- base start -->
 		<script type="text/javascript" src="../../im/src/core.js" ></script>
@@ -35,29 +34,12 @@
 		<script type="text/javascript" src="../../js/ui.window.js" ></script>
 		<!-- webim ui end -->
 
-
 		<script type="text/javascript">
-			var test1, test2;
-			var methods = {
-				"new window": function(){
-					var win = new webimUI.window();
-					//test1.appendChild(win.element);
-					//test1.removeChild(win.element);
-				},
-				"addEvent": function(){
-					addEvent(test2,"click",function(){});
-					//var win = new webimUI.window();
-					//test2.appendChild(win.element);
-					//test2.removeChild(win.element);
-				}
-			};
 window.onload = function(){
-	test1 = document.createElement("div");
-	test2 = $("test");
-	//var win = new webimUI.window();
-	//var win = new webimUI.window();
+	var win = new webimUI.window();
+	log(win.$, win);
 	//console.log((content));
-	new Benchmark(methods, { iterations: -1});
+	//new Benchmark(methods, { iterations: -1});
 }
 </script>
 	</head>

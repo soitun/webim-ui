@@ -10,6 +10,9 @@ function isFunction( obj ){
 function isArray( obj ){
 	return _toString.call(obj) === "[object Array]";
 }
+function isObject( obj ){
+	return obj && _toString.call(obj) === "[object Object]";
+}
 
 function trim( text ) {
 	return (text || "").replace( /^\s+|\s+$/g, "" );

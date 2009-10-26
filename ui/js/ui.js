@@ -63,12 +63,12 @@ var keyCode = {
 	TAB: 9,
 	UP: 38
 };
-function mapElements(obj){
+function mapElements(obj, pre){
 	var elements = obj.getElementsByTagName("*"), el, id, need = {};
-	for(var i = elements.length -1; i > -1; i--){
+	for(var i = elements.length - 1; i > -1; i--){
 		el = elements[i];
 		id = el.id;
-		if(id)need[id.replace("webim-","")] = el;
+		if(id)need[id.replace(pre || "webim-", "")] = el;
 	}
 	return need;
 }
@@ -77,17 +77,30 @@ function createElement(str){
 	el.innerHTML = trim(str);
 	return el.firstChild;
 }
+var tpl = (function(){
+	var dic = null, re = /\<\%\=(.*?)\%\>/ig;
+	function call(a, b){
+		return dic && isObject(dic) ? dic[b] : i18n(b);
+	}
+	return function(str, hash){
+		if(!str)return '';
+		dic = hash;
+		return str.replace(re, call);
+	};
+})();
 var _widgetId = 1;
-function widget(name,defaults, prototype){
-	var m = function(element, options){
+function widget(name, defaults, prototype){
+	function m(element, options){
 		var self = this;
 		self.id = _widgetId++;
 		self.name = name;
 		self.className = "webim-" + name;
 		self.options = extend({}, m['defaults'], options);
+		self.element = element || createElement(tpl(self.options.template));
+		self.$ = mapElements(self.element, "webim-" + name + "-");
 		isFunction(self._init) && self._init();
-	};
-	m.defaults = defaults// default options;
+	}
+	m.defaults = defaults;// default options;
 	// add prototype
 	extend(m.prototype, widget.prototype, prototype);
 	webimUI[name] = m;

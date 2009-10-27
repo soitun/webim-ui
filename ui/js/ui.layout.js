@@ -448,7 +448,54 @@ $.extend(webim.layout.webapi.prototype, objectExtend, {
 
 });
 webim.layout.webapi.defaults = {
-        template: '',
+        template: '<div id="webim" class="webim">\
+                    <div class="webim-preload ui-helper-hidden-accessible">\
+                    <div id="webim-flashlib-c">\
+                    </div>\
+                    </div>\
+<div id="webim-layout" class="webim-layout webim-webapi"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
+                            <div class="webim-shortcut">\
+                            </div>\
+                            <div class="webim-layout-r">\
+                            <div class="webim-panels">\
+                                <div class="webim-window-tab-wrap ui-widget webim-panels-next-wrap">\
+                                            <div class="webim-window-tab webim-panels-next ui-state-default">\
+                                                    <div class="webim-window-tab-count">\
+                                                            0\
+                                                    </div>\
+                                                    <em class="ui-icon ui-icon-triangle-1-w"></em>\
+                                                    <span>0</span>\
+                                            </div>\
+                                </div>\
+                                <div class="webim-panels-tab-wrap">\
+                                        <div class="webim-panels-tab">\
+                                        </div>\
+                                </div>\
+                                <div class="webim-window-tab-wrap ui-widget webim-panels-prev-wrap">\
+                                            <div class="webim-window-tab webim-panels-prev ui-state-default">\
+                                                    <div class="webim-window-tab-count">\
+                                                            0\
+                                                    </div>\
+                                                    <span>0</span>\
+                                                    <em class="ui-icon ui-icon-triangle-1-e"></em>\
+                                            </div>\
+                                </div>\
+                                <div class="webim-window-tab-wrap webim-collapse-wrap ui-widget">\
+                                            <div class="webim-window-tab webim-collapse ui-state-default" title="<%=collapse%>">\
+                                                    <em class="ui-icon ui-icon-circle-arrow-e"></em>\
+                                            </div>\
+                                </div>\
+                                <div class="webim-window-tab-wrap webim-expand-wrap ui-widget">\
+                                            <div class="webim-window-tab webim-expand ui-state-default" title="<%=expand%>">\
+                                                    <em class="ui-icon ui-icon-circle-arrow-w"></em>\
+                                            </div>\
+                                </div>\
+                            </div>\
+                            <div class="webim-apps">\
+                            </div>\
+                            </div>\
+            </div></div>\
+                    </div>',
         shortcutLength:5,
         chatAutoPop: true,
         template_s: '<div class="webim-window-tab-wrap ui-widget webim-shortcut-item">\

@@ -16,25 +16,6 @@ var _countDisplay = function(element, count){
 	return count;
 };
 
-var plugin = {
-	add: function(module, option, set) {
-		var proto = webimUI[module].prototype;
-		for(var i in set) {
-			proto.plugins[i] = proto.plugins[i] || [];
-			proto.plugins[i].push([option, set[i]]);
-		}
-	},
-	call: function(instance, name, args) {
-		var set = instance.plugins[name];
-		if(!set || !instance.element.parentNode) { return; }
-
-		for (var i = 0; i < set.length; i++) {
-			if (instance.options[set[i][0]]) {
-				set[i][1].apply(instance.element, args);
-			}
-		}
-	}
-};
 var keyCode = {
 	BACKSPACE: 8,
 	CAPS_LOCK: 20,
@@ -88,6 +69,28 @@ var tpl = (function(){
 		return str.replace(re, call);
 	};
 })();
+
+
+
+var plugin = {
+	add: function(module, option, set) {
+		var proto = webimUI[module].prototype;
+		for(var i in set) {
+			proto.plugins[i] = proto.plugins[i] || [];
+			proto.plugins[i].push([option, set[i]]);
+		}
+	},
+	call: function(instance, name, args) {
+		var set = instance.plugins[name];
+		if(!set || !instance.element.parentNode) { return; }
+
+		for (var i = 0; i < set.length; i++) {
+			if (instance.options[set[i][0]]) {
+				set[i][1].apply(instance.element, args);
+			}
+		}
+	}
+};
 var _widgetId = 1;
 function widget(name, defaults, prototype){
 	function m(element, options){
@@ -111,10 +114,14 @@ extend(widget.prototype, {
 	}
 });
 
-var webimUI = {
-	version:"@VERSION"
+var webimUI = webim.ui = function(){
 }
-webim.ui = webimUI;
+extend(webimUI,{
+	version: "@VERSION",
+	widget: widget,
+	plugin: plugin
+});
+
 //
 /* webim:
  *
@@ -164,7 +171,7 @@ function grepOffline(msg){
 function grepOnline(msg){
         return msg.type == "online";
 }
-extend(webim.prototype, objectExtend, {
+extend(webimUI.prototype, objectExtend, {
         _init:function(element,options){
                 speedUp("im");
                 var self = this;
@@ -609,51 +616,3 @@ speedDown("buddyUI");
 
 });
 
-webim.defaults.template = '<div id="webim" class="webim">\
-                    <div class="webim-preload ui-helper-hidden-accessible">\
-                    <div id="webim-flashlib-c">\
-                    </div>\
-                    </div>\
-<div id="webim-layout" class="webim-layout webim-webapi"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
-                            <div class="webim-shortcut">\
-                            </div>\
-                            <div class="webim-layout-r">\
-                            <div class="webim-panels">\
-                                <div class="webim-window-tab-wrap ui-widget webim-panels-next-wrap">\
-                                            <div class="webim-window-tab webim-panels-next ui-state-default">\
-                                                    <div class="webim-window-tab-count">\
-                                                            0\
-                                                    </div>\
-                                                    <em class="ui-icon ui-icon-triangle-1-w"></em>\
-                                                    <span>0</span>\
-                                            </div>\
-                                </div>\
-                                <div class="webim-panels-tab-wrap">\
-                                        <div class="webim-panels-tab">\
-                                        </div>\
-                                </div>\
-                                <div class="webim-window-tab-wrap ui-widget webim-panels-prev-wrap">\
-                                            <div class="webim-window-tab webim-panels-prev ui-state-default">\
-                                                    <div class="webim-window-tab-count">\
-                                                            0\
-                                                    </div>\
-                                                    <span>0</span>\
-                                                    <em class="ui-icon ui-icon-triangle-1-e"></em>\
-                                            </div>\
-                                </div>\
-                                <div class="webim-window-tab-wrap webim-collapse-wrap ui-widget">\
-                                            <div class="webim-window-tab webim-collapse ui-state-default" title="<%=collapse%>">\
-                                                    <em class="ui-icon ui-icon-circle-arrow-e"></em>\
-                                            </div>\
-                                </div>\
-                                <div class="webim-window-tab-wrap webim-expand-wrap ui-widget">\
-                                            <div class="webim-window-tab webim-expand ui-state-default" title="<%=expand%>">\
-                                                    <em class="ui-icon ui-icon-circle-arrow-w"></em>\
-                                            </div>\
-                                </div>\
-                            </div>\
-                            <div class="webim-apps">\
-                            </div>\
-                            </div>\
-            </div></div>\
-                    </div>';

@@ -224,14 +224,14 @@ webim.widget("buddy",{
 webim.ui.buddy.defaults = {
         event:'click',
         template: '<div id="webim-buddy">\
-                        <div class="webim-buddy-online"><a class="ui-state-default ui-corner-all" href="#online">{{online}}</a></div>\
+                        <div class="webim-buddy-online"><a class="ui-state-default ui-corner-all" href="#online"><%=online%></a></div>\
                         <div class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input type="text" value="" /></div>\
                         <div class="webim-buddy-content">\
-                                <div class="webim-buddy-empty">{{empty buddy}}</div>\
-                                <div class="webim-buddy-offline"><a href="#offline">{{offline}}</a></div>\
+                                <div class="webim-buddy-empty"><%=empty buddy%></div>\
+                                <div class="webim-buddy-offline"><a href="#offline"><%=offline%></a></div>\
                                 <ul></ul>\
                         </div>\
                   </div>',
-        template_g: '<li><h4 class="ui-state-default">{{title}}({{count}})</h4><ul></ul></li>',
-        template_li: '<li title=""><a href="{{link}}" rel="{{id}}" class="ui-helper-clearfix"><img width="25" src="about:blank"/><strong>{{name}}</strong><span>{{status}}</span></a></li>'
+        template_g: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
+        template_li: '<li title=""><a href="<%=link%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="about:blank"/><strong><%=name%></strong><span><%=status%></span></a></li>'
 };

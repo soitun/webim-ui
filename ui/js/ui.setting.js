@@ -51,5 +51,5 @@ webim.ui.config.defaults = {
         template: '<div id="webim-config">\
                         <ul></ul>\
                   </div>',
-        template_c: '<li><input type="checkbox" {{checked}} id="{{id}}" name="{{name}}"/><label for="{{id}}">{{label}}</label></li>'
+        template_c: '<li><input type="checkbox" <%=checked%> id="<%=id%>" name="<%=name%>"/><label for="<%=id%>"><%=label%></label></li>'
 };

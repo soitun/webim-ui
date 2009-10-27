@@ -1,0 +1,20 @@
+/*
+ * widget config
+ */
+#webim-config{
+        padding: 1em 0;
+
+}
+#webim-config ul{
+	list-style: none;
+}
+#webim-config ul li{
+        margin: .5em 1em;
+}
+#webim-config ul li input{
+        vertical-align: middle;
+}
+
+#webim-config ul li label{
+        padding-left: .2em;
+}

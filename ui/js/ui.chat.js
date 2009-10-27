@@ -311,7 +311,7 @@ webim.ui.chat.defaults = {
                                                                         </td> \
                                                                         <td style="vertical-align:top;width:100%;"> \
                                                                         <div class="webim-chat-input-wrap">\
-                                                                                <textarea class="webim-chat-input webim-gray">{{input notice}}</textarea> \
+                                                                                <textarea class="webim-chat-input webim-gray"><%=input notice%></textarea> \
                                                                         </div> \
                                                                         </td> \
                                                                 </tr> \
@@ -330,7 +330,7 @@ webim.ui.plugin.add("chat","emot",{
                         chat.insert(alt, true);
                     }
                 });
-                var trigger = $(tpl('<a href="#chat-emot" title="{{emot}}"><em class="webim-icon webim-icon-emot"></em></a>')).click(function(){
+                var trigger = $(tpl('<a href="#chat-emot" title="<%=emot%>"><em class="webim-icon webim-icon-emot"></em></a>')).click(function(){
                         emot.toggle();
                         return false;
                 });
@@ -344,7 +344,7 @@ webim.ui.chat.defaults.clearHistory = true;
 webim.ui.plugin.add("chat","clearHistory",{
         init:function(e, ui){
                 var chat = ui.self;
-                var trigger = $(tpl('<a href="#chat-clearHistory" title="{{clear history}}"><em class="webim-icon webim-icon-clear"></em></a>')).click(function(){
+                var trigger = $(tpl('<a href="#chat-clearHistory" title="<%=clear history%>"><em class="webim-icon webim-icon-clear"></em></a>')).click(function(){
                         chat.trigger("clearHistory",[chat.options.buddyInfo]);
                         return false;
                 });

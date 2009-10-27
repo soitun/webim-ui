@@ -60,7 +60,7 @@ webim.ui.notification.defaults = {
         event:'click',
         template: '<div id="webim-notification">\
                         <ul></ul>\
-                        <div class="webim-notification-empty">{{empty notification}}</div>\
+                        <div class="webim-notification-empty"><%=empty notification%></div>\
                   </div>',
-        template_li: '<li><a href="{{link}}" target="{{target}}">{{text}}</a></li>'
+        template_li: '<li><a href="<%=link%>" target="<%=target%>"><%=text%></a></li>'
 };

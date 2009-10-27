@@ -93,7 +93,7 @@ webim.widget("history",{
 
 });
 //<p class="webim-history-actions"> \
-//                                                        <a href="#">{{clear history}}</a> \
+//                                                        <a href="#"><%=clear history%></a> \
 //                                                        </p> \
 
 webim.ui.history.defaults = {

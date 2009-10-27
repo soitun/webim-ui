@@ -54,7 +54,7 @@ webim.ui.menu.defaults = {
         event:'click',
         template: '<div id="webim-menu">\
                         <ul></ul>\
-                        <div class="webim-menu-empty">{{empty menu}}</div>\
+                        <div class="webim-menu-empty"><%=empty menu%></div>\
                   </div>',
-        template_li: '<li><a href="{{link}}" target="{{target}}"><img src="{{icon}}"/><span>{{title}}</span></a></li>'
+        template_li: '<li><a href="<%=link%>" target="<%=target%>"><img src="<%=icon%>"/><span><%=title%></span></a></li>'
 };

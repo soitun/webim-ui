@@ -12,16 +12,17 @@
  change
 
  */
-webim.widget("notification",{
+widget("notification",{
+        event:'click',
+        template: '<div id="webim-notification" class="webim-notification">\
+                        <ul id=":ul"></ul>\
+                        <div id=":empty" class="webim-notification-empty"><%=empty notification%></div>\
+                  </div>',
+        template_li: '<li><a href="<%=link%>" target="<%=target%>"><%=text%></a></li>'
+},{
         _init: function(){
                 var self = this, element = self.element, options = self.options;
-                if(!element){
-                        element = self.element = $(tpl(options.template)).addClass(self.widgetClassName);
-                }
-                self.ui = {
-                        ul: element.children("ul:first"),
-                        empty: element.children(".webim-notification-empty")
-                };
+		return;
                 var win = options.window;
                 if(win){
                         win.bind("displayStateChange", function(e, type){
@@ -56,11 +57,3 @@ webim.widget("notification",{
         destroy: function(){
         }
 });
-webim.ui.notification.defaults = {
-        event:'click',
-        template: '<div id="webim-notification">\
-                        <ul></ul>\
-                        <div class="webim-notification-empty"><%=empty notification%></div>\
-                  </div>',
-        template_li: '<li><a href="<%=link%>" target="<%=target%>"><%=text%></a></li>'
-};

@@ -1,4 +1,4 @@
-webim.widget("emot", {
+widget("emot", {},{
         _init: function(options){
                 var self = this, element = self.element, options = self.options;
                 if(!element){
@@ -27,7 +27,7 @@ webim.widget("emot", {
                 this.element.toggleClass("webim-emot-show");
         }
 });
-$.extend(webim.ui.emot, {
+extend(webimUI.emot, {
         defaults: {
                 template: '<div class="webim-emot ui-widget-content"></div>'
         },

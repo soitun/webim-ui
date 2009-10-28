@@ -1,127 +1,5 @@
 //
 //
-var _countDisplay = function(element, count){
-	if (count === undefined){
-		return parseInt(element.innerHTML);
-	}
-	else if (count){
-		count = (typeof count == "number") ? count : (parseInt(element.innerHTML) + parseInt(count));
-		element.innerHTML = count.toString();
-		show(element);
-	}
-	else {
-		element.innerHTML = '0';
-		hide(element);
-	}
-	return count;
-};
-
-var keyCode = {
-	BACKSPACE: 8,
-	CAPS_LOCK: 20,
-	COMMA: 188,
-	CONTROL: 17,
-	DELETE: 46,
-	DOWN: 40,
-	END: 35,
-	ENTER: 13,
-	ESCAPE: 27,
-	HOME: 36,
-	INSERT: 45,
-	LEFT: 37,
-	NUMPAD_ADD: 107,
-	NUMPAD_DECIMAL: 110,
-	NUMPAD_DIVIDE: 111,
-	NUMPAD_ENTER: 108,
-	NUMPAD_MULTIPLY: 106,
-	NUMPAD_SUBTRACT: 109,
-	PAGE_DOWN: 34,
-	PAGE_UP: 33,
-	PERIOD: 190,
-	RIGHT: 39,
-	SHIFT: 16,
-	SPACE: 32,
-	TAB: 9,
-	UP: 38
-};
-function mapElements(obj, pre){
-	var elements = obj.getElementsByTagName("*"), el, id, need = {};
-	for(var i = elements.length - 1; i > -1; i--){
-		el = elements[i];
-		id = el.id;
-		if(id)need[id.replace(pre || "webim-", "")] = el;
-	}
-	return need;
-}
-function createElement(str){
-	var el = document.createElement("div");
-	el.innerHTML = trim(str);
-	return el.firstChild;
-}
-var tpl = (function(){
-	var dic = null, re = /\<\%\=(.*?)\%\>/ig;
-	function call(a, b){
-		return dic && isObject(dic) ? dic[b] : i18n(b);
-	}
-	return function(str, hash){
-		if(!str)return '';
-		dic = hash;
-		return str.replace(re, call);
-	};
-})();
-
-
-
-var plugin = {
-	add: function(module, option, set) {
-		var proto = webimUI[module].prototype;
-		for(var i in set) {
-			proto.plugins[i] = proto.plugins[i] || [];
-			proto.plugins[i].push([option, set[i]]);
-		}
-	},
-	call: function(instance, name, args) {
-		var set = instance.plugins[name];
-		if(!set || !instance.element.parentNode) { return; }
-
-		for (var i = 0; i < set.length; i++) {
-			if (instance.options[set[i][0]]) {
-				set[i][1].apply(instance.element, args);
-			}
-		}
-	}
-};
-var _widgetId = 1;
-function widget(name, defaults, prototype){
-	function m(element, options){
-		var self = this;
-		self.id = _widgetId++;
-		self.name = name;
-		self.className = "webim-" + name;
-		self.options = extend({}, m['defaults'], options);
-		self.element = element || createElement(tpl(self.options.template));
-		self.$ = mapElements(self.element, "webim-" + name + "-");
-		isFunction(self._init) && self._init();
-	}
-	m.defaults = defaults;// default options;
-	// add prototype
-	extend(m.prototype, widget.prototype, prototype);
-	webimUI[name] = m;
-}
-
-extend(widget.prototype, {
-	_init: function(){
-	}
-});
-
-var webimUI = webim.ui = function(){
-}
-extend(webimUI,{
-	version: "@VERSION",
-	widget: widget,
-	plugin: plugin
-});
-
 //
 /* webim:
  *
@@ -129,7 +7,7 @@ extend(webimUI,{
  attributes：
  layout  //ui layout
  connection // connection
- config //save parameters in the server
+ setting //save parameters in the server
  status //save parameters in the local
  buddy
  history
@@ -171,47 +49,64 @@ function grepOffline(msg){
 function grepOnline(msg){
         return msg.type == "online";
 }
+var webimUI = webim.ui = function(element, options){
+	var self = this;
+	self.element = element;
+        self.options = extend({}, webimUI.defaults, options);
+	self._init();
+}
 extend(webimUI.prototype, objectExtend, {
-        _init:function(element,options){
-                speedUp("im");
+        _init:function(){
                 var self = this;
-                options = self.options = extend({}, webim.defaults, options);
-                if(!element){
-                        element = $(tpl(options.template));
-                }
-                element = self.element = $(element);
-                self.data = {
-                        user:{}
-                };
-                self.onlineIdsHash = {};
-                self.status = webim.status;
-                speedUp("status");
-                self.status.init();
-                speedDown("status");
-                speedUp("layout");
-                self.layout = new webim.layout.webapi(element.find(".webim-layout"), {
-                });//
-                speedDown("layout");
-                self.layout.element.appendTo(element);
-                self.connection = new webim.comet(null,{jsonp: true});
-                self.notification = new webim.notification();
-                self.config = webim.config;
-                self.buddy = new webim.buddy();
-                self.history = new webim.history();
-                speedUp("iminitEvent");
-                self._initEvents();
-                speedDown("iminitEvent");
-                speedDown("im");
+		options = self.options;
+		var layout = self.layout = new webimUI.layout();
+                self.notification = new webimUI.notification();
+                self.setting = new webimUI.setting();
+                self.buddy = new webimUI.buddy();
+                self.menu = new webimUI.menu();
+		//render start
+		layout.addApp(self.menu, {
+			title: i18n("menu"),
+			icon: "home",
+			sticky: false,
+			onlyIcon: false,
+			isMinimize: true
+		},"shortcut");
+                layout.addApp(self.buddy, {
+                        title: i18n("chat"),
+                        icon: "buddy",
+                        className: "webim-buddy-window",
+                 //       onlyIcon: true,
+                        //isMinimize: isOffline || !status("b"),
+                        titleVisibleLength: 19
+                });
+                layout.addApp(self.notification, {
+                        title: i18n("notification"),
+                        icon: "notification",
+                        sticky: false,
+                        onlyIcon: true,
+                        isMinimize: true
+                });
+                layout.addApp(self.setting, {
+                        title: i18n("setting"),
+                        icon: "setting",
+                        sticky: false,
+                        onlyIcon: true,
+                        isMinimize: true
+                });
+		document.body.appendChild(layout.element);
+
+		//render end
+                //self.layout.element.appendTo(element);
+                //self._initEvents();
         },
         initSound: function(urls){
                 soundNotce.init(urls || this.options.soundUrls);
         },
         _initEvents: function(){
                 return;
-                var im = this, layout = im.layout, buddy = im.buddy, history = im.history, connection = im.connection, status = im.status, isOffline = status("o"), config = im.config;
-speedUp("buddyUI");
+                var im = this, layout = im.layout, buddy = im.buddy, history = im.history, connection = im.connection, status = im.status, isOffline = status("o"), setting = im.setting;
                 var buddyUI = new webim.ui.buddy(null);
-speedDown("buddyUI");                
                 connection.bind("connect",function(e, data){
                         log(data, "connect");
                 }).bind("data",function(e, data){
@@ -223,7 +118,6 @@ speedDown("buddyUI");
                         im.stop(e, "disconnect");
                         log(data, "connect:close");
                 });
-                speedUp("apps");
                 layout.addApp(buddyUI, {
                         title: i18n("chat"),
                         icon: "buddy",
@@ -242,25 +136,21 @@ speedDown("buddyUI");
                         onlyIcon: true,
                         isMinimize: true
                 });
-                var configUI = new webim.ui.config(null);
-                configUI.bind("change",function(e, key, val){
+                var settingUI = new webim.ui.setting(null);
+                settingUI.bind("change",function(e, key, val){
                         im._updateConfig(key, val);
                 });
-                layout.addApp(configUI, {
-                        title: i18n("config"),
-                        icon: "config",
+                layout.addApp(settingUI, {
+                        title: i18n("setting"),
+                        icon: "setting",
                         sticky: false,
                         onlyIcon: true,
                         isMinimize: true
                 });
-                speedDown("apps");
-                speedUp("config.tag");
-                each(config.all, function(k,v){
-                        configUI.check_tag(k, v);
+                each(setting.all, function(k,v){
+                        settingUI.check_tag(k, v);
                         im._updateConfig(k, v, true);
                 });
-                speedDown("config.tag");
-                speedUp("bind");
                 //select a buddy
                 buddyUI.bind("select", function(e, info){
                         log(info, "buddyUI.select");
@@ -314,7 +204,7 @@ speedDown("buddyUI");
                                 		im.addChat(id);
                                 		c = layout.chat(id);
                                 }
-                                c && config("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
+                                c && setting("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
                                 c.window.notifyUser("information", count);
                                 var p = c.window.pos;
                                 (p == -1) && layout.setNextMsgNum(count);
@@ -381,18 +271,17 @@ speedDown("buddyUI");
                 });
                 layout.bind("collapse", function(e, type){
                         im._updateConfig("minimize_layout", true);
-                        configUI.check_tag("minimize_layout", true);
+                        settingUI.check_tag("minimize_layout", true);
                 });
                 layout.bind("expand", function(e, type){
                         im._updateConfig("minimize_layout", false);
-                        configUI.check_tag("minimize_layout", false);
+                        settingUI.check_tag("minimize_layout", false);
                 });
                 ///notification
                 im.notification.bind("data",function(e, data){
                         notificationUI.window.notifyUser("information", "+" + data.length);
                         notificationUI.add(data);
                 });
-                speedDown("bind");
                 setTimeout(function(){
                         im.notification.load();
                 }, 2000);
@@ -409,12 +298,12 @@ speedDown("buddyUI");
         },
         _initStatus: false,
         go: function(){
-                var im = this, layout = im.layout, buddy = im.buddy, history = im.history, connection = im.connection, status = im.status, isOffline = status("o"), config = im.config, configUI = layout.app("config"), buddyUI = layout.app("buddy"), data = im.data;
+                var im = this, layout = im.layout, buddy = im.buddy, history = im.history, connection = im.connection, status = im.status, isOffline = status("o"), setting = im.setting, settingUI = layout.app("setting"), buddyUI = layout.app("buddy"), data = im.data;
 
                 //model init
                 webim.date.init(data.server_time);
                 connection.connect(data.connection);
-                config.init(data.setting);
+                setting.init(data.setting);
                 history.option("userInfo", data.user);
                 layout.option("userInfo", data.user);
                 //model handle
@@ -425,8 +314,8 @@ speedDown("buddyUI");
                 //ui start
                 buddyUI.notice("count", buddy.count({presence:"online"}));
                 if(data.setting)
-                each(config.all,function(k,v){
-                        configUI.check_tag(k, v);
+                each(setting.all,function(k,v){
+                        settingUI.check_tag(k, v);
                         im._updateConfig(k, v, true);
                 });
                 if(!im._initStatus){
@@ -499,7 +388,7 @@ speedDown("buddyUI");
                                 (value ? layout.collapse() : layout.expand()); 
                         break;
                 }
-                if(!is_init)self.config(name,value);
+                if(!is_init)self.setting(name,value);
         },
         handle:function(data){
                 var self = this;
@@ -615,4 +504,125 @@ speedDown("buddyUI");
         }
 
 });
+
+var _countDisplay = function(element, count){
+	if (count === undefined){
+		return parseInt(element.innerHTML);
+	}
+	else if (count){
+		count = (typeof count == "number") ? count : (parseInt(element.innerHTML) + parseInt(count));
+		element.innerHTML = count.toString();
+		show(element);
+	}
+	else {
+		element.innerHTML = '0';
+		hide(element);
+	}
+	return count;
+};
+
+var keyCode = {
+	BACKSPACE: 8,
+	CAPS_LOCK: 20,
+	COMMA: 188,
+	CONTROL: 17,
+	DELETE: 46,
+	DOWN: 40,
+	END: 35,
+	ENTER: 13,
+	ESCAPE: 27,
+	HOME: 36,
+	INSERT: 45,
+	LEFT: 37,
+	NUMPAD_ADD: 107,
+	NUMPAD_DECIMAL: 110,
+	NUMPAD_DIVIDE: 111,
+	NUMPAD_ENTER: 108,
+	NUMPAD_MULTIPLY: 106,
+	NUMPAD_SUBTRACT: 109,
+	PAGE_DOWN: 34,
+	PAGE_UP: 33,
+	PERIOD: 190,
+	RIGHT: 39,
+	SHIFT: 16,
+	SPACE: 32,
+	TAB: 9,
+	UP: 38
+};
+function mapElements(obj){
+	var elements = obj.getElementsByTagName("*"), el, id, need = {}, pre = ":";
+	for(var i = elements.length - 1; i > -1; i--){
+		el = elements[i];
+		id = el.id;
+		if(id && id.indexOf(pre) == 0)need[id.substring(pre.length, id.length)] = el;
+	}
+	return need;
+}
+function createElement(str){
+	var el = document.createElement("div");
+	el.innerHTML = str;
+	return el.firstChild;
+}
+var tpl = (function(){
+	var dic = null, re = /\<\%\=(.*?)\%\>/ig;
+	function call(a, b){
+		return dic && isObject(dic) ? dic[b] : i18n(b);
+	}
+	return function(str, hash){
+		if(!str)return '';
+		dic = hash;
+		return str.replace(re, call);
+	};
+})();
+
+
+
+var plugin = {
+	add: function(module, option, set) {
+		var proto = webimUI[module].prototype;
+		for(var i in set) {
+			proto.plugins[i] = proto.plugins[i] || [];
+			proto.plugins[i].push([option, set[i]]);
+		}
+	},
+	call: function(instance, name, args) {
+		var set = instance.plugins[name];
+		if(!set || !instance.element.parentNode) { return; }
+
+		for (var i = 0; i < set.length; i++) {
+			if (instance.options[set[i][0]]) {
+				set[i][1].apply(instance.element, args);
+			}
+		}
+	}
+};
+var _widgetId = 1;
+function widget(name, defaults, prototype){
+	function m(element, options){
+		var self = this;
+		self.id = _widgetId++;
+		self.name = name;
+		self.className = "webim-" + name;
+		self.options = extend({}, m['defaults'], options);
+		self.element = element || createElement(tpl(self.options.template));
+		self.$ = mapElements(self.element);
+		isFunction(self._init) && self._init();
+	}
+	m.defaults = defaults;// default options;
+	// add prototype
+	extend(m.prototype, objectExtend, widget.prototype, prototype);
+	webimUI[name] = m;
+}
+
+extend(widget.prototype, {
+	_init: function(){
+	}
+});
+
+extend(webimUI,{
+	version: "@VERSION",
+	widget: widget,
+	plugin: plugin
+});
+
 

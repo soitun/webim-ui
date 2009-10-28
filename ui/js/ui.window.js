@@ -36,146 +36,122 @@ widget("window", {
         sticky: true,
         titleVisibleLength: 12,
         count: 0, // notifyUser if count > 0
-        template:'<div class="webim-window ui-widget">\
+        template:'<div id=":webim-window" class="webim-window ui-widget">\
                                             <div class="webim-window-tab-wrap">\
-                                            <div id="webim-window-tab" class="webim-window-tab ui-state-default">\
+                                            <div id=":tab" class="webim-window-tab ui-state-default">\
                                             <div class="webim-window-tab-inner">\
-                                                    <div id="webim-window-tabTip" class="webim-window-tab-tip">\
-                                                            <strong id="webim-window-tabTipC"><%=tooltip%></strong>\
+                                                    <div id=":tabTip" class="webim-window-tab-tip">\
+                                                            <strong id=":tabTipC"><%=tooltip%></strong>\
                                                     </div>\
-                                                    <a id="webim-window-tabClose" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
-                                                    <div id="webim-window-tabCount" class="webim-window-tab-count">\
+                                                    <a id=":tabClose" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
+                                                    <div id=":tabCount" class="webim-window-tab-count">\
                                                             0\
                                                     </div>\
-                                                    <em id="webim-window-tabIcon" class="webim-icon webim-icon-chat"></em>\
-                                                    <h4 id="webim-window-tabTitle"><%=title%></h4>\
+                                                    <em id=":tabIcon" class="webim-icon webim-icon-chat"></em>\
+                                                    <h4 id=":tabTitle"><%=title%></h4>\
                                             </div>\
                                             </div>\
                                             </div>\
                                             <div class="webim-window-window">\
-                                                    <div id="webim-window-header" class="webim-window-header ui-widget-header ui-corner-top">\
-                                                            <span id="webim-window-actions" class="webim-window-actions">\
-                                                                    <a id="webim-window-minimize" title="<%=minimize%>" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\
-                                                                    <a id="webim-window-maximize" title="<%=maximize%>" class="webim-window-maximize" href="#maximize"><em class="ui-icon ui-icon-plus"><%=maximize%></em></a>\
-                                                                    <a id="webim-window-close" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
+                                                    <div id=":header" class="webim-window-header ui-widget-header ui-corner-top">\
+                                                            <span id=":actions" class="webim-window-actions">\
+                                                                    <a id=":minimize" title="<%=minimize%>" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\
+                                                                    <a id=":maximize" title="<%=maximize%>" class="webim-window-maximize" href="#maximize"><em class="ui-icon ui-icon-plus"><%=maximize%></em></a>\
+                                                                    <a id=":close" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
                                                             </span>\
-                                                            <h4 id="webim-window-headerTitle"><%=title%></h4>\
+                                                            <h4 id=":headerTitle"><%=title%></h4>\
                                                     </div>\
-                                                    <div id="webim-window-content" class="webim-window-content ui-widget-content">\
+                                                    <div id=":content" class="webim-window-content ui-widget-content">\
                                                     </div>\
                                             </div>\
                                             </div>'
 },
 {
-	_create: function(options){
-		var self = this;
-		var template = tpl(options.template);
-		self._init($(template), options);
-	},
-	html: function(str){
-		return this.ui.content.html(str);
+	html: function(obj){
+		return this.$.content.appendChild(obj);
 	},
 	_init: function(element, options){
-		var self = this, options = self.options;
-		//log($);
-		//log(self.element);
-		return;
-		self.changeElement($(element));
+		var self = this, options = self.options, $ = self.$;
 		element = self.element;
-		element.data("window", self);
-		element.addClass(options.className); //extend class
-		var ui = self.ui = {
-			tab: element.find(".webim-window-tab:first"),
-			header: element.find(".webim-window-header:first"),
-			content: element.find(".webim-window-content:first"),
-			actions: element.find(".webim-window-actions:first"),
-			resize_se: element.find(".webim-resizable-se:first")
-		};
-		extend(ui,{
-			minimize: ui.actions.find(".webim-window-minimize"),
-			maximize: ui.actions.find(".webim-window-maximize"),
-			close: ui.actions.find(".webim-window-close").add(ui.tab.find(".webim-window-close")),
-			tabIcon: ui.tab.find(".webim-icon"),
-			tabTip: ui.tab.find(".webim-window-tab-tip"),
-			tabTipC: ui.tab.find(".webim-window-tab-tip strong"),
-			tabCount: ui.tab.find(".webim-window-tab-count"),
-			headerTitle: ui.header.find("h4"),
-			tabTitle: ui.tab.find("h4")
-		});
-		ui.title = ui.headerTitle.add(ui.tabTitle);
-		options.tabWidth && ui.tab.width(options.tabWidth);
+		element.window = self;
+		//$.title = $.headerTitle.add($.tabTitle);
+		options.tabWidth && ($.tab.style.width = options.tabWidth + "px");
 		self.title(options.title, options.icon);
-		!options.minimizable && ui.minimize.hide();
-		!options.maximizable && ui.maximize.hide();
-		!options.closeable && ui.close.hide();
+		!options.minimizable && hide($.minimize);
+		!options.maximizable && hide($.maximize);
+		if(!options.closeable){
+		       	hide($.tabClose);
+		       	hide($.close);
+		}
 		if(options.isMinimize){
 			self.minimize();
 		}else{
 			self.restore();
 		}
 		if(options.onlyIcon){
-			ui.title.filter(":last").hide();
+			hide($.tabTitle);
 		}else{
-			ui.tabTip.remove();
+			remove($.tabTip);
 		}
 		options.count && self.notifyUser("information", options.count);
 		self._initEvents();
-		self._fitUI();
+		//self._fitUI();
 		//setTimeout(function(){self.trigger("ready");},0);
 		winManager(self);
 	},
 	notifyUser: function(type, count){
-		var self = this, ui = self.ui;
+		var self = this, $ = self.$;
 		if(type == "information"){
 			if(self.isMinimize()){
-				if(_countDisplay(ui.tabCount, count))ui.tab.addClass("ui-state-highlight");
+				if(_countDisplay($.tabCount, count))addClass($.tab,"ui-state-highlight");
 			}
 		}
 	},
 	_count: function(){
-		return _countDisplay(this.ui.tabCount);
+		return _countDisplay(this.$.tabCount);
 	},
 	title: function(title, icon){
-		var self = this, ui = self.ui, tabIcon = ui.tabIcon;
+		var self = this, $ = self.$, tabIcon = $.tabIcon;
 		if(icon){
 			if(isUrl(icon)){
-				tabIcon.attr("class", "webim-icon").css("background-image","url("+ icon +")");
+				tabIcon.className = "webim-icon";
+				tabIcon.style.backgroundImage = "url("+ icon +")";
 			}
 			else{
-				tabIcon.attr("class", "webim-icon webim-icon-" + icon);
+				tabIcon.className = "webim-icon webim-icon-" + icon;
 			}
 		}
-		ui.tabTipC.html(title);
-		ui.tabTitle.html(subVisibleLength(title, 0, self.options.titleVisibleLength));
-		return ui.headerTitle.html(title);
+		$.tabTipC.innerHTML = title;
+		$.tabTitle.innerHTML = subVisibleLength(title, 0, self.options.titleVisibleLength);
+		$.headerTitle.innerHTML = title;
 	},
 	_changeState:function(state){
 		var el = this.element, className = state == "restore" ? "normal" : state;
-		el.removeClass("webim-window-normal webim-window-maximize webim-window-minimize").addClass("webim-window-" + className);
+		replaceClass(el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className);
 		this.trigger("displayStateChange", [state]);
 	},
 	active: function(){
-		return this.element.hasClass("webim-window-active");
+		return hasClass(this.element, "webim-window-active");
 	},
 	activate: function(){
 		var self = this;
 		if(self.active())return;
-		self.element.addClass("webim-window-active");
+		addClass(self.element, "webim-window-active");
 		self.trigger("activate");
 	},
 	deactivate: function(){
 		var self = this;
 		if(!self.active())return;
-		self.element.removeClass("webim-window-active");
+		removeClass(self.element, "webim-window-active");
 		if(!self.options.sticky) self.minimize();
 		self.trigger("deactivate");
 	},
 	_setVisibile: function(){
-		var self = this, ui = self.ui;
-		ui.tab.addClass("ui-state-active");
+		var self = this, $ = self.$;
+		addClass($.tab, "ui-state-active");
 		self.activate();
-		_countDisplay(ui.tabCount, 0);
-		ui.tab.removeClass("ui-state-highlight");
+		_countDisplay($.tabCount, 0);
+		removeClass($.tab, "ui-state-highlight");
 	},
 	maximize: function(){
 		var self = this;
@@ -185,57 +161,62 @@ widget("window", {
 	},
 	restore: function(){
 		var self = this;
-		if(self.element.hasClass("webim-window-normal"))return;
+		if(hasClass(self.element, "webim-window-normal"))return;
 		self._setVisibile();
 		self._changeState("restore");
 	},
 	minimize: function(){
 		var self = this;
 		if(self.isMinimize())return;
-		self.ui.tab.removeClass("ui-state-active");
+		removeClass(self.$.tab, "ui-state-active");
 		self.deactivate();
 		self._changeState("minimize");
 	},
 	close: function(){
 		var self = this;
 		self.trigger("close");
-		self.element.remove();
+		remove(self.element);
 	},
 	_initEvents:function(){
-		var self = this, element = self.element, ui = self.ui;
+		var self = this, element = self.element, $ = self.$, tab = $.tab;
+		var stop = function(e){
+			stopPropagation(e);
+			preventDefault(e);
+		};
 		//resize
 		var minimize = function(e){
 			self.minimize();
 		};
-		ui.header.bind("click", minimize);
-		ui.tab.click(function(e){
+		addEvent($.header, "click", minimize);
+		addEvent(tab, "click", function(e){
 			if(self.isMinimize())self.restore();
 			else self.minimize();
 			stop(e);
-		}).hover(_hoverCss, _outCss).mousedown(stop).disableSelection();
-		var stop = function(e){
-			e.stopPropagation();
-			e.preventDefault();
-		};
+		});
+		hoverClass(tab, "ui-state-hover");
+		addEvent(tab,"mousedown",stop);
+		disableSelection(tab);
+
 		each(["minimize", "maximize", "close"], function(n,v){
-			ui[v].bind("click", function(e){
+			addEvent($[v], "click", function(e){
 				if(!this.disabled)self[v]();
 				stop(e);
-			}).bind("mousedown",stop);
+			});
+			addEvent($[v],"mousedown",stop);
 		});
 
 	},
 	height:function(){
-		return this.ui.content.height();
+		return this.$.content.offsetHeight;
 	},
 	_fitUI: function(bounds){
 		return;
 	},
 	isMaximize: function(){
-		return this.element.hasClass("webim-window-maximize");
+		return hasClass(this.element,"webim-window-maximize");
 	},
 	isMinimize: function(){
-		return this.element.hasClass("webim-window-minimize");
+		return hasClass(this.element,"webim-window-minimize");
 	}
 });
 var winManager = (function(){
@@ -246,11 +227,11 @@ var winManager = (function(){
 		return true;
 	}
 	var activate = function(e){
-		var win = $(this).data("window");
+		var win = this;
 		win && win != curWin && deactivateCur() && (curWin = win);
 	};
 	var deactivate = function(e){
-		var win = $(this).data("window");
+		var win = this;
 		win && curWin == win && (curWin = false);
 	};
 	var register = function(win){
@@ -262,18 +243,23 @@ var winManager = (function(){
 		win.bind("deactivate", deactivate);
 	};
 	///////////
-	return;
-	$(function(){
-		$(document).bind("mousedown",function(e){
-			var el = $(e.target);
-			el = el.hasClass("webim-window") ? el : el.parents(".webim-window:first");
-			if(el.length){
-				var win = el.data("window");
-				win && win.activate();
-			}else{
-				deactivateCur();
+	addEvent(document,"mousedown",function(e){
+		e = target(e);
+		var el;
+		while(e){
+			if(e.id == ":webim-window"){
+				el = e;
+				break;
 			}
-		});
+			else
+				e = e.parentNode;
+		}
+		if(el){
+			var win = el.window;
+			win && win.activate();
+		}else{
+			deactivateCur();
+		}
 	});
 	return function(win){
 		register(win);

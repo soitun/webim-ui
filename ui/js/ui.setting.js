@@ -1,5 +1,5 @@
 //
-/* ui.config:
+/* ui.setting:
  *
  options:
  attributes：
@@ -12,13 +12,16 @@
  change
 
  */
-webim.widget("config",{
+widget("setting",{
+        event:'click',
+        template: '<div id="webim-setting" class="webim-setting">\
+                        <ul id=":ul"></ul>\
+                  </div>',
+        template_c: '<li><input type="checkbox" <%=checked%> id="<%=id%>" name="<%=name%>"/><label for="<%=id%>"><%=label%></label></li>'
+},{
         _init: function(){
                 var self = this, element = self.element, options = self.options;
-                if(!element){
-                        element = self.element = $(tpl(options.template)).addClass(self.widgetClassName);
-                }
-                self.ul = element.children("ul:first");
+		return;
                 self.tags = {};
                 //self._initEvents();
         },
@@ -46,10 +49,3 @@ webim.widget("config",{
         destroy: function(){
         }
 });
-webim.ui.config.defaults = {
-        event:'click',
-        template: '<div id="webim-config">\
-                        <ul></ul>\
-                  </div>',
-        template_c: '<li><input type="checkbox" <%=checked%> id="<%=id%>" name="<%=name%>"/><label for="<%=id%>"><%=label%></label></li>'
-};

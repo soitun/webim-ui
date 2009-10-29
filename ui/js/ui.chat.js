@@ -20,7 +20,7 @@
  */
  
 function ieCacheSelection(e){
-        document.selection && $.data(this, "caretPos", document.selection.createRange());
+        document.selection && (this.caretPos = document.selection.createRange());
 }
 widget("chat",{
         event:'click',
@@ -66,11 +66,11 @@ widget("chat",{
 			win.html(element);
 		}
 		element.data("chat", self);
-		var history = self.history = new webim.ui.history(null,{
+		var history = self.history = new webimUI.history(null,{
 			userInfo: options.userInfo,
 			buddyInfo: options.buddyInfo
 		});
-		history.element.prependTo(ui.content);
+		history.element.prependTo($.content);
 		self._initEvents();
 		if(win){
 			self._bindWindow();
@@ -78,7 +78,7 @@ widget("chat",{
 		}
 		self.update(options.buddyInfo);
 		history.add(options.history);
-		webim.ui.plugin.call(self, "init", [null, self.plugin_ui()]);
+		plugin.call(self, "init", [null, self.plugin_ui()]);
 		self._adjustContent();
 	},
 	update: function(buddyInfo){
@@ -99,12 +99,12 @@ widget("chat",{
 		}
 	},
 	focus: function(){
-		this.ui.input.focus();
+		this.$.input.focus();
 	},
 	_noticeTime: null,
 	_noticeTxt:"",
 	notice: function(text, timeOut){
-		var self = this, content = self.ui.notice, time = self._noticeTime;
+		var self = this, content = self.$.notice, time = self._noticeTime;
 		if(time)clearTimeout(time);
 		if(!text){
 			self._noticeTxt = null;
@@ -125,18 +125,18 @@ widget("chat",{
 		}
 	},
 	_adjustContent: function(){
-		var content = this.ui.content;
+		var content = this.$.content;
 		content.scrollTop(content[0].scrollHeight);
 	},
 	_fitUI: function(e){
-		var self = (e && e.data && e.data.self) || this, win = self.window, ui = self.ui;
+		var self = (e && e.data && e.data.self) || this, win = self.window, $ = self.$;
 		self._adjustContent();
 
 	},
 	_focus: function(e, type){
 		var self = e.data.self;
 		if(type != "minimize"){
-			self.ui.input.focus();
+			self.$.input.focus();
 			self._adjustContent();
 		}
 	},
@@ -150,7 +150,7 @@ widget("chat",{
 		self._adjustContent();
 	},
 	_inputAutoHeight:function(){
-		var el = this.ui.input, scrollTop = el[0].scrollTop;
+		var el = this.$.input, scrollTop = el[0].scrollTop;
 		if(scrollTop > 0){
 			var h = el.height();
 			if(h> 32 && h < 100) el.height(h + scrollTop);
@@ -172,12 +172,12 @@ widget("chat",{
 			body: val,
 			timestamp: (new Date()).getTime()
 		};
-		webim.ui.plugin.call(self, "send", [null, self.plugin_ui({msg: msg})]);
+		plugin.call(self, "send", [null, self.plugin_ui({msg: msg})]);
 		self.trigger('sendMsg', msg);
 		//self.sendStatus("");
 	},
 	_inputkeypress: function(e){
-		var self = (e && e.data && e.data.self) || this, ui = self.ui;
+		var self = (e && e.data && e.data.self) || this, $ = self.$;
 		if (e.keyCode == 13){
 			if(e.ctrlKey){
 				self.insert("\n", true);
@@ -199,10 +199,10 @@ widget("chat",{
 
 		//var val = el.setSelectionRange ? el.value.substring(el.selectionStart, el.selectionEnd) : (window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : ""));
 		var val = window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : "");
-		if(!val)self.ui.input.focus();
+		if(!val)self.$.input.focus();
 	},
 	_initEvents: function(){
-		var self = this, options = self.options, ui = self.ui, placeholder = i18n("input notice"), gray = "webim-gray", input = ui.input;
+		var self = this, options = self.options, $ = self.$, placeholder = i18n("input notice"), gray = "webim-gray", input = $.input;
 		self.history.bind("update",{self:self}, self._onHistoryUp).bind("clear", function(){
 			self.notice(i18n("clear history notice"), 3000);
 		});
@@ -218,19 +218,19 @@ widget("chat",{
 				this.value = placeholder;
 			}
 		}).bind("keypress", {self: self},self._inputkeypress);
-		ui.content.bind("click", {self : self}, self._onFocusInput);
+		$.content.bind("click", {self : self}, self._onFocusInput);
 
 	},
 	_updateInfo:function(info){
-		var self = this, ui = self.ui;
-		ui.userPic.attr("href", info.url);
-		ui.userPic.children().attr("src", info.pic_url);
-		ui.userStatus.html(info.status);
+		var self = this, $ = self.$;
+		$.userPic.attr("href", info.url);
+		$.userPic.children().attr("src", info.pic_url);
+		$.userStatus.html(info.status);
 		self.window.title(info.name);
 	},
 	insert:function(value, isCursorPos){
 		//http://hi.baidu.com/beileyhu/blog/item/efe29910f31fd505203f2e53.html
-		var self = this,input = self.ui.input;
+		var self = this,input = self.$.input;
 		input.focus();
 		if(!isCursorPos){
 			input.val(value);
@@ -280,7 +280,7 @@ widget("chat",{
 	status: function(type){
 		//type ['typing']
 		type = type || 'clear';
-		var self = this, el = self.ui.status, name = self.options.buddyInfo.name, markup = '';
+		var self = this, el = self.$.status, name = self.options.buddyInfo.name, markup = '';
 		markup = type == 'clear' ? '' : name + i18n(type);
 		el.html(markup);
 		self._adjustContent();
@@ -297,7 +297,7 @@ widget("chat",{
 		var self = this;
 		return $.extend({
 			self: self,
-			ui: self.ui,
+			ui: self.$,
 			history: self.history
 		}, extend);
 	},
@@ -308,7 +308,7 @@ webimUI.chat.defaults.emot = true;
 plugin.add("chat","emot",{
 	init:function(e, ui){
 		var chat = ui.self;
-		var emot = new webim.ui.emot(null,{
+		var emot = new webimUI.emot(null,{
 			select: function(e, alt){
 				chat.focus();
 				chat.insert(alt, true);
@@ -318,8 +318,8 @@ plugin.add("chat","emot",{
 			emot.toggle();
 			return false;
 		});
-		ui.ui.toolContent.append(emot.element);
-		ui.ui.tools.append(trigger);
+		ui.$.toolContent.append(emot.element);
+		ui.$.tools.append(trigger);
 	},
 	send:function(e, ui){
 	}
@@ -332,6 +332,6 @@ plugin.add("chat","clearHistory",{
 			chat.trigger("clearHistory",[chat.options.buddyInfo]);
 			return false;
 		});
-		ui.ui.tools.append(trigger);
+		ui.$.tools.append(trigger);
 	}
 });

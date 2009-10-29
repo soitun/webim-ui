@@ -225,7 +225,7 @@ var winManager = (function(){
 		curWin && curWin.deactivate();
 		curWin = false;
 		return true;
-	}
+	};
 	var activate = function(e){
 		var win = this;
 		win && win != curWin && deactivateCur() && (curWin = win);

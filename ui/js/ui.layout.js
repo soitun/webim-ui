@@ -31,7 +31,7 @@ widget("layout",{
                     <div id="webim-flashlib-c">\
                     </div>\
                     </div>\
-<div id="webim-layout" class="webim-layout webim-webapi"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
+<div id=":layout" class="webim-layout webim-webapi"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
                             <div id=":shortcut" class="webim-shortcut">\
                             </div>\
                             <div class="webim-layout-r">\
@@ -86,7 +86,7 @@ widget("layout",{
                                             </div>'
 },{
 	_init: function(element, options){
-		var self = this;
+		var self = this, options = self.options;
 		extend(self,{
 			window: window,
 			apps : {},
@@ -102,18 +102,19 @@ widget("layout",{
 
 		});
 
-		return;
-		self.addShortcut(options.shortcuts);
+		//self.addShortcut(options.shortcuts);
 		self._initEvents();
 		options.isMinimize && self.collapse();
-		self.element.parent("body").length && self.buildUI();
+		//self.buildUI();
+		//self.element.parent("body").length && self.buildUI();
+		//
 		//test
 	},
 	_ready:false,
 	buildUI: function(e){
-		var self = (e && e.data && e.data.self) || this, ui = self.ui;
-		//var w = self.element.width() - ui.shortcut.outerWidth() - ui.apps.outerWidth() - 55;
-		var w = ($(window).width() - 45) - ui.shortcut.outerWidth() - ui.apps.outerWidth() - 70;
+		var self = this, $ = self.$;
+		//var w = self.element.width() - $.shortcut.outerWidth() - $.apps.outerWidth() - 55;
+		var w = (windowWidth() - 45) - $.shortcut.offsetWidth - $.apps.offsetWidth - 70;
 		self.maxVisibleTabs = parseInt(w / self.tabWidth);
 		self._fitUI();
 		self._ready = true;
@@ -148,7 +149,7 @@ widget("layout",{
 			var tab = tabs[tabIds[i]];
 			if (i < numPrev || i >= upcont) {
 				if (all) 
-					tab.element.show();
+					show(tab.element);
 				else {
 					if (self.activeTabId == tabIds[i]) 
 						tab.minimize();
@@ -161,12 +162,12 @@ widget("layout",{
 						nextN += n;
 						tab.pos = -1;
 					}
-					tab.element.hide();
+					hide(tab.element);
 				}
 			}
 			else {
 				tab.pos = 0;
-				tab.element.show();
+				show(tab.element);
 			}
 		}
 		if (!all) {
@@ -175,10 +176,10 @@ widget("layout",{
 		}
 	},
 	setNextMsgNum: function(num){
-		_countDisplay(this.ui.nextMsgCount, num);
+		_countDisplay(this.$.nextMsgCount, num);
 	},
 	setPrevMsgNum: function(num){
-		_countDisplay(this.ui.prevMsgCount, num);
+		_countDisplay(this.$.prevMsgCount, num);
 	},
 	slideing: false,
 	_slide: function(direction){
@@ -205,38 +206,46 @@ widget("layout",{
 					self.prevCount--;
 				}
 
-				self.ui.tabs.animate({
-					left: -1 * self.tabWidth * self.nextCount
-				}, 500, function(){
-					if (self.slideing) 
-						self._slide(direction);
-					else {
-						self._fitUI();
-						self._slideReset();
+				var tabs = self.$.tabs, old_left = parseFloat(tabs.style.left), 
+				left = -1 * self.tabWidth * self.nextCount, 
+				times = parseInt(500/13),
+				i = 1,
+				pre = (left - old_left)/times;
+				var time = setInterval(function(){
+					tabs.style.left = old_left + pre*i + 'px';
+					if(i == times){
+						if (self.slideing) 
+							self._slide(direction);
+						else {
+							self._fitUI();
+							self._slideReset();
+						}
+						clearInterval(time);
+						return;
 					}
-				});
+					i++;
+				},13);
 		}
 
 	},
-	_sildeUp: function(){
+	_slideUp: function(){
 		this.slideing = false;
 
 	},
 	_slideSetup: function(reset){
-		var self = this, ui = self.ui, tabsWrap = ui.tabsWrap, tabs = ui.tabs;
+		var self = this, $ = self.$, tabsWrap = $.tabsWrap, tabs = $.tabs;
 
 		if (!self._tabsWidth) {
-			self._tabsWidth = tabs.width();
+			self._tabsWidth = tabs.clientWidth;
 		}
 		if (reset) {
 			self._tabsWidth = null;
 		}
-		tabsWrap.css({
-			position: reset ? '' : 'relative',
-			overflow: reset ? 'visible' : 'hidden',
-			width: reset ? '' : self._tabsWidth
-		});
-		tabs.width(reset ? '' : self.tabWidth * self.tabIds.length).css('position', reset ? '' : 'relative');
+		tabsWrap.style.position = reset ? '' : 'relative';
+		tabsWrap.style.overflow = reset ? 'visible' : 'hidden';
+		tabsWrap.style.width = reset ? '' : self._tabsWidth + "px";
+		tabs.style.width = reset ? '' : self.tabWidth * self.tabIds.length + "px";
+		tabs.style.position = reset ? '' : 'relative';
 	},
 	_slideReset: function(){
 		this._slideSetup(true);
@@ -257,87 +266,84 @@ widget("layout",{
 		self.nextCount = ncount;
 	},
 	_updateCountUI: function(){
-		var self = this, ui = self.ui, pcount = self.prevCount, ncount = self.nextCount;
+		var self = this, $ = self.$, pcount = self.prevCount, ncount = self.nextCount;
 		if (ncount <= 0) {
-			ui.next.addClass('ui-state-disabled');
+			addClass($.next, 'ui-state-disabled');
 		}
 		else {
-			ui.next.removeClass('ui-state-disabled');
+			removeClass($.next, 'ui-state-disabled');
 		}
 		if (pcount <= 0) {
-			ui.prev.addClass('ui-state-disabled');
+			addClass($.prev, 'ui-state-disabled');
 		}
 		else {
-			ui.prev.removeClass('ui-state-disabled');
+			removeClass($.prev, 'ui-state-disabled');
 		}
 		if (pcount > 0 || ncount > 0) {
-			ui.next.show();
-			ui.prev.show();
+			$.next.style.display = "block";
+			$.prev.style.display = "block";
 		}
 		else {
-			ui.next.hide();
-			ui.prev.hide();
+			hide($.next);
+			hide($.prev);
 		}
-		ui.nextCount.html(ncount.toString());
-		ui.prevCount.html(pcount.toString());
+		$.nextCount.innerHTML = ncount.toString();
+		$.prevCount.innerHTML = pcount.toString();
 	},
 	_initEvents: function(){
-		var self = this, win = self.window, ui = self.ui;
-		win.bind("resize",{self: self}, self.buildUI);
-		ui.next.mousedown(function(){
-			self._slide(-1);
-		}).mouseup(function(){
-			self._sildeUp();
-		}).disableSelection();
-		ui.prev.mousedown(function(){
-			self._slide(1);
-		}).mouseup(function(){
-			self._sildeUp();
-		}).disableSelection();
-		ui.expand.click(function(){
+		var self = this, win = self.window, $ = self.$;
+		addEvent(win,"resize", function(){self.buildUI();});
+		addEvent($.next,"mousedown", function(){self._slide(-1);});
+		addEvent($.next,"mouseup", function(){self._slideUp();});
+		disableSelection($.next);
+		addEvent($.prev,"mousedown", function(){self._slide(1);});
+		addEvent($.prev,"mouseup", function(){self._slideUp();});
+		disableSelection($.prev);
+		addEvent($.expand, "click", function(){
 			self.expand();
 			return false;
 		});
-		ui.collapse.click(function(){
+		addEvent($.collapse, "click", function(){
 			self.collapse();
 			return false;
 		});
 	},
 	isMinimize: function(){
-		return this.element.hasClass("webim-webapi-minimize");
+		return hasClass(this.$.layout, "webim-webapi-minimize");
 	},
 	collapse: function(){
 		if(this.isMinimize()) return;
-		this.element.addClass("webim-webapi-minimize");
+		addClass(this.$.layout, "webim-webapi-minimize");
 		this.trigger("collapse");
 	},
 	expand: function(){
 		if(!this.isMinimize()) return;
-		this.element.removeClass("webim-webapi-minimize");
+		removeClass(this.$.layout, "webim-webapi-minimize");
 		this.trigger("expand");
 	},
 	_displayUpdate:function(e){
 		this._ready && this.trigger("displayUpdate");
 	},
 	_fitUI: function(){
-		var self = this, ui = self.ui, apps = ui.apps;
+		var self = this, $ = self.$, apps = $.apps;
 		self._updateCount();
-		self.ui.tabs.css('left', -1 * self.tabWidth * self.nextCount);
+		self.$.tabs.style.left = -1 * self.tabWidth * self.nextCount + 'px';
 		self._updateCountUI();
 		self._setVisibleTabs();
 		//self.tabs.height(h);
 		self._displayUpdate();
 	},
 	_stickyWin: null,
-	_appStateChange:function(e, state){
-		var self = e.data.self, win = e.data.win;
-		if(state != "minimize")
-			$.each(self.apps, function(key, val){
+	_appStateChange:function(win, state){
+		var self = this;
+		if(state != "minimize"){
+			each(self.apps, function(key, val){
 				if(val.window != win){
 					val.window.minimize();
 				}
 			});
-			self._displayUpdate();
+		}
+		self._displayUpdate();
 	},
 	app:function(name){
 		return this.apps[name];
@@ -345,12 +351,12 @@ widget("layout",{
 	addApp: function(app, options, container){
 		var self = this, options = extend(options,{closeable: false});
 		var win, el = app.element;
-		win = new webim.ui.window(null, options);
+		win = new webimUI.window(null, options);
 		win.html(el);
 		self.$[container ? container : "apps"].appendChild(win.element);
 		app.window = win;
-		win.bind("displayStateChange", {self: self, win: win}, self._appStateChange);
-		self.apps[app.widgetName] = app;
+		win.bind("displayStateChange", function(state){ self._appStateChange(this, state);});
+		self.apps[app.name] = app;
 	},
 	focusChat: function(id){
 		var self = this, tab = self.tabs[id];
@@ -360,7 +366,7 @@ widget("layout",{
 		return this.panels[id];
 	},
 	updateChat: function(data){
-		data = $.makeArray(data);
+		data = makeArray(data);
 		var self = this, info, l = data.length, panel;
 		for(var i = 0; i < l; i++){
 			info = data[i];
@@ -369,13 +375,13 @@ widget("layout",{
 		}
 	},
 	updateAllChat:function(){
-		$.each(this.panels, function(k,v){
+		each(this.panels, function(k,v){
 			v.update();
 		});
 	},
-	_onChatClose:function(e){
-		var self = e.data.self, id = e.data.id;
-		self.tabIds = $.grep(self.tabIds, function(v, i){
+	_onChatClose:function(id){
+		var self = this;
+		self.tabIds = grep(self.tabIds, function(v, i){
 			return v != id;
 		});
 		delete self.tabs[id];
@@ -383,8 +389,8 @@ widget("layout",{
 		self._changeActive(id, true);
 		self._fitUI();
 	},
-	_onChatChange:function(e, type){
-		var self = e.data.self, id = e.data.id;
+	_onChatChange:function(id, type){
+		var self = this;
 		if(type == "minimize"){
 			self._changeActive(id, true);
 			self._displayUpdate();
@@ -406,13 +412,13 @@ widget("layout",{
 	addChat: function(info, options,winOptions){
 		var self = this, panels = self.panels, id = info.id, chat;
 		if(!panels[id]){
-			var win = self.tabs[id] = new webim.ui.window(null, $.extend({
+			var win = self.tabs[id] = new webimUI.window(null, extend({
 				isMinimize: self.activeTabId || !self.options.chatAutoPop,
 				tabWidth: self.tabWidth -2
-			},winOptions)).bind("close", {self: self, id: id}, self._onChatClose).bind("displayStateChange", {self: self, id: id}, self._onChatChange);
+			},winOptions)).bind("close", function(){ self._onChatClose(id)}).bind("displayStateChange", function(state){ self._onChatChange(id,state)});
 			self.tabIds.push(id);
-			self.ui.tabs.prepend(win.element);
-			chat = panels[id] = new webim.ui.chat(null, $.extend({
+			self.$.tabs.insertBefore(win.element, self.$.tabs.firstChild);
+			chat = panels[id] = new webimUI.chat(null, extend({
 				window: win,
 				userInfo: self.options.userInfo,
 				buddyInfo: info
@@ -434,8 +440,8 @@ widget("layout",{
 	},
 	addShortcut: function(title,icon,link, isExtlink){
 		var self = this;
-		if($.isArray(title)){
-			$.each(title, function(n,v){
+		if(isArray(title)){
+			each(title, function(n,v){
 				self.addShortcut(v);
 			});
 			return;
@@ -446,7 +452,7 @@ widget("layout",{
 		}else if(typeof title != "string"){
 			return;
 		}
-		var self = this, content = self.ui.shortcut, temp = self.options.template_s;
+		var self = this, content = self.$.shortcut, temp = self.options.template_s;
 		self.menu.add(title,icon,link, isExtlink);
 		if(content.children().length > self.options.shortcutLength)return;
 		temp = $(tpl(temp,{title: i18n(title), icon: icon, link: link, target: isExtlink ? "_blank" : ""}));
@@ -455,14 +461,17 @@ widget("layout",{
 		content.append(temp);
 	},
 	addWindow: function(){
-		new webim.ui.window(null, {
+		new webimUI.window(null, {
 		});
 	},
 	online: function(){
-		var self = this, ui = self.ui;
+		var self = this, $ = self.$;
 	},
 	offline: function(){
-		var self = this, ui = self.ui;
+		var self = this, $ = self.$;
 	}
 
 });
+function windowWidth(){
+	return document.compatMode === "CSS1Compat" && document.documentElement.clientWidth || document.body.clientWidth;
+}

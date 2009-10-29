@@ -94,7 +94,12 @@ extend(webimUI.prototype, objectExtend, {
                         onlyIcon: true,
                         isMinimize: true
                 });
+
 		document.body.appendChild(layout.element);
+		for(var i = 1; i < 7; i++){
+			layout.addChat({id:i, name: "11"}, {}, {});
+		}
+		layout.buildUI();
 
 		//render end
                 //self.layout.element.appendTo(element);
@@ -389,120 +394,7 @@ extend(webimUI.prototype, objectExtend, {
                         break;
                 }
                 if(!is_init)self.setting(name,value);
-        },
-        handle:function(data){
-                var self = this;
-                if(data.messages.length)
-                self.trigger("message",[data.messages]);
-                if(data.presences.length)
-                self.trigger("presence",[data.presences]);
-                if(data.statuses.length)
-                self.trigger("status",[data.statuses]);
-        },
-        sendMsg: function(msg){
-                var self = this;
-                msg.ticket = self.data.connection.ticket;
-                ajax({
-                        type: 'post',
-                        url: self.options.urls.message,
-                        type: 'post',
-                        cache: false,
-                        data: msg
-                });
-        },
-        sendStatus: function(msg){
-                var self = this;
-                msg.ticket = self.data.connection.ticket;
-                ajax({
-                        type: 'post',
-                        url: self.options.urls.status,
-                        type: 'post',
-                        cache: false,
-                        data: msg
-                });
-        },
-//        online_list:function(){
-//                var self = this;
-//                ajax({
-//                        type:"post",
-//                        dataType: "json",
-//                        url: self.options.urls.online_list,
-//                        success: function(data){
-//                                self.trigger("online_list", [data]);
-//                        },
-//                        error: function(data){
-//                                log(data, "online:error");
-//                        }
-//                });
-//
-//        },
-        setStranger: function(ids){
-                this.stranger_ids = idsArray(ids);
-        },
-        stranger_ids:[],
-        online:function(){
-                var self = this, status = self.status, ids = idsArray(status("tabIds"));
-                status("o", false);
-                self.ready();
-                ajax({
-                        type:"post",
-                        dataType: "json",
-                        data:{
-                                buddy_ids: ids.join(","),
-                                stranger_ids: self.stranger_ids.join(",")
-                        },
-                        url: self.options.urls.online,
-                        success: function(data){
-                        		if(!data || !data.user || !data.connection){
-                        			
-                        			self.stop(null, "online error");
-                                	log(data, "online:error");
-                        		}else{
-                        			data.user = extend(self.data.user, data.user);
-                                	self.data = data;
-                                	self.go();
-                        		}
-                                
-                        },
-                        error: function(data){
-                                self.stop(null, "online error");
-                                log(data, "online:error");
-                        }
-                });
-
-        },
-        offline:function(){
-                var self = this, data = self.data;
-                self.status("o", true);
-                self.connection.close();
-                self.layout.removeAllChat();
-                self.stop();
-                ajax({
-                        type: 'post',
-                        url: self.options.urls.offline,
-                        type: 'post',
-                        cache: false,
-                        data: {
-                                status: 'offline',
-                                ticket: data.connection.ticket
-                        }
-                });
- 
-        },
-        refresh:function(){
-                var self = this, data = self.data;
-                if(!data || !data.connection || !data.connection.ticket) return;
-                ajax({
-                        type: 'post',
-                        url: self.options.urls.refresh,
-                        type: 'post',
-                        cache: false,
-                        data: {
-                                ticket: data.connection.ticket
-                        }
-                });
         }
-
 });
 
 var _countDisplay = function(element, count){
@@ -561,7 +453,8 @@ function mapElements(obj){
 function createElement(str){
 	var el = document.createElement("div");
 	el.innerHTML = str;
-	return el.firstChild;
+	el = el.firstChild; // release memory in IE ???
+	return el;
 }
 var tpl = (function(){
 	var dic = null, re = /\<\%\=(.*?)\%\>/ig;
@@ -605,6 +498,7 @@ function widget(name, defaults, prototype){
 		self.className = "webim-" + name;
 		self.options = extend({}, m['defaults'], options);
 		self.element = element || createElement(tpl(self.options.template));
+		self.options.className && addClass(self.element, self.options.className);
 		self.$ = mapElements(self.element);
 		isFunction(self._init) && self._init();
 	}

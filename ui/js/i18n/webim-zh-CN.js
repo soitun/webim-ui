@@ -1,5 +1,5 @@
-﻿webim.i18n.locale = 'zh-CN';
-webim.i18n.store('zh-CN',{
+webim.ui.i18n.locale = 'zh-CN';
+webim.ui.i18n.store('zh-CN',{
         "dt:monthdate": "{{month}}{{date}}日",
         "dt:today": "今天",
         "dt:yesterday": "昨天",
@@ -24,12 +24,12 @@ webim.i18n.store('zh-CN',{
         "dt:sunday": "星期天"
     });
     	
-webim.i18n.store('zh-CN',{
+webim.ui.i18n.store('zh-CN',{
 	"close":"关闭",
 	"minimize":"最小化",
 	"maximize":"最大化",
 	"restore":"还原",
-        "config":"设置",
+        "setting":"设置",
         "notification":"通知",
 	"hotpost":"热帖",
         "chat":"聊天",
@@ -64,7 +64,7 @@ webim.i18n.store('zh-CN',{
 	"friend":"好友",
 	"stranger":"陌生人"
 });
-webim.i18n.store('zh-CN',{
+webim.ui.i18n.store('zh-CN',{
 	"doing": "记录",
 	"album": "相册",
 	"blog": "日志",

@@ -122,7 +122,7 @@ extend(comet.prototype, objectExtend, {
                         //dataType: 'json', //fortest need show
                         timeout: 40000,
                         cache: false,
-                        self: self,
+                        context: self,
                         success: self._onPollSuccess,
                         error: self._onPollError
                 };
@@ -139,7 +139,7 @@ extend(comet.prototype, objectExtend, {
         },
 
         _onPollSuccess: function(d){
-                var self = this.self || this;
+                var self = this;
                 self._onPolling = false;
                 if (!self._connecting) 
                 return;//已断开连接

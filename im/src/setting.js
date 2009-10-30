@@ -5,6 +5,7 @@
 * 	set
 *
 * Events:
+* 	update
 * 	
 */
 model("setting",{
@@ -29,8 +30,12 @@ model("setting",{
 			options = {};
 			options[key] = value;
 		}
-		var _old = self.data;
-		if (checkUpdate(_old, options)) {
+		var _old = self.data,
+			up = checkUpdate(_old, options);
+		if ( up ) {
+			each(up,function(key,val){
+				self.trigger("update",[key,val]);
+			});
 			var _new = extend({}, _old, options);
 			self.data = _new;
 			ajax({

@@ -20,7 +20,7 @@ model("status",{
 		var self = this, data = self.data;
 		if (!data){
 			var c = cookie(self.options.key);
-			self.data = c ? toJSON(c) : {};
+			self.data = c ? JSON.parse(c) : {};
 		}else{
 			self._save(data);
 		}
@@ -46,8 +46,8 @@ model("status",{
 	_save: function(data){
 		this.data = data;
 		cookie(this.options.key, JSON.stringify(data), {
-			path: '/',
-			domain: window.document.domain
+			//path: '/',
+			//domain: document.domain
 		});
 	}
 });

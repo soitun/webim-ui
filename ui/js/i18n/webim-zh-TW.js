@@ -1,5 +1,5 @@
-﻿webim.i18n.locale = 'zh-TW';
-webim.i18n.store('zh-TW',{
+﻿webim.ui.i18n.locale = 'zh-TW';
+webim.ui.i18n.store('zh-TW',{
         "dt:monthdate": "{{month}}{{date}}日",
         "dt:today": "今天",
         "dt:yesterday": "昨天",
@@ -24,7 +24,7 @@ webim.i18n.store('zh-TW',{
         "dt:sunday": "星期天"
     });
     	
-webim.i18n.store('zh-TW',{
+webim.ui.i18n.store('zh-TW',{
 	"new message":"有新消息",
 	"close":"關閉",
 	"minimize":"最小化",

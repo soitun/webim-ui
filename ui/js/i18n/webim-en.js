@@ -1,5 +1,5 @@
-﻿webim.i18n.locale = 'en';
-webim.i18n.store('en',{
+﻿webim.ui.i18n.locale = 'en';
+webim.ui.i18n.store('en',{
         "dt:monthdate": "{{month}}{{date}}",
         "dt:today": "Today",
         "dt:yesterday": "Yesterday",
@@ -24,7 +24,7 @@ webim.i18n.store('en',{
         "dt:sunday": "Sunday"
     });
     	
-webim.i18n.store('en',{
+webim.ui.i18n.store('en',{
 	"new message":"New Message",
 	"close":"Close",
 	"minimize":"Minimize",

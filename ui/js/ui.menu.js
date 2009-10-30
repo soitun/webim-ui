@@ -2,30 +2,27 @@
 /* ui.menu:
  *
  options:
- attributes£º
+ attributes
 
  methods:
- check_tag
+ 	add
 
  destroy()
  events: 
- change
 
  */
 widget("menu",{
-        event:'click',
         template: '<div id="webim-menu" class="webim-menu">\
-                        <ul id=":ul"></ul>\
+                        <ul id=":ul"><%=list%></ul>\
                         <div id=":empty" class="webim-menu-empty"><%=empty menu%></div>\
                   </div>',
-        template_li: '<li><a href="<%=link%>" target="<%=target%>"><img src="<%=icon%>"/><span><%=title%></span></a></li>'
+        tpl_li: '<li><a href="<%=link%>" target="<%=target%>"><img src="<%=icon%>"/><span><%=title%></span></a></li>'
 },{
 	_init: function(){
 		var self = this, element = self.element, options = self.options;
-		return;
 		var win = options.window;
 		if(win){
-			win.bind("displayStateChange", function(e, type){
+			win.bind("displayStateChange", function(type){
 				if(type != "minimize"){
 					self._fitUI();
 				}
@@ -33,20 +30,39 @@ widget("menu",{
 		}
 		//self._initEvents();
 	},
+	template: function(){
+		var self = this, temp = [], data = self.options.data;
+		data && each(data, function(i, val){
+			temp.push(self._li_tpl(val));
+		}) && data.length && hide(self.$.empty);
+		return tpl(self.options.template,{
+		   list:temp.join("")
+		});
+	},
+	_li_tpl: function(data){
+		return tpl(this.options.tpl_li, {
+			title: i18n(data.title),
+			icon: data.icon,
+			link: data.link,
+			target: data.isExtlink ? "_blank" : ""
+		});
+	},
 	_fitUI:function(){
 		var el = this.element;
-		el.height() > 300 && el.height(300);
+		if(el.clientHeight > 300)
+			el.style.height = 300 + "px";
 	},
-	add: function(title,icon,link, isExtlink){
+	add: function(data){
 		var self = this;
-		var ui = self.ui, template_li = self.options.template_li;
-		ui.empty.hide();
-		ui.ul.append(tpl(template_li, {
-			title: i18n(title),
-			icon: icon,
-			link: link,
-			target: isExtlink ? "_blank" : ""
-		}));
+		if(isArray(data)){
+			each(data, function(i,val){
+				self.add(val);
+			});
+			return;
+		}
+                var $ = self.$;
+		hide($.empty);
+		$.ul.appendChild(createElement(self._li_tpl(data)));
 	},
 	destroy: function(){
 	}

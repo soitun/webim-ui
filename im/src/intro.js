@@ -7,5 +7,5 @@
  * Date: 
  * Revision: 
  */
-(function(undefined){
+(function(window, document, undefined){
 

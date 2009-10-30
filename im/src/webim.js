@@ -43,7 +43,7 @@ extend(webim.prototype, objectExtend,{
 		self.setting = new webim.setting();
 		self.buddy = new webim.buddy();
 		self.history = new webim.history();
-		self.online();
+		//self.online();
 	},
         handle:function(data){
                 var self = this;

@@ -62,7 +62,7 @@ var titleShow = (function(){
 				s = false;
 			}
 			if (s) {
-				document.title = "【" + msg + "】" + title;
+				document.title = "[" + msg + "]" + title;
 			}
 			else {
 				document.title = title;

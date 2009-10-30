@@ -2,7 +2,7 @@
 /* ui.menu:
  *
  options:
- attributes£º
+ attributesÂ£Âº
 
  methods:
  check_tag

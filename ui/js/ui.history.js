@@ -23,29 +23,28 @@ widget("history",{
 },{
 	_init: function(){
 		var self = this, element = self.element, options = self.options;
-		return;
 		plugin.call(self, "init", [null, self.plugin_ui()]);
 	},
 	clear:function(){
 		var self = this;
-		self.ui.content.empty();
+		self.$.content.innerHTML = "";
 		self.trigger("clear");
 	},
 	add: function(data){
-		data = $.makeArray(data);
+		data = makeArray(data);
 		var self = this, l = data.length, markup = [];
 		if(!l)return;
 		for (var i = 0; i < l; i++){
 			var val = data[i];
 			markup.push(self._renderMsg(val));
 		}
-		self.ui.content.append(markup.join(''));
+		self.$.content.innerHTML += markup.join('');
 		self.trigger("update");
 	},
 	_renderMsg: function(logItem){
 		var self = this;
-		logItem = $.extend({}, logItem);
-		webim.ui.plugin.call(self, "render", [null, self.plugin_ui({msg: logItem})]);
+		logItem = extend({}, logItem);
+		plugin.call(self, "render", [null, self.plugin_ui({msg: logItem})]);
 		var  from = logItem.from, to = logItem.to, time = logItem.timestamp, msg = logItem.body, shouldTilte = true, last = self._lastLogItem, markup = [], buddyInfo = self.options.buddyInfo, userInfo = self.options.userInfo;
 		var fromSelf = from != buddyInfo.id;
 		var fromToSelf = fromSelf && from == to;
@@ -57,7 +56,7 @@ widget("history",{
 		//markup.push(self._renderDateBreak(time));
 		if (shouldTilte) {
 			self._lastLogItem = logItem;
-			var t = (new webim.date(time));
+			var t = (new date(time));
 			markup.push('<h4><span class="webim-gray">');
 			markup.push(t.getDay(true));
 			markup.push(" ");
@@ -78,17 +77,17 @@ widget("history",{
 		last && lastDate.setTime(last.timestamp);
 		if(!last || newDate.getDate() != lastDate.getDate() || newDate.getMonth() != lastDate.getMonth()){
 			markup.push("<h5>");
-			markup.push((new webim.date(time)).getDay(true));
+			markup.push((new date(time)).getDay(true));
 			markup.push("</h5>");
 		}
 		return markup.join("");
 	},
-	plugin_ui:function(extend){
+	plugin_ui:function(ext){
 		var self = this;
-		return $.extend({
+		return extend({
 			element: self.element,
-			ui: self.ui
-		}, extend);
+			$: self.$
+		}, ext);
 	},
 	plugins:{}
 
@@ -107,7 +106,7 @@ var autoLinkUrls = (function(){
 		}
 		return function(str, attrs){
 			attrStr = "";
-			attrs && isObject(attrs) && $.each(attrs, serialize);
+			attrs && isObject(attrs) && each(attrs, serialize);
 			return str.replace(/(https?:\/\/|www\.)([^\s<]+)/ig, filterUrl);
 		};
 })();
@@ -125,9 +124,8 @@ plugin.add("history","parseMsg",{
 webimUI.history.defaults.emot = true;
 plugin.add("history","emot",{
 	render:function(e, ui){
-		ui.msg.body = webim.ui.emot.parse(ui.msg.body);
+		ui.msg.body = webimUI.emot.parse(ui.msg.body);
 	}
 });
-
 
 

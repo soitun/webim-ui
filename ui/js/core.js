@@ -1,3 +1,17 @@
+var log = webim.log,
+idsArray = webim.idsArray,
+now = webim.now,
+isFunction = webim.isFunction,
+isArray = webim.isArray,
+isObject = webim.isObject,
+trim = webim.trim,
+makeArray = webim.makeArray,
+extend = webim.extend,
+each = webim.each,
+inArray = webim.inArray,
+grep = webim.grep,
+map = webim.map;
+
 function returnFalse(){
 	return false;
 }
@@ -62,19 +76,17 @@ function hoverClass(obj, name){
 		removeClass(this, name);
 	});
 }
-function toggleClass(obj, _old, _new){
-	removeClass(obj,_old);
-	addClass(obj, _new);
+function toggleClass(obj, name, is){
+	if(typeof is === "boolean")
+		is ? addClass(obj, name) : removeClass(obj,name);
+	else
+		hasClass(obj, name) ? removeClass(obj,name) : addClass(obj, name);
 }
 function show(obj){
-	if(obj && obj.style && obj.style.display=="none"){
-		obj.style.display = "";
-	}
+	obj && obj.style && (obj.style.display="block")
 }
 function hide(obj){
-	if(obj && obj.style && obj.style.display!="none"){
-		obj.style.display = "none";
-	}
+	obj && obj.style && (obj.style.display="none")
 }
 function remove(obj){
 	obj && obj.parentNode && (obj.parentNode.removeChild(obj));
@@ -84,7 +96,7 @@ function addEvent( obj, type, fn ) {
 		obj.addEventListener( type, fn, false );
 	} else{
 		obj['e'+type+fn] = fn;
-		obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
+		obj[type+fn] = function(){return obj['e'+type+fn]( window.event );}
 		obj.attachEvent( 'on'+type, obj[type+fn] );
 	}
 }

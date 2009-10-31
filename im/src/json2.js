@@ -1,6 +1,6 @@
 /*
     http://www.JSON.org/json2.js
-    2009-06-29
+    2009-09-29
 
     Public Domain.
 
@@ -33,7 +33,7 @@
             value represented by the name/value pair that should be serialized,
             or undefined if nothing should be serialized. The toJSON method
             will be passed the key associated with the value, and this will be
-            bound to the object holding the key.
+            bound to the value
 
             For example, this would serialize Dates as ISO strings.
 
@@ -144,7 +144,7 @@
     NOT CONTROL.
 */
 
-/*jslint evil: true */
+/*jslint evil: true, strict: false */
 
 /*members "", "\b", "\t", "\n", "\f", "\r", "\"", JSON, "\\", apply,
     call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,
@@ -153,10 +153,13 @@
     test, toJSON, toString, valueOf
 */
 
+
 // Create a JSON object only if one does not already exist. We create the
 // methods in a closure to avoid creating global variables.
 
-var JSON = JSON || {};
+if (!this.JSON) {
+    this.JSON = {};
+}
 
 (function () {
 
@@ -459,8 +462,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 // in JavaScript: it can begin a block or an object literal. We wrap the text
 // in parens to eliminate the ambiguity.
 
-                j = (new Function("return " + text))();
-
+                j = (new Function( ' return ' + text))();
 
 // In the optional fourth stage, we recursively walk the new structure, passing
 // each name/value pair to a reviver function for possible transformation.
@@ -475,4 +477,3 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         };
     }
 }());
-

@@ -10,7 +10,7 @@ webim.defaults.urls = {
 	refresh:path + "webim/refresh.php",
 	status:path + "webim/status.php"
 };
-webim.setting.url = path + "webim/setting.php";
+webim.setting.defaults.url = path + "webim/setting.php";
 webim.history.defaults.urls = {
 	load: path + "webim/histories.php",
 	clear: path + "webim/clear_history.php"

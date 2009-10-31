@@ -20,73 +20,69 @@
  */
 
 widget("buddy",{
-        event:'click',
         template: '<div id="webim-buddy" class="webim-buddy">\
                         <div id=":online" class="webim-buddy-online"><a class="ui-state-default ui-corner-all" href="#online"><%=online%></a></div>\
-                        <div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input type="text" value="" /></div>\
+                        <div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
                         <div class="webim-buddy-content">\
                                 <div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
                                 <div id=":offline" class="webim-buddy-offline"><a href="#offline"><%=offline%></a></div>\
                                 <ul id=":ul"></ul>\
                         </div>\
                   </div>',
-        template_g: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
-        template_li: '<li title=""><a href="<%=link%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="about:blank"/><strong><%=name%></strong><span><%=status%></span></a></li>'
+        tpl_group: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
+        tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>"/><strong><%=name%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
-		var self = this, element = self.element, options = self.options;
-		return;
-		self.template_li = $(options.template_li);
-		self.ul = element.find("ul:first");
+		var self = this;
 		self.groups = {
 		};
-		var ui = self.ui = {
-			online: element.find(".webim-buddy-online"),
-			offline: element.find(".webim-buddy-offline"),
-			search: element.find(".webim-buddy-search"),
-			empty: element.find(".webim-buddy-empty")
+		self.li = {
 		};
-		ui.searchInput = ui.search.children("input");
-		self.li = {};
+		self.li_group = {
+		};
 		self._count = 0;
 		self._initEvents();
 	},
 	_initEvents: function(){
-		var self = this, ui = self.ui, search = ui.search, input = ui.searchInput, placeholder = i18n("search buddy"), activeClass = "ui-state-active";
-		search.children("em").click(function(){
+		var self = this, $ = self.$, search = $.search, input = $.searchInput, placeholder = i18n("search buddy"), activeClass = "ui-state-active";
+		addEvent(search.firstChild, "click",function(){
 			input.focus();
 		});
-		input.val(placeholder).focus(function(){
-			search.addClass(activeClass);
+		input.value = placeholder;
+		addEvent(input, "focus", function(){
+			addClass(search, activeClass);
 			if(this.value == placeholder)this.value = "";
-		}).blur(function(){
-			search.removeClass(activeClass);
+		});
+		addEvent(input, "blur", function(){
+			removeClass(search, activeClass);
 			if(this.value == "")this.value = placeholder;
 		});
-		input.bind("keyup", function(e){
-			var list = self.ul.find("ul li");
-			list.show();
-			if (this.value){
-				list.not(":contains('" + this.value + "')").hide();
-			}
+		addEvent(input, "keyup", function(){
+			var list = $.ul.childNodes, val = this.value;
+			each(list,function(n, li){
+				show(li);
+				if(val && li.innerHTML.indexOf(val) == -1) hide(li);
+			});
 		});
-		ui.online.children("a").click(function(){
+		var a = $.online.firstChild;
+		addEvent(a, "click", function(e){
+			preventDefault(e);
 			self.trigger("online");
-			return false;
-		}).hover(_hoverCss, _outCss);
-		ui.offline.children("a").click(function(){
+		});
+		hoverClass(a, "ui-state-hover");
+		addEvent($.offline.firstChild, "click", function(e){
+			preventDefault(e);
 			self.trigger("offline");
-			return false;
 		});
 
 	},
 	_titleCount: function(){
-		var self = this, _count = self._count, win = self.window, empty = self.ui.empty, element = self.element;
+		var self = this, _count = self._count, win = self.window, empty = self.$.empty, element = self.element;
 		win && win.title(i18n("chat") + "(" + (_count ? _count : "0") + ")");
 		if(!_count){
-			empty.show();
+			show(empty);
 		}else{
-			empty.hide();
+			hide(empty);
 		}
 		if(_count > 8){
 			self.scroll(true);
@@ -95,7 +91,7 @@ widget("buddy",{
 		}
 	},
 	scroll:function(is){
-		this.element.toggleClass("webim-buddy-scroll", is);
+		toggleClass(this.element, "webim-buddy-scroll", is);
 	},
 	_time:null,
 	_titleBuddyOnline: function(name){
@@ -128,59 +124,62 @@ widget("buddy",{
 		}
 	},
 	online: function(){
-		var self = this, ui = self.ui, win = self.window;
+		var self = this, $ = self.$, win = self.window;
 		self.notice("connect");
-		ui.online.hide();
-		ui.offline.show();
+		hide($.online);
+		show($.offline);
 	},
 	offline: function(){
-		var self = this, ui = self.ui, win = self.window;
+		var self = this, $ = self.$, win = self.window;
 		self.notice("offline");
-		ui.online.show();
-		ui.offline.hide();
-		ui.empty.hide();
+		show($.online);
+		hide($.offline);
+		hide($.empty);
 		self.scroll(false);
 		self.removeAll();
 	},
 	_updateInfo:function(el, info){
-		el.find("strong").html(info.name);
-		el.find("span").html(info.status);
-		el.find("img").attr("src", info.pic_url);
-		el.find("a").attr("href", info.url);
+		el = el.firstChild;
+		el.setAttribute("href", info.url);
+		el = el.firstChild;
+		el.setAttribute("src", info.pic_url);
+		el = el.nextSibling;
+		el.innerHTML = info.name;
+		el = el.nextSibling;
+		el.innerHTML = info.status;
 		return el;
 	},
-	_handler: function(e){
-		e.preventDefault();
-		var d = e.data;
-		d.self.trigger("select", [d.data]);
-		this.blur();
-	},
 	_addOne:function(info){
-		var self = this, li = self.li, id = info.id, event = self.options.event;
+		var self = this, li = self.li, id = info.id, ul = self.$.ul;
 		if(!li[id]){
-			var el = li[id] = self.template_li.clone();
-			self._updateInfo(el, info);
-			var a = el.children('a').bind(event + ".buddy",{self: self, data: info}, self._handler);
-			if(event != 'click')
-				a.bind('click', returnFalse);
+			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
+			//self._updateInfo(el, info);
+			var a = el.firstChild;
+			addEvent(a, "click",function(e){
+				preventDefault(e);
+				self.trigger("select", [info]);
+				this.blur();
+			});
 
 			var groups = self.groups, group_name = i18n(info["group"] || "friend"), group = groups[group_name];
 			if(!group){
-				var g_el = $(self.options.template_g).hide().appendTo(self.ul);
+				var g_el = createElement(tpl(self.options.tpl_group));
+				hide(g_el);
+				ul.appendChild(g_el);
 				group = {
 					name: group_name,
 					el: g_el,
 					count: 0,
-					title: g_el.children("h4"),
-					li: g_el.children("ul")
+					title: g_el.firstChild,
+					li: g_el.lastChild
 				};
 				self.groups[group_name] = group;
 			}
-			if(group.count == 0) group.el.show();
-			el.data("group",group);
-			group.li.append(el);
+			if(group.count == 0) show(group.el);
+			self.li_group[id] = group;
+			group.li.appendChild(el);
 			group.count++;
-			group.title.html(group_name + "("+ group.count+")");
+			group.title.innerHTML = group_name + "("+ group.count+")";
 		}
 	},
 	_updateOne:function(info){
@@ -188,13 +187,13 @@ widget("buddy",{
 		li[id] && self._updateInfo(li[id], info);
 	},
 	update: function(data, index){
-		data = $.makeArray(data);
+		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
 			this._updateOne(data[i]);
 		}
 	},
 	add: function(data, index){
-		data = $.makeArray(data);
+		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
 			this._addOne(data[i]);
 		}
@@ -213,20 +212,20 @@ widget("buddy",{
 			id = ids[i];
 			el = li[id];
 			if(el){
-				group = el.data("group");
+				group = li_group[id];
 				if(group){
 					group.count --;
-					if(group.count == 0)group.el.hide();
-					group.title.html(group.name + "("+ group.count+")");
+					if(group.count == 0)hide(group.el);
+					group.title.innerHTML = group.name + "("+ group.count+")";
 				}
-				el.remove();
+				remove(el);
 				delete(li[id]);
 			}
 		}
 	},
 	select: function(id){
-		var self = this, el = self.li[id], event = self.options.event;
-		el && el.trigger(event + ".buddy");
+		var self = this, el = self.li[id];
+		el && el.firstChild.click();
 		return el;
 	},
 	destroy: function(){

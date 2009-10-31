@@ -172,6 +172,9 @@ widget("window", {
 		self.deactivate();
 		self._changeState("minimize");
 	},
+	tabClose: function(){
+		this.close();
+	},
 	close: function(){
 		var self = this;
 		self.trigger("close");
@@ -197,7 +200,7 @@ widget("window", {
 		addEvent(tab,"mousedown",stop);
 		disableSelection(tab);
 
-		each(["minimize", "maximize", "close"], function(n,v){
+		each(["minimize", "maximize", "close", "tabClose"], function(n,v){
 			addEvent($[v], "click", function(e){
 				if(!this.disabled)self[v]();
 				stop(e);

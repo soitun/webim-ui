@@ -2,9 +2,9 @@
 //date.init(serverTime);设置时差
 //date()
 function date(time){
-        var date = (new Date());
-        date.setTime(time ? (parseFloat(time) + date.timeSkew) : (new Date()).getTime());
-        this.date = date;
+        var d = (new Date());
+        d.setTime(time ? (parseFloat(time) + date.timeSkew) : (new Date()).getTime());
+        this.date = d;
 };
 date.timeSkew = 0;
 date.init = function(serverTime){//设置本地时间和服务器时间差

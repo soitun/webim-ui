@@ -1,13 +1,20 @@
-widget("emot", {},{
+widget("emot", {
+                template: '<div class="webim-emot ui-widget-content"><%=emots%></div>'
+},{
         _init: function(options){
-                var self = this, element = self.element, options = self.options;
-                if(!element){
-                        element = self.element = $(tpl(options.template)).addClass('webim-emot');
-                }
-                var emots = self.emots = webim.ui.emot.emots;
+                var self = this, element = self.element;
+		each(element.firstChild.childNodes, function(i,v){
+			addEvent(v, "click", function(e){
+				removeClass(element, "webim-emot-show");
+				self.trigger('select', this.firstChild.getAttribute('alt'));
+			});
+		});
+        },
+	template: function(){
+                var self = this, emots = self.emots = webim.ui.emot.emots;
                 var markup = [];
                 markup.push('<ul class="ui-helper-clearfix">');
-                $.each(emots, function(n, v){
+                each(emots, function(n, v){
                     var src = v.src, title = v.t ? v.t : v.q[0];
                     markup.push('<li><img src="');
                     markup.push(src);
@@ -18,19 +25,14 @@ widget("emot", {},{
                     markup.push('" /></li>');
                 });
                 markup.push('</ul>');
-                element.html(markup.join('')).find('li').click(function(){
-                        self.element.removeClass("webim-emot-show");
-                        self.trigger('select', $(this).children().attr('alt'));
-                });
-        },
+		return tpl(self.options.template, { emots: markup.join('')});
+
+	},
         toggle: function(){
-                this.element.toggleClass("webim-emot-show");
+                toggleClass(this.element, "webim-emot-show");
         }
 });
 extend(webimUI.emot, {
-        defaults: {
-                template: '<div class="webim-emot ui-widget-content"></div>'
-        },
         emots: [
                 {"t":"smile","src":"smile.png","q":[":)"]},
                 {"t":"smile_big","src":"smile-big.png","q":[":d",":-d",":D",":-D"]},
@@ -51,17 +53,17 @@ extend(webimUI.emot, {
         ],
         init: function(options){
             var emot = webim.ui.emot, q = emot._q = {};
-            options = $.extend({
+            options = extend({
                 dir: 'webim/static/emot/default'
             }, options);
             if (options.emots) 
                 emot.emots = options.emots;
             var dir = options.dir + "/";
-            $.each(emot.emots, function(key, v){
+            each(emot.emots, function(key, v){
                 if (v && v.src) 
                     v.src = dir + v.src;
                 v && v.q &&
-                $.each(v.q, function(n, val){
+                each(v.q, function(n, val){
                     q[val] = key;
 
                 });
@@ -70,7 +72,7 @@ extend(webimUI.emot, {
         },
         parse: function(str){
             var q = webim.ui.emot._q, emots = webim.ui.emot.emots;
-            q && $.each(q, function(n, v){
+            q && each(q, function(n, v){
                 var emot = emots[v], src = emot.src, title = emot.t ? emot.t : emot.q[0], markup = [];
                 markup.push('<img src="');
                 markup.push(src);

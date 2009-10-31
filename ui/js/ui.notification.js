@@ -29,13 +29,14 @@ widget("notification",{
                                 }
                         });
                 }
+		options.data && options.data.length && hide(self.$.empty);
                 //self._initEvents();
         },
 	template: function(){
 		var self = this, temp = [], data = self.options.data;
 		data && each(data, function(i, val){
 			temp.push(self._li_tpl(val));
-		}) && data.length && hide(self.$.empty);
+		});
 		return tpl(self.options.template,{
 		   list:temp.join("")
 		});

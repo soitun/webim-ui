@@ -23,12 +23,11 @@ function ieCacheSelection(e){
         document.selection && (this.caretPos = document.selection.createRange());
 }
 widget("chat",{
-        event:'click',
         template:'<div class="webim-chat"> \
                                                 <div id=":header" class="webim-chat-header ui-widget-subheader">  \
                                                         <div id=":user" class="webim-user"> \
                                                                 <a id=":userPic" class="webim-user-pic" href="#id"><img src="about:blank"></a> \
-                                                                <span id="userStatus" title="" class="webim-user-status">Hello</span> \
+                                                                <span id=":userStatus" title="" class="webim-user-status">Hello</span> \
                                                         </div> \
                                                 </div> \
                                                                                                                                         <div class="webim-chat-notice-wrap"><div id=":notice" class="webim-chat-notice ui-state-highlight"></div></div> \
@@ -54,26 +53,16 @@ widget("chat",{
                                         </div>'
 },{
 	_init: function(){
-		var self = this, element = self.element, options = self.options;
-		return;
-		var win = self.window = options.window;
-		if(!element){
-			if(!win){
-				throw "[webim.ui.chat]Where is window?";
-				return;
-			}
-			element = self.element = $(tpl(options.template));
-			win.html(element);
-		}
-		element.data("chat", self);
+		var self = this, element = self.element, options = self.options, win = self.window = options.window;
 		var history = self.history = new webimUI.history(null,{
 			userInfo: options.userInfo,
 			buddyInfo: options.buddyInfo
 		});
-		history.element.prependTo($.content);
+		self.$.content.insertBefore(history.element, self.$.content.firstChild);
 		self._initEvents();
 		if(win){
-			self._bindWindow();
+			win.html(element);
+			//self._bindWindow();
 			//self._fitUI();
 		}
 		self.update(options.buddyInfo);
@@ -108,46 +97,42 @@ widget("chat",{
 		if(time)clearTimeout(time);
 		if(!text){
 			self._noticeTxt = null;
-			content.hide();
+			hide(content);
 			return;
 		}
 		if(timeOut){
-			content.html(text).show();
+			content.innerHTML = text;
+			show(content);
 			setTimeout(function(){
 				if(self._noticeTxt)
-					content.html(self._noticeTxt);
-				else content.fadeOut(500);
+					content.innerHTML = self._noticeTxt;
+				else hide(content, 500);
 			}, timeOut);
 
 		}else{
 			self._noticeTxt = text;
-			content.html(text).show();
+			content.innerHTML = text;
+			show(content);
 		}
 	},
 	_adjustContent: function(){
 		var content = this.$.content;
-		content.scrollTop(content[0].scrollHeight);
+		content.scrollTop = content.scrollHeight;
 	},
 	_fitUI: function(e){
-		var self = (e && e.data && e.data.self) || this, win = self.window, $ = self.$;
+		var self = this, win = self.window, $ = self.$;
 		self._adjustContent();
 
 	},
-	_focus: function(e, type){
-		var self = e.data.self;
-		if(type != "minimize"){
-			self.$.input.focus();
-			self._adjustContent();
-		}
-	},
 	_bindWindow: function(){
 		var self = this, win = self.window;
-		win.bind("displayStateChange", {self: self}, self._focus);
+		win.bind("displayStateChange", function(type){
+			if(type != "minimize"){
+				self.$.input.focus();
+				self._adjustContent();
+			}
+		});
 		//win.bind("resize",{self: self}, self._fitUI);
-	},
-	_onHistoryUp:function(e){
-		var self = (e && e.data && e.data.self) || this;
-		self._adjustContent();
 	},
 	_inputAutoHeight:function(){
 		var el = this.$.input, scrollTop = el[0].scrollTop;
@@ -155,11 +140,6 @@ widget("chat",{
 			var h = el.height();
 			if(h> 32 && h < 100) el.height(h + scrollTop);
 		}
-	},
-	_inputkeyup: function(e){
-		ieCacheSelection.call(this);
-		var self = e.data.self;
-		//self._inputAutoHeight();
 	},
 	_sendMsg: function(val){
 		var self = this, options = self.options, buddyInfo = options.buddyInfo;
@@ -177,17 +157,17 @@ widget("chat",{
 		//self.sendStatus("");
 	},
 	_inputkeypress: function(e){
-		var self = (e && e.data && e.data.self) || this, $ = self.$;
+		var self =  this, $ = self.$;
 		if (e.keyCode == 13){
 			if(e.ctrlKey){
 				self.insert("\n", true);
 				return true;
 			}else{
-				var el = $(this), val = el.val();
-				if ($.trim(val)) {
+				var el = target(e), val = el.value;
+				if (trim(val)) {
 					self._sendMsg(val);
-					el.val('');
-					e.preventDefault();
+					el.value = "";
+					preventDefault(e);
 				}
 			}
 		}
@@ -195,7 +175,7 @@ widget("chat",{
 
 	},
 	_onFocusInput: function(e){
-		var self = e.data.self, el = e.target;
+		var self = this, el = target(e);
 
 		//var val = el.setSelectionRange ? el.value.substring(el.selectionStart, el.selectionEnd) : (window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : ""));
 		var val = window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : "");
@@ -203,29 +183,41 @@ widget("chat",{
 	},
 	_initEvents: function(){
 		var self = this, options = self.options, $ = self.$, placeholder = i18n("input notice"), gray = "webim-gray", input = $.input;
-		self.history.bind("update",{self:self}, self._onHistoryUp).bind("clear", function(){
+
+		self.history.bind("update", function(){
+			self._adjustContent();
+		}).bind("clear", function(){
 			self.notice(i18n("clear history notice"), 3000);
 		});
 		//输入法中，进入输入法模式时keydown,keypress触发，离开输入法模式时keyup事件发生。
 		//autocomplete之类事件放入keyup，回车发送事件放入keydown,keypress
 
-		input.bind('keyup',{self:self}, self._inputkeyup).click(ieCacheSelection).select(ieCacheSelection).focus(function(){
-			input.removeClass(gray);
+		addEvent(input,'keyup',function(){
+			ieCacheSelection.call(this);
+		});
+		addEvent(input,"click", ieCacheSelection);
+		addEvent(input,"select", ieCacheSelection);
+		addEvent(input,'focus',function(){
+			removeClass(this, gray);
 			if(this.value == placeholder)this.value = "";
-		}).blur(function(){
+		});
+		addEvent(input,'blur',function(){
 			if(this.value == ""){
-				input.addClass(gray);
+				addClass(this, gray);
 				this.value = placeholder;
 			}
-		}).bind("keypress", {self: self},self._inputkeypress);
-		$.content.bind("click", {self : self}, self._onFocusInput);
+		});
+		addEvent(input,'keypress',function(e){
+			self._inputkeypress(e);
+		});
+		addEvent($.content, "click", function(e){self._onFocusInput(e)});
 
 	},
 	_updateInfo:function(info){
 		var self = this, $ = self.$;
-		$.userPic.attr("href", info.url);
-		$.userPic.children().attr("src", info.pic_url);
-		$.userStatus.html(info.status);
+		$.userPic.setAttribute("href", info.url);
+		$.userPic.firstChild.setAttribute("src", info.pic_url);
+		$.userStatus.innerHTML = info.status;
 		self.window.title(info.name);
 	},
 	insert:function(value, isCursorPos){
@@ -233,17 +225,16 @@ widget("chat",{
 		var self = this,input = self.$.input;
 		input.focus();
 		if(!isCursorPos){
-			input.val(value);
+			input.value = value;
 			return;
 		}
 		if(!value) value = "";
-		input = input.get(0);
 		if(input.setSelectionRange){
 			var val = input.value, rangeStart = input.selectionStart, rangeEnd = input.selectionEnd, tempStr1 = val.substring(0,rangeStart), tempStr2 = val.substring(rangeEnd), len = value.length;  
 			input.value = tempStr1+value+tempStr2;  
 			input.setSelectionRange(rangeStart+len,rangeStart+len);
 		}else if(document.selection){
-			var caretPos = $.data(input, "caretPos");
+			var caretPos = input.caretPos;
 			if(caretPos){
 				caretPos.text = value;
 				caretPos.collapse();
@@ -282,24 +273,24 @@ widget("chat",{
 		type = type || 'clear';
 		var self = this, el = self.$.status, name = self.options.buddyInfo.name, markup = '';
 		markup = type == 'clear' ? '' : name + i18n(type);
-		el.html(markup);
+		el.innerHTML = markup;
 		self._adjustContent();
 		if (self._setST)  clearTimeout(self._setST);
 		if (markup != '') 
 			self._setST = window.setTimeout(function(){
-				el.html('');
+				el.innerHTML = '';
 			}, 10000);
 	},
 	destroy: function(){
 		this.window.close();
 	},
-	plugin_ui:function(extend){
+	plugin_ui:function(ext){
 		var self = this;
-		return $.extend({
+		return extend({
 			self: self,
-			ui: self.$,
+			$: self.$,
 			history: self.history
-		}, extend);
+		}, ext);
 	},
 	plugins: {}
 });
@@ -308,18 +299,18 @@ webimUI.chat.defaults.emot = true;
 plugin.add("chat","emot",{
 	init:function(e, ui){
 		var chat = ui.self;
-		var emot = new webimUI.emot(null,{
-			select: function(e, alt){
-				chat.focus();
-				chat.insert(alt, true);
-			}
+		var emot = new webimUI.emot();
+		emot.bind("select",function(alt){
+			chat.focus();
+			chat.insert(alt, true);
 		});
-		var trigger = $(tpl('<a href="#chat-emot" title="<%=emot%>"><em class="webim-icon webim-icon-emot"></em></a>')).click(function(){
+		var trigger = createElement(tpl('<a href="#chat-emot" title="<%=emot%>"><em class="webim-icon webim-icon-emot"></em></a>'));
+		addEvent(trigger,"click",function(e){
+			preventDefault(e);
 			emot.toggle();
-			return false;
 		});
-		ui.$.toolContent.append(emot.element);
-		ui.$.tools.append(trigger);
+		ui.$.toolContent.appendChild(emot.element);
+		ui.$.tools.appendChild(trigger);
 	},
 	send:function(e, ui){
 	}
@@ -328,10 +319,11 @@ webimUI.chat.defaults.clearHistory = true;
 plugin.add("chat","clearHistory",{
 	init:function(e, ui){
 		var chat = ui.self;
-		var trigger = $(tpl('<a href="#chat-clearHistory" title="<%=clear history%>"><em class="webim-icon webim-icon-clear"></em></a>')).click(function(){
+		var trigger = createElement(tpl('<a href="#chat-clearHistory" title="<%=clear history%>"><em class="webim-icon webim-icon-clear"></em></a>'));
+		addEvent(trigger,"click",function(e){
+			preventDefault(e);
 			chat.trigger("clearHistory",[chat.options.buddyInfo]);
-			return false;
 		});
-		ui.$.tools.append(trigger);
+		ui.$.tools.appendChild(trigger);
 	}
 });

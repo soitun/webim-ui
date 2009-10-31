@@ -6,7 +6,8 @@ data []所有信息 readonly
 methods:
 get(id)
 handle(data) //handle data and distribute events
-online(ids) // 
+online(ids, loadDelay) // 
+loadDelay()
 offline(ids)
 update(ids) 更新用户信息 有更新时触发events:update
 

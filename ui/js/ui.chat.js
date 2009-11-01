@@ -59,7 +59,7 @@ widget("chat",{
 			buddyInfo: options.buddyInfo
 		});
 		self.$.content.insertBefore(history.element, self.$.content.firstChild);
-		self._initEvents();
+		//self._initEvents();
 		if(win){
 			win.html(element);
 			self._bindWindow();

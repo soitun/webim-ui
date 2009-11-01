@@ -48,7 +48,8 @@ UI_CSS_FILES = ${CSS_BASE_FILES}
 
 UI_JS_FILES = ${JS_SRC_DIR}/intro.js\
 	${JS_BASE_FILES}\
-	${JS_SRC_DIR}/outro.js
+	${JS_SRC_DIR}/outro.js\
+	${JS_SRC_DIR}/swfobject-2.1.js
 
 UI_ALL_JS_FILES = ${IM}\
 	${UI_JS_FILES}\

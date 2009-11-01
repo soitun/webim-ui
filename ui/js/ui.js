@@ -33,8 +33,9 @@ extend(webimUI.prototype, objectExtend, {
 		});
 		self.buddy = new webimUI.buddy(null,{
 		});
+		var menu = [{"title":"doing","icon":"image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon":"image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon":"image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon":"image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon":"image\/app\/share.gif","link":"space.php?do=share"}];
 		self.menu = new webimUI.menu(null,{
-			data:[{"title":"doing","icon":"image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon":"image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon":"image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon":"image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon":"image\/app\/share.gif","link":"space.php?do=share"}]
+			data: menu
 		});
 					    //render start
 		layout.addApp(self.menu, {
@@ -44,6 +45,7 @@ extend(webimUI.prototype, objectExtend, {
 			onlyIcon: false,
 			isMinimize: true
 		},"shortcut");
+		layout.addShortcut(menu);
 		layout.addApp(self.buddy, {
 			title: i18n("chat"),
 			icon: "buddy",
@@ -323,34 +325,6 @@ var _countDisplay = function(element, count){
 	return count;
 };
 
-var keyCode = {
-	BACKSPACE: 8,
-	CAPS_LOCK: 20,
-	COMMA: 188,
-	CONTROL: 17,
-	DELETE: 46,
-	DOWN: 40,
-	END: 35,
-	ENTER: 13,
-	ESCAPE: 27,
-	HOME: 36,
-	INSERT: 45,
-	LEFT: 37,
-	NUMPAD_ADD: 107,
-	NUMPAD_DECIMAL: 110,
-	NUMPAD_DIVIDE: 111,
-	NUMPAD_ENTER: 108,
-	NUMPAD_MULTIPLY: 106,
-	NUMPAD_SUBTRACT: 109,
-	PAGE_DOWN: 34,
-	PAGE_UP: 33,
-	PERIOD: 190,
-	RIGHT: 39,
-	SHIFT: 16,
-	SPACE: 32,
-	TAB: 9,
-	UP: 38
-};
 function mapElements(obj){
 	var elements = obj.getElementsByTagName("*"), el, id, need = {}, pre = ":";
 	for(var i = elements.length - 1; i > -1; i--){
@@ -427,11 +401,14 @@ function widget(name, defaults, prototype){
 		self.options = extend({}, m['defaults'], options);
 
 		//template
-		self.element = element || createElement(self.template ? self.template() : tpl(self.options.template));
-		self.options.className && addClass(self.element, self.options.className);
-		self.$ = mapElements(self.element);
+		self.element = element || (self.template && createElement(self.template())) || ( self.options.template && createElement(tpl(self.options.template)));
+		if(self.element){
+			self.options.className && addClass(self.element, self.options.className);
+			self.$ = mapElements(self.element);
+		}
 		isFunction(self._init) && self._init();
-		//isFunction(self._initEvents) && self._initEvents();
+		//isFunction(self._initEvents) && setTimeout(function(){self._initEvents()}, 0);
+		isFunction(self._initEvents) && self._initEvents();
 	}
 	m.defaults = defaults;// default options;
 	// add prototype

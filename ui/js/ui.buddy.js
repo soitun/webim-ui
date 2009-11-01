@@ -43,7 +43,7 @@ widget("buddy",{
 		self.li_group = {
 		};
 		self._count = 0;
-		self._initEvents();
+		//self._initEvents();
 	},
 	_initEvents: function(){
 		var self = this, $ = self.$, search = $.search, input = $.searchInput, placeholder = i18n("search buddy"), activeClass = "ui-state-active";

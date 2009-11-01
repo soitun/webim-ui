@@ -94,7 +94,7 @@ widget("window", {
 			remove($.tabTip);
 		}
 		options.count && self.notifyUser("information", options.count);
-		self._initEvents();
+		//self._initEvents();
 		//self._fitUI();
 		//setTimeout(function(){self.trigger("ready");},0);
 		winManager(self);

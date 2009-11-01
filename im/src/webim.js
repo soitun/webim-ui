@@ -99,12 +99,9 @@ extend(webim.prototype, objectExtend,{
 	},
 	handle:function(data){
 		var self = this;
-		if(data.messages.length)
-			self.trigger("message",[data.messages]);
-		if(data.presences.length)
-			self.trigger("presence",[data.presences]);
-		if(data.statuses.length)
-			self.trigger("status",[data.statuses]);
+		data.messages && data.messages.length && self.trigger("message",[data.messages]);
+		data.presences && data.presences.length && self.trigger("presence",[data.presences]);
+		data.statuses && data.statuses.length && self.trigger("status",[data.statuses]);
 	},
 	sendMsg: function(msg){
 		var self = this;

@@ -76,12 +76,11 @@ widget("layout",{
                     </div>',
         shortcutLength:5,
         chatAutoPop: true,
-        template_s: '<div class="webim-window-tab-wrap ui-widget webim-shortcut-item">\
-                                            <a class="webim-window-tab" href="{{link}}" target="{{target}}">\
+        tpl_shortcut: '<div class="webim-window-tab-wrap ui-widget webim-shortcut-item"><a class="webim-window-tab" href="<%=link%>" target="<%=target%>">\
                                                     <div class="webim-window-tab-tip">\
-                                                            <strong>{{title}}</strong>\
+                                                            <strong><%=title%></strong>\
                                                     </div>\
-                                                    <em class="webim-icon" style="background-image:url({{icon}})"></em>\
+                                                    <em class="webim-icon" style="background-image:url(<%=icon%>)"></em>\
                                             </a>\
                                             </div>'
 },{
@@ -103,7 +102,7 @@ widget("layout",{
 		});
 
 		//self.addShortcut(options.shortcuts);
-		self._initEvents();
+		//self._initEvents();
 		options.isMinimize && self.collapse();
 		//self.buildUI();
 		//self.element.parent("body").length && self.buildUI();
@@ -439,27 +438,20 @@ widget("layout",{
 	removeAllChat: function(){
 		this.removeChat(this.tabIds);
 	},
-	addShortcut: function(title,icon,link, isExtlink){
+	addShortcut: function(data){
 		var self = this;
-		if(isArray(title)){
-			each(title, function(n,v){
+		if(isArray(data)){
+			each(data, function(n,v){
 				self.addShortcut(v);
 			});
 			return;
-
-		}else if(isObject(title)){
-			self.addShortcut(title.title, title.icon, title.link, title.isExtlink);
-			return;
-		}else if(typeof title != "string"){
-			return;
 		}
-		var self = this, content = self.$.shortcut, temp = self.options.template_s;
-		self.menu.add(title,icon,link, isExtlink);
-		if(content.children().length > self.options.shortcutLength)return;
-		temp = $(tpl(temp,{title: i18n(title), icon: icon, link: link, target: isExtlink ? "_blank" : ""}));
+		var content = self.$.shortcut, temp = self.options.tpl_shortcut;
+		if(content.childNodes.length > self.options.shortcutLength + 1)return;
+		temp = createElement(tpl(temp,{title: i18n(data.title), icon: data.icon, link: data.link, target: data.isExtlink ? "_blank" : ""}));
 
-		temp.find("a").hover(_hoverCss, _outCss);
-		content.append(temp);
+		hoverClass(temp.firstChild, "ui-state-hover");
+		content.appendChild(temp);
 	},
 	addWindow: function(){
 		new webimUI.window(null, {

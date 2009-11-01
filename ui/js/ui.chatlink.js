@@ -25,48 +25,61 @@ widget("chatlink",{
 	offline: true
 },{
 	_init: function(){
-		var self = this, element = self.element, ids = {}, options = self.options, filterId = options.filterId, links = {}, offline = options.offline;
-
-		var tpl = $('<span class="webim-chatlink-disable webim-chatlink'+(options.offline ? '' : ' webim-chatlink-no-offline')+'"><span class="webim-chatlink-off-i"></span><span class="webim-chatlink-on-i"></span></span>').click(function(e){
-			self.trigger("select", this.id);
-			e.stopPropagation();
-			return false;
-		});
-
-		var a = element ? element.find("a") : $("a"), b;
-		a.filter(function(e){
-			var id = filterId(this.href), text = this.innerHTML;
-			if(id && $(this).children().length == 0 && text){
+		var self = this, element = self.element, ids = {}, options = self.options, filterId = options.filterId, anthors = {}, offline = options.offline;
+		var a = document.anthors, b;
+		each(a, function(i, el){
+			var id = filterId(el.href), text = el.innerHTML;
+			if(id && el.childNodes.length == 0 && text){
 				ids[id] = true;
-				b = tpl.clone(true).attr({id: id, title: i18n('chat with',{name: text})}).insertAfter(this);
-				links[id] = links[id] ? links[id].add(b) : b;
-				return true;
+				b = self._temp({id: id, title: i18n('chat with',{name: text}), title2: ""});
+				el.parentNode.insertBefore(b, el.nextSibling);
+				anthors[id] = anthors[id] ? anthors[id].push(b) : [b];
 			}
-			return false;
 		});
-		ids = idsArray(ids);
 		var id = filterId(window.location.href);
 		if(id){
-			ids.push(id);
-			b = $("<li class='webim-chatlink-disable'>").append(tpl.removeClass("webim-chatlink-disable").clone(true).attr("id",id)).appendTo($(".spacemenu_list:first,.line_list:first"));
-			b.find("span").not(b.children("span")).html("<a href='javascript:void 0'>"+i18n('chat with me')+"</a>");
-			links[id] = links[id] ? links[id].add(b) : b;
+			ids[id] = true;
+			var el = self._temp({id: id, title: "", title2: "<a href='javascript:void 0'>"+i18n('chat with me')+"</a>" });
+			removeClass(el, "webim-chatlink-disable");
+			b = document.createElement("li");
+			b.className = "webim-chatlink-disable";
+			b.appendChild(el);
+			var els = document.getElementsByTagName("*"), l = els.length;
+			for(var i = 0; i < l ; i++){
+				el = els[i], n = el.className;
+				if(n.indexOf("spacemenu_list")!= -1 || n.indexOf("line_list")!= -1)
+					{
+						el.appendChild(b);
+						break;
+					}
+			}
+			anthors[id] = anthors[id] ? anthors[id].push(b) : [b];
 		}
 		self.ids = ids;
-		self.links = links;
+		self.anthors = anthors;
+	},
+	_temp:function(attr){
+		var self = this;
+		var el = createElement(tpl('<span id="<%=id%>" title="<%=title%>" class="webim-chatlink-disable webim-chatlink'+(self.options.offline ? '' : ' webim-chatlink-no-offline')+'"><span class="webim-chatlink-off-i"><%=title2%></span><span class="webim-chatlink-on-i"><%=title2%></span></span>', attr));
+		addEvent(el, "click", function(e){
+			self.trigger("select", this.id);
+			stopPropagation(e);
+			preventDefault(e);
+		});
+		return el;
 	},
 	disable: function(){
-		var self = this, ids = self.ids, l = ids.length;
-		for(var i = 0; i < l; i++){
-			var li = self.links[ids[i]];
-			li && li.addClass("webim-chatlink-disable");
+		var self = this, ids = self.ids;
+		for(var id in ids){
+			var lis = self.anthors[id];
+			lis && each(lis, function(i, li){ addClass(li, "webim-chatlink-disable")});
 		}
 	},
 	enable: function(){
-		var self = this, ids = self.ids, l = ids.length;
-		for(var i = 0; i < l; i++){
-			var li = self.links[ids[i]];
-			li && li.removeClass("webim-chatlink-disable");
+		var self = this, ids = self.ids;
+		for(var id in ids){
+			var lis = self.anthors[id];
+			lis && each(lis, function(i, li){ removeClass(li, "webim-chatlink-disable")});
 		}
 	},
 	remove: function(ids){
@@ -74,13 +87,11 @@ widget("chatlink",{
 		var self = this, l = ids.length, id;
 		for(var i = 0; i < l; i++){
 			id = ids[i];
-			var li = self.links[id];
-			if(li){
-				li.remove();
-				delete self.links[id];
-				self.ids = $.grep(self.ids, function(v, i){
-					return v != id;
-				});
+			var lis = self.anthors[id];
+			if(lis){
+				each(lis, function(i, li){remove(li)});
+				delete self.anthors[id];
+				delete self.ids[id];
 			}
 		}
 	},
@@ -88,16 +99,17 @@ widget("chatlink",{
 		ids = idsArray(ids);
 		var self = this, l = ids.length;
 		for(var i = 0; i < l; i++){
-			var li = self.links[ids[i]];
-			li && li.addClass("webim-chatlink-on");
+			var lis = self.anthors[ids[i]];
+			lis && each(lis, function(i, li){ addClass(li, "webim-chatlink-on")});
+
 		}
 	},
 	offline: function(ids){
 		ids = idsArray(ids);
 		var self = this, l = ids.length;
 		for(var i = 0; i < l; i++){
-			var li = self.links[ids[i]];
-			li && li.removeClass("webim-chatlink-on");
+			var lis = self.anthors[ids[i]];
+			lis && each(lis, function(i, li){ removeClass(li, "webim-chatlink-on")});
 		}
 	}
 

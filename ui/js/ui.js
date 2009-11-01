@@ -31,8 +31,8 @@ extend(webimUI.prototype, objectExtend, {
 		self.setting = new webimUI.setting(null,{
 			data: im.setting.data
 		});
-		self.buddy = new webimUI.buddy();
-		//(isOffline ? buddyUI.offline() : buddyUI.online());
+		self.buddy = new webimUI.buddy(null,{
+		});
 		self.menu = new webimUI.menu(null,{
 			data:[{"title":"doing","icon":"image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon":"image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon":"image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon":"image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon":"image\/app\/share.gif","link":"space.php?do=share"}]
 		});
@@ -49,7 +49,7 @@ extend(webimUI.prototype, objectExtend, {
 			icon: "buddy",
 			className: "webim-buddy-window",
 			//       onlyIcon: true,
-			//isMinimize: isOffline || !status("b"),
+			isMinimize: !im.status.get("b"),
 			titleVisibleLength: 19
 		});
 		layout.addApp(self.notification, {
@@ -66,7 +66,7 @@ extend(webimUI.prototype, objectExtend, {
 			onlyIcon: true,
 			isMinimize: true
 		});
-
+		self.buddy.offline();
 		document.body.appendChild(layout.element);
 		layout.buildUI();
 
@@ -78,15 +78,22 @@ extend(webimUI.prototype, objectExtend, {
 		sound.init(urls || this.options.soundUrls);
 	},
 	_initEvents: function(){
-		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, isOffline = status.get("o"), setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting;
+		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting;
 		//im events
-		im.bind("go",function(data){
+		im.bind("ready",function(){
+			buddyUI.online();
+		}).bind("go",function(data){
 			layout.option("userInfo", data.user);
 			date.init(data.server_time);
-			//self._initStatus();
+			self._initStatus();
+			!buddyUI.window.isMinimize() && buddy.loadDelay();
 			buddyUI.notice("count", buddy.count({presence:"online"}));
+			setting.set(data.setting);
 		}).bind("stop", function(type){
-			//type == "offline" && layout.removeAllChat();
+			type == "offline" && layout.removeAllChat();
+			layout.updateAllChat();
+			buddyUI.offline();
+			type && buddyUI.notice(type);
 		});
 		//setting events
 		setting.bind("update",function(key, val){
@@ -116,7 +123,6 @@ extend(webimUI.prototype, objectExtend, {
 		});
 
 		//buddy events
-		(isOffline ? buddyUI.offline() : buddyUI.online());
 
 		//select a buddy
 		buddyUI.bind("select", function(info){

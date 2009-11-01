@@ -22,8 +22,8 @@ webim.ui.emot.init({"dir": path + "webim/static/images/emot/default"});
 ready(function(){
 	var imUI = new webimUI();
 	//imUI.im.setStranger("2,3,4");
-	imUI.im.status.set("tabIds",[2,3,4]);
-	imUI.im.online();
+	//imUI.im.status.set("tabIds",[]);
+	imUI.im.autoOnline() && imUI.im.online();
 	//document.body.appendChild(layout.element);
 
 });

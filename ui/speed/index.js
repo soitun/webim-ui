@@ -17,6 +17,7 @@ webim.history.defaults.urls = {
 };
 webim.buddy.defaults.url = path + "webim/buddies.php";
 webim.notification.defaults.url = path + "webim/notifications.php";
+webim.ui.emot.init({"dir": path + "webim/static/images/emot/default"});
 
 var test1, test2;
 var methods = {
@@ -39,7 +40,7 @@ var methods = {
 var methods2 = {
 	"create imUI": function(){
 		var imUI = new webimUI();
-		//document.body.appendChild(layout.element);
+		imUI.im.autoOnline() && imUI.im.online();
 	}
 };
 

@@ -359,8 +359,9 @@ widget("layout",{
 		self.apps[app.name] = app;
 	},
 	focusChat: function(id){
-		var self = this, tab = self.tabs[id];
+		var self = this, tab = self.tabs[id], panel = self.panels[id];
 		tab && tab.isMinimize() && tab.restore();
+		panel && panel.focus();
 	},
 	chat:function(id){
 		return this.panels[id];

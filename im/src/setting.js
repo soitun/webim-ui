@@ -26,6 +26,7 @@ model("setting",{
 	},
 	set: function(key, value){
 		var self = this, options = key;
+		if(!key)return;
 		if (typeof key == "string") {
 			options = {};
 			options[key] = value;

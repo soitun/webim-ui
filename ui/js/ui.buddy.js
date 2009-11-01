@@ -10,6 +10,8 @@
  select(id)
  update(data, [index])
  notice
+ online
+ offline
 
  destroy()
  events: 
@@ -127,6 +129,7 @@ widget("buddy",{
 		var self = this, $ = self.$, win = self.window;
 		self.notice("connect");
 		hide($.online);
+		show($.empty);
 		show($.offline);
 	},
 	offline: function(){
@@ -206,7 +209,7 @@ widget("buddy",{
 		this.remove(ids);
 	},
 	remove: function(ids){
-		var id, el, li = this.li, group;
+		var id, el, li = this.li, group, li_group = this.li_group;
 		ids = idsArray(ids);
 		for(var i=0; i < ids.length; i++){
 			id = ids[i];

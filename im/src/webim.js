@@ -17,6 +17,7 @@
 * methods:
 * 	online
 * 	offline
+* 	autoOnline
 * 	sendMsg
 * 	sendStatus
 * 	setStranger
@@ -80,6 +81,9 @@ extend(webim.prototype, objectExtend,{
 		self.buddy.clear();
 		self.trigger("stop", msg);
 
+	},
+	autoOnline: function(){
+		return !this.status.get("o");
 	},
 	_initEvents: function(){
 		var self = this, status = self.status, setting = self.setting, history = self.history, connection = self.connection;
@@ -158,7 +162,7 @@ extend(webim.prototype, objectExtend,{
 			url: self.options.urls.online,
 			success: function(data){
 				if(!data || !data.user || !data.connection){
-					self.stop(null, "online error");
+					self.stop("online error");
 				}else{
 					data.user = extend(self.data.user, data.user);
 					self.data = data;
@@ -166,7 +170,7 @@ extend(webim.prototype, objectExtend,{
 				}
 			},
 			error: function(data){
-				self.stop(null, "online error");
+				self.stop("online error");
 			}
 		});
 

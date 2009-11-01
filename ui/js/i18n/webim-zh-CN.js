@@ -36,6 +36,7 @@ webim.ui.i18n.store('zh-CN',{
         "menu":"工具栏",
         "online":"上线",
         "connect":"连接",
+        "connecting":"连接中",
         "offline":"离线",
         "search buddy": "搜索联系人",
         "user offline notice": "您处于离线状态，不能收到消息",

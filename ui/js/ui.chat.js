@@ -62,7 +62,7 @@ widget("chat",{
 		self._initEvents();
 		if(win){
 			win.html(element);
-			//self._bindWindow();
+			self._bindWindow();
 			//self._fitUI();
 		}
 		self.update(options.buddyInfo);

@@ -24,7 +24,7 @@ CSS_BASE_FILES = ${CSS_SRC_DIR}/core.css\
 	${CSS_SRC_DIR}/chat.css\
 	${CSS_SRC_DIR}/menu.css\
 	${CSS_SRC_DIR}/history.css\
-	${CSS_SRC_DIR}/webapi.css\
+	${CSS_SRC_DIR}/layout.css\
 
 IM = ${SRC_DIR}/im/dist/webim.js
 
@@ -58,9 +58,11 @@ UI_VER = `cat ${SRC_DIR}/version.txt`
 DATE=`svn info . | grep Date: | sed 's/.*: //g'`
 REV=`svn info . | grep Rev: | sed 's/.*: //g'`
 
-REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
+#REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
 		sed 's/Revision:./&'"${REV}"'/' | \
 		sed s/@VERSION/${UI_VER}/
+
+REPLACE = sed s/@VERSION/${UI_VER}/
 
 MINJAR = java -jar ${BUILD_DIR}/yuicompressor-2.4.2.jar
 UNICODE = native2ascii -encoding utf-8 
@@ -81,10 +83,12 @@ dist:
 	@@mkdir -p ${DIST_DIR}
 
 	@@cat ${UI_CSS_FILES} | \
-		sed 's/\.\.\/images/images/'  > ${UI_CSS};
-
-	@@cat ${UI_JS_FILES}  > ${UI_JS};
-	@@cat ${UI_ALL_JS_FILES} > ${UI_ALL_JS};
+		sed 's/\.\.\/images/images/' | \
+	       ${REPLACE} > ${UI_CSS};
+	@@cat ${UI_JS_FILES} | \
+	       ${REPLACE} > ${UI_JS};
+	@@cat ${UI_ALL_JS_FILES} | \
+	       ${REPLACE} > ${UI_ALL_JS};
 
 	@@echo "Built"
 
@@ -92,7 +96,7 @@ copy:
 	@@cp -r ${IMAGE_SRC_DIR} ${DIST_DIR}/images 
 	@@cp -r ${ASSET_SRC_DIR} ${DIST_DIR}/assets 
 	@@mkdir -p ${DIST_DIR}/themes
-	@@cp -r ${THEME_SRC_DIR}/redmond ${DIST_DIR}/themes/redmond 
+	@@cp -r ${THEME_SRC_DIR}/* ${DIST_DIR}/themes/
 	@@echo "Copy images assets themes."
 
 min:

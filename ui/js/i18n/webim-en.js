@@ -1,4 +1,4 @@
-﻿webim.ui.i18n.locale = 'en';
+webim.ui.i18n.locale = 'en';
 webim.ui.i18n.store('en',{
         "dt:monthdate": "{{month}}{{date}}",
         "dt:today": "Today",

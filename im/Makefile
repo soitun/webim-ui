@@ -25,13 +25,15 @@ WEBIM_FILES = ${SRC_DIR}/intro.js\
 	${SRC_DIR}/outro.js\
 	${SRC_DIR}/json2.js
 
-WEBIM_VER = `cat ${SRC_DIR}/version.txt`
+WEBIM_VER = `cat ${PREFIX}/version.txt`
 DATE=`svn info . | grep Date: | sed 's/.*: //g'`
 REV=`svn info . | grep Rev: | sed 's/.*: //g'`
 
-REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
+#REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
 		sed 's/Revision:./&'"${REV}"'/' | \
 		sed s/@VERSION/${WEBIM_VER}/
+
+REPLACE = sed s/@VERSION/${WEBIM_VER}/
 
 MINJAR = java -jar ${BUILD_DIR}/yuicompressor-2.4.2.jar
 UNICODE = native2ascii -encoding utf-8 
@@ -46,9 +48,8 @@ all: dist min
 dist:
 	@@mkdir -p ${DIST_DIR}
 
-	#@@cat ${WEBIM_FILES} | \
-	#	${REPLACE} > ${WEBIM_JS};
-	@@cat ${WEBIM_FILES} > ${WEBIM_JS};
+	@@cat ${WEBIM_FILES} | \
+		${REPLACE} > ${WEBIM_JS};
 
 	@@echo "Merge"
 

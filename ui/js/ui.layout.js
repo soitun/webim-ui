@@ -1,5 +1,5 @@
 //
-/* webim layout webapi:
+/* webim layout :
  *
  options:
  attributes：
@@ -31,7 +31,7 @@ widget("layout",{
                     <div id="webim-flashlib-c">\
                     </div>\
                     </div>\
-<div id=":layout" class="webim-layout webim-webapi"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
+<div id=":layout" class="webim-layout"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
                             <div id=":shortcut" class="webim-shortcut">\
                             </div>\
                             <div class="webim-layout-r">\
@@ -308,16 +308,16 @@ widget("layout",{
 		});
 	},
 	isMinimize: function(){
-		return hasClass(this.$.layout, "webim-webapi-minimize");
+		return hasClass(this.$.layout, "webim-layout-minimize");
 	},
 	collapse: function(){
 		if(this.isMinimize()) return;
-		addClass(this.$.layout, "webim-webapi-minimize");
+		addClass(this.$.layout, "webim-layout-minimize");
 		this.trigger("collapse");
 	},
 	expand: function(){
 		if(!this.isMinimize()) return;
-		removeClass(this.$.layout, "webim-webapi-minimize");
+		removeClass(this.$.layout, "webim-layout-minimize");
 		this.trigger("expand");
 	},
 	_displayUpdate:function(e){
@@ -446,6 +446,7 @@ widget("layout",{
 			});
 			return;
 		}
+		if(!isObject(data)) return;
 		var content = self.$.shortcut, temp = self.options.tpl_shortcut;
 		if(content.childNodes.length > self.options.shortcutLength + 1)return;
 		temp = createElement(tpl(temp,{title: i18n(data.title), icon: data.icon, link: data.link, target: data.isExtlink ? "_blank" : ""}));

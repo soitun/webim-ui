@@ -14,17 +14,17 @@
 /*
  * layout
  */
-.webim-webapi{
+.webim-layout{
         position: fixed;
         bottom: 0;
         right: 1.5em;
         z-index: 50000;
         left: 1.5em;
 }
-.webim-webapi-minimize{
+.webim-layout-minimize{
         left: auto;
 }
-.webim-webapi .webim-ui{
+.webim-layout .webim-ui{
         border-bottom-width:0;
 }
 
@@ -50,10 +50,10 @@
 /*
  * window
  */
-.webim-webapi .webim-window{
+.webim-layout .webim-window{
         float:left;
 }
-.webim-webapi .webim-window-tab {
+.webim-layout .webim-window-tab {
         z-index: 6;
         float:left;
         cursor: pointer;
@@ -65,28 +65,28 @@
         text-decoration:none;
         border-left-width: 1px;
 } 
-.webim-webapi .webim-window-tab-wrap{
+.webim-layout .webim-window-tab-wrap{
         float: left;
         
 }
-.webim-webapi .webim-window-tab .webim-icon{
+.webim-layout .webim-window-tab .webim-icon{
         float: left;
         display:inline;
         margin: .4em .5em .2em;
         *margin: .3em .5em .3em;
 }
-.webim-webapi .webim-window-tab h4{
+.webim-layout .webim-window-tab h4{
         float: left;
         font-weight: normal;
         margin: .3em 2em .3em .3em;
         display:inline;
 }
-.webim-webapi .webim-window-tab .webim-window-close{
+.webim-layout .webim-window-tab .webim-window-close{
 		right:.3em;
 		top: .4em;
 		position:absolute;
 }
-.webim-webapi .webim-window-window {
+.webim-layout .webim-window-window {
         position: absolute;
         bottom: 2.20em;
         z-index: 5;
@@ -94,64 +94,64 @@
         width: 20em;
 }
 
-.webim-webapi .webim-window-content {
+.webim-layout .webim-window-content {
         border-top-width: 0;
 }
 
-.webim-webapi .webim-window-header {
+.webim-layout .webim-window-header {
         cursor: pointer;
         text-align: center;
         padding: .2em .5em;
 }
 
-.webim-webapi .webim-window-actions{
+.webim-layout .webim-window-actions{
         float: right;
 }
-.webim-webapi .webim-window-actions a{
+.webim-layout .webim-window-actions a{
         float:left;
         margin: 0 .1em;
 }
-.webim-webapi .webim-window-header h4{
+.webim-layout .webim-window-header h4{
         margin: 0;
         font-weight:normal;
         background:url(about:blank);/*events http://ued.koubei.com/?p=394*/
 }
 /*window state */
-.webim-webapi .webim-window-minimize .webim-window-window{
+.webim-layout .webim-window-minimize .webim-window-window{
         /*visibility: hidden;*/
         display: none;
 }
-.webim-webapi .webim-shortcut .webim-window-tab{
+.webim-layout .webim-shortcut .webim-window-tab{
         border-left-width:0;
         border-right-width:1px;
 }
-.webim-webapi .webim-shortcut .webim-window-window{
+.webim-layout .webim-shortcut .webim-window-window{
         right:auto;
         left: 0;
         width: 12em;
 }
-.webim-webapi .webim-window-normal .webim-window-tab, .webim-webapi .webim-window-maximize .webim-window-tab{
+.webim-layout .webim-window-normal .webim-window-tab, .webim-layout .webim-window-maximize .webim-window-tab{
         margin-top: -1px;
         padding-left:0;
         border-width: 1px;
         border-top-width:0;
 }
-.webim-webapi .webim-window-normal .webim-window-tab-inner, .webim-webapi .webim-window-maximize .webim-window-tab-inner{
+.webim-layout .webim-window-normal .webim-window-tab-inner, .webim-layout .webim-window-maximize .webim-window-tab-inner{
         border-top:1px solid #eee;
 }
-.webim-webapi .webim-apps .webim-window-window {
+.webim-layout .webim-apps .webim-window-window {
         width: 100%;
 }
 
 
-.webim-webapi .webim-buddy-window .webim-window-tab{
+.webim-layout .webim-buddy-window .webim-window-tab{
         width: 12em;
 }
-.webim-webapi .webim-buddy-window .webim-window-tab h4{
+.webim-layout .webim-buddy-window .webim-window-tab h4{
 		margin-right: 0;
 }
 
-.webim-webapi  .webim-window-tab-count {
+.webim-layout  .webim-window-tab-count {
         font-size: 10px;
         font-weight: bold;
         height: 17px;
@@ -168,7 +168,7 @@
         background: url(../images/count_bg.gif) no-repeat;
 }
 
-.webim-webapi  .webim-window-tab-tip {
+.webim-layout  .webim-window-tab-tip {
         background: transparent url(../images/dark_pointer.gif) no-repeat scroll right bottom;
         bottom: 2.3em;
         display: none;
@@ -178,7 +178,7 @@
         z-index: 3;
 }
 
-.webim-webapi .webim-window-tab-tip strong {
+.webim-layout .webim-window-tab-tip strong {
         background: #282828;
         color: #FFFFFF;
         display: block;
@@ -190,92 +190,92 @@
         float: left;
         position: relative;
 }
-.webim-webapi .webim-window-tab-wrap .ui-state-hover .webim-window-tab-tip {
+.webim-layout .webim-window-tab-wrap .ui-state-hover .webim-window-tab-tip {
 		display: block;
 }
-.webim-webapi .webim-window-tab-wrap .ui-state-active .webim-window-tab-tip {
+.webim-layout .webim-window-tab-wrap .ui-state-active .webim-window-tab-tip {
 		display: none;
 }
-.webim-webapi .webim-shortcut .webim-window-tab-tip{
+.webim-layout .webim-shortcut .webim-window-tab-tip{
 		background-position: left bottom;
 		right: auto;
 		left: .8em;
 }
-.webim-webapi .webim-shortcut .webim-window-tab-tip strong{
+.webim-layout .webim-shortcut .webim-window-tab-tip strong{
 		margin: 0 0 0 -.5em;
 }
 /*window end*/
 /**/
-.webim-webapi .webim-shortcut-item .ui-state-hover{
+.webim-layout .webim-shortcut-item .ui-state-hover{
 		border-width: 0;
 }
 /*panels*/
 
-.webim-webapi .webim-panels .webim-window{
+.webim-layout .webim-panels .webim-window{
         position: relative;
 }
-.webim-webapi .webim-panels-tab-wrap{
+.webim-layout .webim-panels-tab-wrap{
         float:left;
 }
-.webim-webapi .webim-panels-tab{
+.webim-layout .webim-panels-tab{
         float:left;
 }
-.webim-webapi .webim-panels-prev, .webim-webapi .webim-panels-next{
+.webim-layout .webim-panels-prev, .webim-layout .webim-panels-next{
         display: none;
 }
-.webim-webapi .webim-panels-prev .ui-icon, .webim-webapi .webim-panels-next .ui-icon{
+.webim-layout .webim-panels-prev .ui-icon, .webim-layout .webim-panels-next .ui-icon{
         float:left;
         margin: .4em 0 .2em;
 }
-.webim-webapi .webim-panels-next span{
+.webim-layout .webim-panels-next span{
         float:left;
         font-weight: normal;
         margin: .4em .3em .2em 0;
 }
-.webim-webapi .webim-panels-prev span{
+.webim-layout .webim-panels-prev span{
         float:left;
         font-weight: normal;
         margin: .4em -.3em .2em .2em;
 }
-.webim-webapi .webim-panels-next .ui-icon{
+.webim-layout .webim-panels-next .ui-icon{
         width: 13px;
 }
 
 /* collapse expand */
 
-.webim-webapi .webim-collapse .ui-icon, .webim-webapi .webim-expand .ui-icon{
+.webim-layout .webim-collapse .ui-icon, .webim-layout .webim-expand .ui-icon{
         margin-top: .4em;
 }
-.webim-webapi .webim-expand-wrap{
+.webim-layout .webim-expand-wrap{
         display: none;
 }
-.webim-webapi-minimize .webim-expand-wrap{
+.webim-layout-minimize .webim-expand-wrap{
         display: block;
 }
-.webim-webapi-minimize .webim-collapse-wrap{
+.webim-layout-minimize .webim-collapse-wrap{
         display: none;
 }
 /*****ie 6 *********/
 *  html{
 	background:url(blank) fixed; /*To prevent the jitter.*/
 }
-* html  .webim-webapi{
+* html  .webim-layout{
 	position: absolute; 
 	bottom: auto;
 	right: 1.5em;
     left: 1.5em;/*ie6 1px bug. http://www.pmob.co.uk/temp/onepxgap.htm */
 	top:expression(eval(document.compatMode &&document.compatMode=='CSS1Compat') ? documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight) : document.body.scrollTop + (document.body.clientHeight-this.clientHeight));
 }
-* html  .webim-webapi .webim-apps .webim-window-window {
+* html  .webim-layout .webim-apps .webim-window-window {
         width: 17.2em;
 }
-* html  .webim-webapi-minimize{
+* html  .webim-layout-minimize{
         left: auto;
 }
-* html  .webim-webapi-minimize .webim-ui{
+* html  .webim-layout-minimize .webim-ui{
 	display: inline;
 }
-* html  .webim-webapi-minimize .webim-layout-r{
+* html  .webim-layout-minimize .webim-layout-r{
 	float: left;
 }
 /* end */

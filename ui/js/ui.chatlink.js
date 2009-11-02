@@ -1,5 +1,5 @@
 //
-/* ui.chat:
+/* ui.chatlink:
 *
 options:
 
@@ -9,6 +9,7 @@ remove(ids)
 online(ids)
 offline(ids)
 disable()
+idsArray()
 enable()
 destroy()
 
@@ -16,6 +17,20 @@ events:
 select
 
 */
+function sibling(n, elem){
+	var r = [];
+
+	for ( ; n; n = n.nextSibling ) {
+		if ( n.nodeType == 1 && n != elem )
+			r.push( n );
+	}
+
+	return r;
+}
+function children(elem){
+	return sibling(elem.firstChild);
+}
+
 widget("chatlink",{
 	filterId: function(link){
 		if(!link)return false;
@@ -26,14 +41,15 @@ widget("chatlink",{
 },{
 	_init: function(){
 		var self = this, element = self.element, ids = {}, options = self.options, filterId = options.filterId, anthors = {}, offline = options.offline;
-		var a = document.anthors, b;
-		each(a, function(i, el){
+		var a = document.getElementsByTagName("a"), b;
+
+		a && each(a, function(i, el){
 			var id = filterId(el.href), text = el.innerHTML;
-			if(id && el.childNodes.length == 0 && text){
+			if(id && children(el).length == 0 && text){
 				ids[id] = true;
 				b = self._temp({id: id, title: i18n('chat with',{name: text}), title2: ""});
 				el.parentNode.insertBefore(b, el.nextSibling);
-				anthors[id] = anthors[id] ? anthors[id].push(b) : [b];
+				anthors[id] ? anthors[id].push(b) :(anthors[id] = [b]);
 			}
 		});
 		var id = filterId(window.location.href);
@@ -53,7 +69,7 @@ widget("chatlink",{
 						break;
 					}
 			}
-			anthors[id] = anthors[id] ? anthors[id].push(b) : [b];
+			anthors[id] ? anthors[id].push(b) :(anthors[id] = [b]);
 		}
 		self.ids = ids;
 		self.anthors = anthors;
@@ -67,6 +83,11 @@ widget("chatlink",{
 			preventDefault(e);
 		});
 		return el;
+	},
+	idsArray: function(){
+		var _ids = [];
+		each(this.ids,function(k,v){_ids.push(k)});
+		return _ids;
 	},
 	disable: function(){
 		var self = this, ids = self.ids;

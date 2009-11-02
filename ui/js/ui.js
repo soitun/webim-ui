@@ -33,9 +33,9 @@ extend(webimUI.prototype, objectExtend, {
 		});
 		self.buddy = new webimUI.buddy(null,{
 		});
-		var menu = [{"title":"doing","icon":"image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon":"image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon":"image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon":"image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon":"image\/app\/share.gif","link":"space.php?do=share"}];
-		self.menu = new webimUI.menu(null,{
-			data: menu
+		var menuData = self.options.menu;
+	       	self.menu = new webimUI.menu(null,{
+			data: menuData
 		});
 					    //render start
 		layout.addApp(self.menu, {
@@ -45,7 +45,7 @@ extend(webimUI.prototype, objectExtend, {
 			onlyIcon: false,
 			isMinimize: true
 		},"shortcut");
-		layout.addShortcut(menu);
+		layout.addShortcut(menuData);
 		layout.addApp(self.buddy, {
 			title: i18n("chat"),
 			icon: "buddy",
@@ -69,8 +69,8 @@ extend(webimUI.prototype, objectExtend, {
 			isMinimize: true
 		});
 		self.buddy.offline();
-		document.body.appendChild(layout.element);
-		layout.buildUI();
+		//document.body.appendChild(layout.element);
+		//layout.buildUI();
 
 		//render end
 
@@ -128,7 +128,6 @@ extend(webimUI.prototype, objectExtend, {
 
 		//select a buddy
 		buddyUI.bind("select", function(info){
-			log(info, "buddyUI.select");
 			self.addChat(info.id);
 			layout.focusChat(info.id);
 		}).bind("offline",function(){
@@ -141,27 +140,23 @@ extend(webimUI.prototype, objectExtend, {
 		});
 		//some buddies online.
 		buddy.bind("online", function(data){
-			log(data, "buddy.online");
 			buddyUI.add(data);
 			layout.updateChat(data);
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 		});
 		buddy.bind("onlineDelay", function(data){
-			log(data, "buddy.onlineDelay");
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 		});
 
 		//some buddies offline.
 		var mapId = function(a){ return isObject(a) ? a.id : a };
 		buddy.bind("offline", function(data){
-			log(data, "buddy.offline");
 			buddyUI.remove(map(data, mapId));
 			layout.updateChat(data);
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 		});
 		//some information has been modified.
 		buddy.bind("update", function(data){
-			log(data, "buddy.update");
 			buddyUI.update(data);
 			layout.updateChat(data);
 		});
@@ -169,7 +164,6 @@ extend(webimUI.prototype, objectExtend, {
 		//all ready.
 		//message
 		im.bind("message",function(data){
-			log(data,"message");
 			var show = false, l = data.length, d, uid = im.data.user.id, id, c, online_ids = [], count = "+1";
 			for(var i = 0; i < l; i++){
 				d = data[i];
@@ -204,7 +198,6 @@ extend(webimUI.prototype, objectExtend, {
 		function mapFrom(a){ return a.from; }
 
 		im.bind("presence",function(data){
-			log(data,"presence");
 			offline = grep(data, grepOffline);
 			online = grep(data, grepOnline);
 			buddy.online(map(online, mapFrom), buddyUI.window.isMinimize());
@@ -212,7 +205,6 @@ extend(webimUI.prototype, objectExtend, {
 			online.length && buddyUI.notice("buddyOnline", online.pop()["nick"]);
 		});
 		im.bind("status",function(data){
-			log(data,"status");
 			each(data,function(n,msg){
 				var userId = im.data.user.id;
 				var id = msg['from'];
@@ -243,8 +235,6 @@ extend(webimUI.prototype, objectExtend, {
 			notificationUI.window.notifyUser("information", "+" + data.length);
 			notificationUI.add(data);
 		});
-
-		return;
 		setTimeout(function(){
 			im.notification.load();
 		}, 2000);
@@ -281,13 +271,10 @@ extend(webimUI.prototype, objectExtend, {
 		layout.chat(id).bind("sendMsg", function(msg){
 			im.sendMsg(msg);
 			history.handle(msg);
-			log(msg, "sendMsg");
 		}).bind("sendStatus", function(msg){
 			im.sendStatus(msg);
-			log(msg, "sendStatus");
 		}).bind("clearHistory", function(buddyInfo){
 			history.clear(buddyInfo.id);
-			log(buddyInfo, "clearHistory");
 		});
 	},
 	_updateStatus: function(){
@@ -425,7 +412,9 @@ extend(webimUI,{
 	version: "@VERSION",
 	widget: widget,
 	plugin: plugin,
-	i18n: i18n
+	i18n: i18n,
+	date: date,
+	ready: ready
 });
 webim.ui = webimUI;
 

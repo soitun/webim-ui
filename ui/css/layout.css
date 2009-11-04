@@ -14,6 +14,17 @@
 /*
  * layout
  */
+.webim-bgiframe{
+	display:none;
+	*display:block;
+	position:absolute;
+	width: 100%;
+	height: 100%;
+	z-index:-1;
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+
 .webim-layout{
         position: fixed;
         bottom: 0;
@@ -26,6 +37,11 @@
 }
 .webim-layout .webim-ui{
         border-bottom-width:0;
+}
+
+.webim-layout .webim-bgiframe{
+	height: 2.7em;
+	width: expression(this.parentNode.offsetWidth+'px');
 }
 
 /*
@@ -52,6 +68,10 @@
  */
 .webim-layout .webim-window{
         float:left;
+}
+.webim-layout .webim-window .webim-bgiframe{
+	height: 100%;
+	height: expression(this.parentNode.offsetHeight+'px');
 }
 .webim-layout .webim-window-tab {
         z-index: 6;

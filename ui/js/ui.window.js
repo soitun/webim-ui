@@ -52,7 +52,8 @@ widget("window", {
                                             </div>\
                                             </div>\
                                             </div>\
-                                            <div class="webim-window-window">\
+                                            <div id=":window" class="webim-window-window">\
+						<iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe>\
                                                     <div id=":header" class="webim-window-header ui-widget-header ui-corner-top">\
                                                             <span id=":actions" class="webim-window-actions">\
                                                                     <a id=":minimize" title="<%=minimize%>" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\

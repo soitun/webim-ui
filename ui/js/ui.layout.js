@@ -31,7 +31,7 @@ widget("layout",{
                     <div id="webim-flashlib-c">\
                     </div>\
                     </div>\
-<div id=":layout" class="webim-layout"><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
+<div id=":layout" class="webim-layout"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
                             <div id=":shortcut" class="webim-shortcut">\
                             </div>\
                             <div class="webim-layout-r">\
@@ -311,14 +311,16 @@ widget("layout",{
 		return hasClass(this.$.layout, "webim-layout-minimize");
 	},
 	collapse: function(){
-		if(this.isMinimize()) return;
+		var self = this;
+		if(self.isMinimize()) return;
 		addClass(this.$.layout, "webim-layout-minimize");
-		this.trigger("collapse");
+		self.trigger("collapse");
 	},
 	expand: function(){
-		if(!this.isMinimize()) return;
-		removeClass(this.$.layout, "webim-layout-minimize");
-		this.trigger("expand");
+		var self = this;
+		if(!self.isMinimize()) return;
+		removeClass(self.$.layout, "webim-layout-minimize");
+		self.trigger("expand");
 	},
 	_displayUpdate:function(e){
 		this._ready && this.trigger("displayUpdate");

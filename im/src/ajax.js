@@ -327,7 +327,7 @@ function jsonp(s){
 	};
 	// Attach handlers for all browsers
 	script.onload = script.onreadystatechange = function(){
-		if(!done){
+		if(!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")){
 			//error
 			error("error");
 			destroy();
@@ -360,6 +360,6 @@ function jsonp(s){
 		}
 	}
 	function error(status){
-		s.error && s.success.call( callbackContext, data, status );
+		s.error && s.error.call( callbackContext, data, status );
 	}
 }

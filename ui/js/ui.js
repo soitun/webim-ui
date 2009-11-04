@@ -263,6 +263,7 @@ extend(webimUI.prototype, objectExtend, {
 	},
 	addChat: function(id, options, winOptions){
 		var self = this, layout = self.layout, im = self.im, history = self.im.history, buddy = self.im.buddy;
+		if(layout.chat(id))return;
 		var h = history.get(id), info = buddy.get(id);
 		var buddyInfo = info || {id:id, name: id};
 		layout.addChat(buddyInfo, extend({history: h}, options), winOptions);

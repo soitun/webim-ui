@@ -1,3 +1,9 @@
+function imlog(ui){
+	var im = ui.im, log = webim.log;
+	im.connection.bind("data",function(d){
+		//log(d);
+	});
+}
 (function(){
 	var path = "";
 	//webim.setting.defaults.data = {};
@@ -39,6 +45,8 @@
 		body.appendChild(layout.element);
 		imUI.initSound(soundUrls);
 		im.bind("ready",ready).bind("go",go).bind("stop",stop);
+		//log
+		imlog(imUI);
 	}
 	function init(){
 		layout.buildUI();

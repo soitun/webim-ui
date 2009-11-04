@@ -20,13 +20,24 @@ var sound = (function(){
                 },
                 init: function(urls){
                         extend(_urls, urls);
+			/*
                         swfobject.embedSWF(_urls.lib + "?_" + new Date().getTime(), "webim-flashlib-c", "100", "100", "9.0.0", null, null, {
                         allowscriptaccess:'always'
                         }, {
                             id: 'webim-flashlib'
                         });
-                    
-                },
+			*/
+			var lib_url = _urls.lib + "?_" + new Date().getTime();
+			try {
+				document.getElementById('webim-flashlib-c').innerHTML = '<object width="10" height="10" id="webim-flashlib" type="application/x-shockwave-flash" data="'+ lib_url + '">\
+				<param name="allowScriptAccess" value="always" />\
+				<param name="movie" value="'+lib_url+'" />\
+				<param name="scale" value="noscale" />\
+				</object>';
+			} 
+			catch (e){
+			}
+		},
                 play: function(type){
                         var url = isUrl(type) ? type : _urls[type];
                         playSound && play(url);

@@ -91,10 +91,10 @@ extend(comet.prototype, objectExtend, {
                 self.connected = true;
                 self.trigger('connect','success');
         },
-        _onClose: function(){
+        _onClose: function(m){
                 var self = this;
                 self._setting();
-                self.trigger('close');
+                self.trigger('close',[m]);
         },
         _onData: function(data){
                 var self = this;
@@ -152,8 +152,8 @@ extend(comet.prototype, objectExtend, {
                         self._startPolling();
                 }, 200);
         },
-        _onPollError: function(o, m){
-                var self = this.self || this;
+        _onPollError: function(m){
+                var self = this;
                 self._onPolling = false;
                 if (!self._connecting) 
                 return;//已断开连接
@@ -163,7 +163,7 @@ extend(comet.prototype, objectExtend, {
                 else{
                         if (self._failTimes > 1) {
                                 //服务器关闭连接
-                                self._onClose();
+                                self._onClose(m);
                         }
                         else {
                                 self._pollTimer = window.setTimeout(function(){

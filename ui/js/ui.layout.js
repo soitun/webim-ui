@@ -349,12 +349,12 @@ widget("layout",{
 	app:function(name){
 		return this.apps[name];
 	},
-	addApp: function(app, options, container){
+	addApp: function(app, options, before, container){
 		var self = this, options = extend(options,{closeable: false});
 		var win, el = app.element;
 		win = new webimUI.window(null, options);
 		win.html(el);
-		self.$[container ? container : "apps"].appendChild(win.element);
+		self.$[container ? container : "apps"].insertBefore(win.element, before && self.apps[before] ? self.apps[before].window.element : null);
 		app.window = win;
 		win.bind("displayStateChange", function(state){ self._appStateChange(this, state);});
 		self.apps[app.name] = app;

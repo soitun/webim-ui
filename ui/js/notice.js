@@ -28,12 +28,17 @@ var sound = (function(){
                         });
 			*/
 			var lib_url = _urls.lib + "?_" + new Date().getTime();
-			try {
-				document.getElementById('webim-flashlib-c').innerHTML = '<object width="10" height="10" id="webim-flashlib" type="application/x-shockwave-flash" data="'+ lib_url + '">\
+			if (navigator.plugins && navigator.mimeTypes && navigator.mimeTypes.length) { // netscape plugin architecture
+				var html = '<embed type="application/x-shockwave-flash" width="10" height="10" id="webim-flashlib" allowscriptaccess="always" src="'+lib_url+'" />';
+			}else{
+				var html = '<object width="10" height="10" id="webim-flashlib" type="application/x-shockwave-flash" data="'+ lib_url + '">\
 				<param name="allowScriptAccess" value="always" />\
 				<param name="movie" value="'+lib_url+'" />\
 				<param name="scale" value="noscale" />\
 				</object>';
+			}
+			try {
+				document.getElementById('webim-flashlib-c').innerHTML = html;
 			} 
 			catch (e){
 			}

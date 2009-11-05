@@ -360,6 +360,6 @@ function jsonp(s){
 		}
 	}
 	function error(status){
-		s.error && s.error.call( callbackContext, data, status );
+		s.error && s.error.call( callbackContext, status );
 	}
 }

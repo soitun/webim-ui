@@ -20,7 +20,6 @@ widget("notification",{
 },{
         _init: function(){
                 var self = this, element = self.element, options = self.options;
-		return;
                 var win = options.window;
                 if(win){
                         win.bind("displayStateChange", function(e, type){

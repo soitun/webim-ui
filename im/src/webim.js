@@ -94,7 +94,6 @@ extend(webim.prototype, objectExtend,{
                         self.stop("connect error");
                 }).bind("close",function(data){
                         self.stop("disconnect");
-			log(data, "disconnect");
                 });
 	},
 	handle:function(data){
@@ -236,6 +235,9 @@ extend(webim,{
 	each: each,
 	inArray: inArray,
 	grep: grep,
-	map: map
+	map: map,
+	JSON: JSON,
+	ajax: ajax,
+	model: model
 });
 

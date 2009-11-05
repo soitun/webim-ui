@@ -44,7 +44,7 @@ extend(webimUI.prototype, objectExtend, {
 			sticky: false,
 			onlyIcon: false,
 			isMinimize: true
-		},"shortcut");
+		}, null,"shortcut");
 		layout.addShortcut(menuData);
 		layout.addApp(self.buddy, {
 			title: i18n("chat"),
@@ -415,7 +415,8 @@ extend(webimUI,{
 	plugin: plugin,
 	i18n: i18n,
 	date: date,
-	ready: ready
+	ready: ready,
+	createElement: createElement
 });
 webim.ui = webimUI;
 

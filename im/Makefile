@@ -23,7 +23,7 @@ BASE_FILES = ${SRC_DIR}/core.js\
 WEBIM_FILES = ${SRC_DIR}/intro.js\
 	${BASE_FILES}\
 	${SRC_DIR}/outro.js\
-	${SRC_DIR}/json2.js
+	${SRC_DIR}/json.js
 
 WEBIM_VER = `cat ${PREFIX}/version.txt`
 DATE=`svn info . | grep Date: | sed 's/.*: //g'`

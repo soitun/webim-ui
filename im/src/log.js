@@ -6,7 +6,7 @@ var _logable = true;
 function log(str, method){
 	if (!_logable) 
 		return;
-	var d = new Date(),  time = ['[', d.getHours(), ':', d.getMinutes(), ':', d.getSeconds(), '-', d.getMilliseconds(), ']'].join(""), msg = time + method + JSON.stringify(str);
+	var d = new Date(),  time = ['[', d.getHours(), ':', d.getMinutes(), ':', d.getSeconds(), '-', d.getMilliseconds(), ']'].join(""), msg = time + method + JSON.encode(str);
 	window.console && window.console.log(time, method, str); 
 	//cosole.log("%s: %o",msg,this);
 	var log = document.getElementById("webim-log") || document.body;

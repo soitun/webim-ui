@@ -20,7 +20,7 @@ model("status",{
 		var self = this, data = self.data;
 		if (!data){
 			var c = cookie(self.options.key);
-			self.data = c ? JSON.parse(c) : {};
+			self.data = c ? JSON.decode(c) : {};
 		}else{
 			self._save(data);
 		}
@@ -45,7 +45,7 @@ model("status",{
 	},
 	_save: function(data){
 		this.data = data;
-		cookie(this.options.key, JSON.stringify(data), {
+		cookie(this.options.key, JSON.encode(data), {
 			//path: '/',
 			//domain: document.domain
 		});

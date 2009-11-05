@@ -44,7 +44,7 @@ model("setting",{
 				url: self.options.url,
 				dataType: 'json',
 				cache: false,
-				data: {data: JSON.stringify(_new)}
+				data: {data: JSON.encode(_new)}
 			});
 		}
 	}

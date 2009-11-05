@@ -1,7 +1,11 @@
 function imlog(ui){
 	var im = ui.im, log = webim.log;
-	im.connection.bind("data",function(d){
-		//log(d);
+	im.connection.bind("data",function(data){
+		//log(data, "data");
+	}).bind("error",function(data){
+		log(data, "connect error");
+	}).bind("close",function(data){
+		log(data, "disconnect");
 	});
 }
 (function(){

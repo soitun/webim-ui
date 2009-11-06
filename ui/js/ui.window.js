@@ -36,6 +36,9 @@ widget("window", {
         sticky: true,
         titleVisibleLength: 12,
         count: 0, // notifyUser if count > 0
+	//A box with position:absolute next to a float may disappear
+	//http://www.brunildo.org/test/IE_raf3.html
+	//here '<div><div id=":window"'
         template:'<div id=":webim-window" class="webim-window ui-widget">\
                                             <div class="webim-window-tab-wrap">\
                                             <div id=":tab" class="webim-window-tab ui-state-default">\
@@ -52,7 +55,7 @@ widget("window", {
                                             </div>\
                                             </div>\
                                             </div>\
-                                            <div id=":window" class="webim-window-window">\
+                                            <div><div id=":window" class="webim-window-window">\
 						<iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe>\
                                                     <div id=":header" class="webim-window-header ui-widget-header ui-corner-top">\
                                                             <span id=":actions" class="webim-window-actions">\
@@ -64,6 +67,7 @@ widget("window", {
                                                     </div>\
                                                     <div id=":content" class="webim-window-content ui-widget-content">\
                                                     </div>\
+                                            </div>\
                                             </div>\
                                             </div>'
 },

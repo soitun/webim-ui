@@ -67,11 +67,11 @@ MINJAR = java -jar ${BUILD_DIR}/yuicompressor-2.4.2.jar
 UNICODE = native2ascii -encoding utf-8 
 
 UI_CSS = ${DIST_DIR}/webim.css
-UI_JS = ${DIST_DIR}/webim.js
+UI_JS = ${DIST_DIR}/webim.ui.js
 UI_ALL_JS = ${DIST_DIR}/webim.all.js
 
 UI_MIN_CSS = ${DIST_DIR}/webim.min.css
-UI_MIN_JS = ${DIST_DIR}/webim.min.js
+UI_MIN_JS = ${DIST_DIR}/webim.ui.min.js
 UI_MIN_ALL_JS = ${DIST_DIR}/webim.all.min.js
 
 
@@ -84,8 +84,7 @@ dist:
 	@@cat ${UI_CSS_FILES} | \
 		sed 's/\.\.\/images/images/' | \
 	       ${REPLACE} > ${UI_CSS};
-	@@cat ${UI_JS_FILES} | \
-	       ${REPLACE} > ${UI_JS};
+
 	@@cat ${UI_ALL_JS_FILES} | \
 	       ${REPLACE} > ${UI_ALL_JS};
 
@@ -104,9 +103,6 @@ min:
 
 	@@${MINJAR} --type css ${UI_CSS} > ${UI_MIN_CSS}
 	@@echo ${UI_MIN_CSS} "Built"
-
-	@@${MINJAR} --type js ${UI_JS} > ${UI_MIN_JS}
-	@@echo ${UI_MIN_JS} "Built"
 
 	@@${MINJAR} --type js ${UI_ALL_JS} > ${UI_MIN_ALL_JS}
 	@@echo ${UI_MIN_ALL_JS} "Built"

@@ -10,7 +10,7 @@ function imlog(ui){
 }
 (function(){
 	var path = "";
-	//webim.setting.defaults.data = {};
+	//extend(webim.setting.defaults.data,{});
 	
 	path = document.location.href.split("/webim");
 	path = path.length > 1 ? (path[0] + "/") : "";
@@ -47,7 +47,8 @@ function imlog(ui){
 		im = imUI.im;
 		layout = imUI.layout;
 		body.appendChild(layout.element);
-		imUI.initSound(soundUrls);
+		//need timeout
+		setTimeout(function(){imUI.initSound(soundUrls)},1000);
 		im.bind("ready",ready).bind("go",go).bind("stop",stop);
 		//log
 		imlog(imUI);

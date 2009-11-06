@@ -46,8 +46,8 @@ model("status",{
 	_save: function(data){
 		this.data = data;
 		cookie(this.options.key, JSON.encode(data), {
-			//path: '/',
-			//domain: document.domain
+			path: '/',
+			domain: document.domain
 		});
 	}
 });

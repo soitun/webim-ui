@@ -24,8 +24,10 @@ function webimUI(element, options){
 extend(webimUI.prototype, objectExtend, {
 	_init:function(){
 		var self = this,
-		layout = self.layout = new webimUI.layout(),
-		im = self.im = new webim();
+		im = self.im = new webim(),
+		layout = self.layout = new webimUI.layout(null,{
+			chatAutoPop: im.setting.get("msg_auto_pop")
+		}),
 		options = self.options;
 		self.notification = new webimUI.notification();
 		self.setting = new webimUI.setting(null,{
@@ -49,6 +51,7 @@ extend(webimUI.prototype, objectExtend, {
 		layout.addApp(self.buddy, {
 			title: i18n("chat"),
 			icon: "buddy",
+			sticky: im.setting.get("buddy_sticky"),
 			className: "webim-buddy-window",
 			//       onlyIcon: true,
 			isMinimize: !im.status.get("b"),
@@ -68,6 +71,8 @@ extend(webimUI.prototype, objectExtend, {
 			onlyIcon: true,
 			isMinimize: true
 		});
+		im.setting.get("play_sound") ? sound.enable() : sound.disable() ;
+		im.setting.get("minimize_layout") ? layout.collapse() : layout.expand(); 
 		self.buddy.offline();
 		//document.body.appendChild(layout.element);
 		//layout.buildUI();

@@ -32,7 +32,7 @@ widget("buddy",{
                         </div>\
                   </div>',
         tpl_group: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
-        tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>"/><strong><%=name%></strong><span><%=status%></span></a></li>'
+        tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=name%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
 		var self = this;
@@ -145,6 +145,7 @@ widget("buddy",{
 		el = el.firstChild;
 		el.setAttribute("href", info.url);
 		el = el.firstChild;
+		el.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
 		el.setAttribute("src", info.pic_url);
 		el = el.nextSibling;
 		el.innerHTML = info.name;
@@ -155,6 +156,7 @@ widget("buddy",{
 	_addOne:function(info){
 		var self = this, li = self.li, id = info.id, ul = self.$.ul;
 		if(!li[id]){
+			if(!info.default_pic_url)info.default_pic_url = "";
 			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
 			//self._updateInfo(el, info);
 			var a = el.firstChild;

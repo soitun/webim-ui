@@ -10,6 +10,7 @@ extend = webim.extend,
 each = webim.each,
 inArray = webim.inArray,
 grep = webim.grep,
+objectExtend = webim.objectExtend,
 map = webim.map;
 
 function returnFalse(){

@@ -238,6 +238,7 @@ extend(webim,{
 	map: map,
 	JSON: JSON,
 	ajax: ajax,
-	model: model
+	model: model,
+	objectExtend: objectExtend
 });
 

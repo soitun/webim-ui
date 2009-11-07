@@ -10,7 +10,6 @@
  * Revision: 6616
  */
 (function(window, undefined){
-
 // Define a local copy of jQuery
 var jQuery = function( selector, context ) {
 		// The jQuery object is actually just the init constructor 'enhanced'

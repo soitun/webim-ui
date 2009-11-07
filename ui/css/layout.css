@@ -14,6 +14,10 @@
 /*
  * layout
  */
+
+/*
+ * ie z-index bgiframe http://hi.baidu.com/pcbbt/blog/item/47405e2259148df9d7cae25c.html
+ */
 .webim-bgiframe{
 	display:none;
 	*display:block;
@@ -35,12 +39,24 @@
 .webim-layout-minimize{
         left: auto;
 }
-.webim-layout .webim-ui{
-        border-bottom-width:0;
-}
-
 .webim-layout .webim-bgiframe{
 	height: 2.7em;
+	top: -1px;
+	left: -1px;
+	width: 100%;
+}
+/*ie6*/
+* html .webim-layout .webim-bgiframe{
+	width: expression(this.parentNode.offsetWidth+'px');
+}
+.webim-layout-bg{
+	position:absolute;
+	top: -1px;
+	left: -1px;
+	width: 100%;
+	height: 2.7em;
+	z-index:-1;
+        border-bottom-width:0;
 	width: expression(this.parentNode.offsetWidth+'px');
 }
 
@@ -70,9 +86,16 @@
         float:left;
 }
 .webim-layout .webim-window .webim-bgiframe{
+	top: 0px;
+	left: 0px;
+	width:100%;
 	height: 100%;
+}
+/*ie6*/
+* html .webim-layout .webim-window .webim-bgiframe{
 	height: expression(this.parentNode.offsetHeight+'px');
 }
+
 .webim-layout .webim-window-tab {
         z-index: 6;
         float:left;
@@ -233,6 +256,11 @@
 
 .webim-layout .webim-panels .webim-window{
         position: relative;
+}
+
+/*ie6: need clear css expression when remove the window.*/
+.webim-layout .webim-panels .webim-window .webim-bgiframe{
+	height: 27em;
 }
 .webim-layout .webim-panels-tab-wrap{
         float:left;

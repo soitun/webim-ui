@@ -31,7 +31,7 @@ widget("layout",{
                     <div id="webim-flashlib-c">\
                     </div>\
                     </div>\
-<div id=":layout" class="webim-layout"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><div class="webim-ui ui-helper-clearfix  ui-toolbar">\
+<div id=":layout" class="webim-layout"><iframe class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><div class="webim-layout-bg ui-toolbar"></div><div class="webim-ui ui-helper-clearfix">\
                             <div id=":shortcut" class="webim-shortcut">\
                             </div>\
                             <div class="webim-layout-r">\

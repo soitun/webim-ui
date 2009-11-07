@@ -3,7 +3,7 @@
 
 }
 #webim-buddy .webim-buddy-search{
-        padding: 0 1.6em 0 0;
+        padding: 0em 1.6em 0em 0em;
         margin: .3em .5em .5em;
         display: none;
         
@@ -11,11 +11,15 @@
 #webim-buddy .webim-buddy-search input{
         border: none;
         background: none;
+	display: block;
+	width:95%;
         padding: .2em;
-        width: 100%;
+	/*
+	*/
 }
 #webim-buddy .webim-buddy-search em{
         float: right;
+	display: inline;
         margin: .1em -1.5em 0 0;
 }
 #webim-buddy .webim-buddy-online{
@@ -31,6 +35,10 @@
         padding: .2em .5em 0;
         position:relative;
 }
+/*fuck ie6  why ?*/
+* html  #webim-buddy .webim-buddy-content{
+        position: fixed;
+}
 
 #webim-buddy.webim-buddy-scroll .webim-buddy-content{
         height: 25em;
@@ -42,9 +50,12 @@
 
 #webim-buddy .webim-buddy-offline{
         display: none;
+	float: right;
+	/*
         position: absolute;
         top: .3em;
         right: .5em;
+	*/
 }
 #webim-buddy .webim-buddy-empty{
         display: none;
@@ -58,8 +69,8 @@
 }
 #webim-buddy ul h4{
         background:none;
-        border-width: 0;
         font-weight: normal;
+        border-width: 0;
         border-bottom-width: 1px;
         padding: .2em .5em 0;
 }
@@ -73,8 +84,11 @@
 #webim-buddy ul li a img{
         display:block;
         float:left;
-        position:relative;
         margin-left: -2.5em;
+}
+/*fuck ie6  why ?*/
+* html  #webim-buddy ul li a img{
+        position: fixed;
 }
 #webim-buddy ul li a strong{
         display: block;

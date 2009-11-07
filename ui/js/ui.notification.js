@@ -21,13 +21,6 @@ widget("notification",{
         _init: function(){
                 var self = this, element = self.element, options = self.options;
                 var win = options.window;
-                if(win){
-                        win.bind("displayStateChange", function(e, type){
-                                if(type != "minimize"){
-                                        self._fitUI();
-                                }
-                        });
-                }
 		options.data && options.data.length && hide(self.$.empty);
                 //self._initEvents();
         },

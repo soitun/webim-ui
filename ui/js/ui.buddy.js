@@ -26,8 +26,8 @@ widget("buddy",{
                         <div id=":online" class="webim-buddy-online"><a class="ui-state-default ui-corner-all" href="#online"><%=online%></a></div>\
                         <div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
                         <div class="webim-buddy-content">\
-                                <div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
                                 <div id=":offline" class="webim-buddy-offline"><a href="#offline"><%=offline%></a></div>\
+                                <div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
                                 <ul id=":ul"></ul>\
                         </div>\
                   </div>',
@@ -60,10 +60,10 @@ widget("buddy",{
 			if(this.value == "")this.value = placeholder;
 		});
 		addEvent(input, "keyup", function(){
-			var list = $.ul.childNodes, val = this.value;
-			each(list,function(n, li){
-				show(li);
-				if(val && li.innerHTML.indexOf(val) == -1) hide(li);
+			var list = self.li, val = this.value;
+			each(self.li, function(n, li){
+				if(val && (li.text || li.innerHTML.replace(/<[^>]*>/g,"")).indexOf(val) == -1) hide(li);
+				else show(li);
 			});
 		});
 		var a = $.online.firstChild;

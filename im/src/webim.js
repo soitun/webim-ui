@@ -46,6 +46,7 @@ extend(webim.prototype, objectExtend,{
 		self.status = new webim.status();
 		self.setting = new webim.setting();
 		self.buddy = new webim.buddy();
+		self.room = new webim.room();
 		self.history = new webim.history();
 		self.notification = new webim.notification();
 		self.connection = new comet(null,{jsonp:true});
@@ -68,6 +69,7 @@ extend(webim.prototype, objectExtend,{
 		buddy.handle(data.buddies);
 		//buddy load delay
 		buddy.online(data.buddy_online_ids, true);
+		self.room.handle(data.rooms);
 		var n_msg = data.new_messages;
 		if(n_msg && n_msg.length)
 			self.trigger("message",[n_msg]);

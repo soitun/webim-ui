@@ -153,7 +153,7 @@ widget("buddy",{
 		el.innerHTML = info.status;
 		return el;
 	},
-	_addOne:function(info){
+	_addOne:function(info, end){
 		var self = this, li = self.li, id = info.id, ul = self.$.ul;
 		if(!li[id]){
 			if(!info.default_pic_url)info.default_pic_url = "";
@@ -170,7 +170,9 @@ widget("buddy",{
 			if(!group){
 				var g_el = createElement(tpl(self.options.tpl_group));
 				hide(g_el);
-				ul.appendChild(g_el);
+				if(group_name == i18n("stranger")) end = true;
+				if(end) ul.appendChild(g_el);
+				else ul.insertBefore(g_el, ul.firstChild);
 				group = {
 					name: group_name,
 					el: g_el,
@@ -191,16 +193,16 @@ widget("buddy",{
 		var self = this, li = self.li, id = info.id;
 		li[id] && self._updateInfo(li[id], info);
 	},
-	update: function(data, index){
+	update: function(data){
 		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
 			this._updateOne(data[i]);
 		}
 	},
-	add: function(data, index){
+	add: function(data, end){
 		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
-			this._addOne(data[i]);
+			this._addOne(data[i], end);
 		}
 	},
 	removeAll: function(){

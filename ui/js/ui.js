@@ -102,6 +102,13 @@ extend(webimUI.prototype, objectExtend, {
 			buddyUI.offline();
 			type && buddyUI.notice(type);
 		});
+		//room
+		im.room.bind("join",function(rooms){
+			each(rooms, function(k, room){
+				room = extend({},room,{group:"group"});
+				buddyUI.add(room, true);
+			});
+		});
 		//setting events
 		setting.bind("update",function(key, val){
 			switch(key){
@@ -133,7 +140,7 @@ extend(webimUI.prototype, objectExtend, {
 
 		//select a buddy
 		buddyUI.bind("select", function(info){
-			self.addChat(info.id);
+			self.addChat(info.id, {type: info.group == "group" ? "room" : "buddy"});
 			layout.focusChat(info.id);
 		}).bind("offline",function(){
 			im.offline();
@@ -177,7 +184,7 @@ extend(webimUI.prototype, objectExtend, {
 				c = layout.chat(id);
 				c && c.status("");//clear status
 				if(!c){	
-					self.addChat(id);
+					self.addChat(id, null, null, d.nick);
 					c = layout.chat(id);
 				}
 				c && setting.get("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
@@ -266,22 +273,25 @@ extend(webimUI.prototype, objectExtend, {
 		a && layout.focusChat(a);
 		// status end
 	},
-	addChat: function(id, options, winOptions){
+	addChat: function(id, options, winOptions, name){
 		var self = this, layout = self.layout, im = self.im, history = self.im.history, buddy = self.im.buddy;
 		if(layout.chat(id))return;
-		var h = history.get(id), info = buddy.get(id);
-		var buddyInfo = info || {id:id, name: id};
-		layout.addChat(buddyInfo, extend({history: h}, options), winOptions);
-		if(!info) buddy.update(id);
-		if(!h) history.load(id);
-		layout.chat(id).bind("sendMsg", function(msg){
-			im.sendMsg(msg);
-			history.handle(msg);
-		}).bind("sendStatus", function(msg){
-			im.sendStatus(msg);
-		}).bind("clearHistory", function(buddyInfo){
-			history.clear(buddyInfo.id);
-		});
+		if(options && options.type == "room"){
+		}else{
+			var h = history.get(id), info = buddy.get(id);
+			var buddyInfo = info || {id:id, name: name || id};
+			layout.addChat(buddyInfo, extend({history: h}, options), winOptions);
+			if(!info) buddy.update(id);
+			if(!h) history.load(id);
+			layout.chat(id).bind("sendMsg", function(msg){
+				im.sendMsg(msg);
+				history.handle(msg);
+			}).bind("sendStatus", function(msg){
+				im.sendStatus(msg);
+			}).bind("clearHistory", function(buddyInfo){
+				history.clear(buddyInfo.id);
+			});
+		}
 	},
 	_updateStatus: function(){
 		var self = this, layout = self.layout, _tabs = {};
@@ -319,11 +329,11 @@ var _countDisplay = function(element, count){
 };
 
 function mapElements(obj){
-	var elements = obj.getElementsByTagName("*"), el, id, need = {}, pre = ":";
+	var elements = obj.getElementsByTagName("*"), el, id, need = {}, pre = ":", preLen = pre.length;
 	for(var i = elements.length - 1; i > -1; i--){
 		el = elements[i];
 		id = el.id;
-		if(id && id.indexOf(pre) == 0)need[id.substring(pre.length, id.length)] = el;
+		if(id && id.indexOf(pre) == 0)need[id.substring(preLen, id.length)] = el;
 	}
 	return need;
 }

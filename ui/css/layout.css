@@ -213,7 +213,7 @@
 
 .webim-layout  .webim-window-tab-tip {
         background: transparent url(../images/dark_pointer.gif) no-repeat scroll right bottom;
-        bottom: 2.3em;
+        bottom: 2.1em;/*< 2.2 in fiefox 2*/
         display: none;
         padding-bottom: .34em;
         position: absolute;

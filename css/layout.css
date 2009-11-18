@@ -4,8 +4,8 @@
         font-size: 1.2em !important;
 }
 .ui-toolbar{ 
-	opacity:0.5;
-	filter:alpha(opacity=50);
+	opacity:0.6;
+	filter:alpha(opacity=60);
         border: 1px solid #b5b5b5;
         background:#eee url(../images/bar_bg.gif) repeat-x scroll left top; color: #333; 
 }

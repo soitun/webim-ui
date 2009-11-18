@@ -1,3 +1,6 @@
+//not use.
+//need change.. 
+//
 webim.ui.tabs = function(element, options){
         var self = this;
         self.element = $(element);

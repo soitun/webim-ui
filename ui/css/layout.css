@@ -4,6 +4,8 @@
         font-size: 1.2em !important;
 }
 .ui-toolbar{ 
+	opacity:0.5;
+	filter:alpha(opacity=50);
         border: 1px solid #b5b5b5;
         background:#eee url(../images/bar_bg.gif) repeat-x scroll left top; color: #333; 
 }
@@ -19,8 +21,6 @@
  * ie z-index bgiframe http://hi.baidu.com/pcbbt/blog/item/47405e2259148df9d7cae25c.html
  */
 .webim-bgiframe{
-	display:none;
-	*display:block;
 	position:absolute;
 	width: 100%;
 	height: 100%;
@@ -259,7 +259,7 @@
 }
 
 /*ie6: need clear css expression when remove the window.*/
-.webim-layout .webim-panels .webim-window .webim-bgiframe{
+* html .webim-layout .webim-panels .webim-window .webim-bgiframe{
 	height: 27em;
 }
 .webim-layout .webim-panels-tab-wrap{

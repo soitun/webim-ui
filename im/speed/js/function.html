@@ -41,7 +41,12 @@ inner: function(){
 	     function p(){
 		     var cc = "we"+"wer";
 	     };
-	  }
+       },
+pack: function(){
+  for(var i=0;i < 10000;i ++){
+	  (function(){var cc = "we"+"wer";})();
+	     }
+	}
 		};
 window.onload = function(){
 	new Benchmark(methods, { iterations: -1});

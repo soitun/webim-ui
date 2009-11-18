@@ -422,8 +422,8 @@ widget("layout",{
 			self.$.tabs.insertBefore(win.element, self.$.tabs.firstChild);
 			chat = panels[id] = new webimUI.chat(null, extend({
 				window: win,
-				userInfo: self.options.userInfo,
-				buddyInfo: info
+				user: self.options.user,
+				info: info
 			}, options));
 			!win.isMinimize() && self._changeActive(id);
 			self._fitUI();

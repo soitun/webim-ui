@@ -15,15 +15,15 @@
 
  */
 widget("history",{
-        userInfo: {},
-        buddyInfo: {},
+        user: {},
+        info: {},
         template:'<div class="webim-history">\
                         <div id=":content" class="webim-history-content"> \
                 </div></div>'
 },{
 	_init: function(){
 		var self = this, element = self.element, options = self.options;
-		plugin.call(self, "init", [null, self.plugin_ui()]);
+		plugin.call(self, "init", [null, self.ui()]);
 	},
 	clear:function(){
 		var self = this;
@@ -44,12 +44,12 @@ widget("history",{
 	_renderMsg: function(logItem){
 		var self = this;
 		logItem = extend({}, logItem);
-		plugin.call(self, "render", [null, self.plugin_ui({msg: logItem})]);
-		var  from = logItem.from, to = logItem.to, time = logItem.timestamp, msg = logItem.body, shouldTilte = true, last = self._lastLogItem, markup = [], buddyInfo = self.options.buddyInfo, userInfo = self.options.userInfo;
-		var fromSelf = from != buddyInfo.id;
+		plugin.call(self, "render", [null, self.ui({msg: logItem})]);
+		var  from = logItem.from, to = logItem.to, time = logItem.timestamp, msg = logItem.body, shouldTilte = true, last = self._lastLogItem, markup = [], info = self.options.info, user = self.options.user;
+		var fromSelf = from != info.id;
 		var fromToSelf = fromSelf && from == to;
 
-		var name = fromSelf ? userInfo.name : (buddyInfo.name ? '<a href="' + buddyInfo.url + '">' + buddyInfo.name + '</a>' : buddyInfo.id);
+		var name = fromSelf ? user.name : (info.name ? '<a href="' + info.url + '">' + info.name + '</a>' : info.id);
 		if (last && last.to == to && last.from == from && time - last.timestamp < 60000){
 			shouldTilte = false;
 		}
@@ -82,7 +82,7 @@ widget("history",{
 		}
 		return markup.join("");
 	},
-	plugin_ui:function(ext){
+	ui:function(ext){
 		var self = this;
 		return extend({
 			element: self.element,

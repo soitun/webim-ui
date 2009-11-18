@@ -50,7 +50,9 @@ var sound = (function(){
         }
 })();
 
-
+/*
+* set display frequency.
+*/
 var titleShow = (function(){
 	var _showNoti = false;
 	addEvent(window,"focus",function(){

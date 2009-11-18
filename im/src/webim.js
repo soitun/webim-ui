@@ -62,14 +62,22 @@ extend(webim.prototype, objectExtend,{
 		self.trigger("ready");
 	},
 	go: function(){
-		var self = this, data = self.data, history = self.history, buddy = self.buddy;
+		var self = this, data = self.data, history = self.history, buddy = self.buddy, room = self.room;
 		self.connection.connect(data.connection);
 		history.option("userInfo", data.user);
 		history.init(data.histories);
 		buddy.handle(data.buddies);
 		//buddy load delay
 		buddy.online(data.buddy_online_ids, true);
-		self.room.handle(data.rooms);
+		//rooms
+		//blocked rooms
+		var b = self.setting.get("block_list"), roomData = data.rooms;
+		isArray(b) && roomData && each(b,function(n,v){
+			roomData[v] && (roomData[v].blocked = true);
+		});
+		room.handle(roomData);
+		room.options.ticket = data.connection.ticket;
+		//handle new messages
 		var n_msg = data.new_messages;
 		if(n_msg && n_msg.length)
 			self.trigger("message",[n_msg]);

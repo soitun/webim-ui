@@ -1,21 +1,22 @@
 function imlog(ui){
-	var im = ui.im, log = webim.log;
+	var im = ui.im, log = window.webim.log;
 	im.connection.bind("data",function(data){
-		//log(data, "data");
+		log(data, "data");
 	}).bind("error",function(data){
 		log(data, "connect error");
 	}).bind("close",function(data){
 		log(data, "disconnect");
 	});
 }
-(function(){
+(function(webim){
 	var path = "";
-	//extend(webim.setting.defaults.data,{});
+	//webim.extend(webim.setting.defaults.data,{});
+	webim.extend(webim.setting.defaults.data,{block_list: ["1000001"]});
 	
 	path = document.location.href.split("/webim");
 	path = path.length > 1 ? (path[0] + "/") : "";
 	var menu = [{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon": path + "image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon": path + "image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon": path + "image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon": path + "image\/app\/share.gif","link":"space.php?do=share"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": path + "image\/app\/doing.gif","link":"space.php?do=doing"}];
-	var webim = window.webim, log = webim.log;
+	var log = webim.log;
 	webim.defaults.urls = {
 		online:path + "webim/online.php",
 		online_list:path + "webim/online_list.php",
@@ -28,6 +29,10 @@ function imlog(ui){
 	webim.history.defaults.urls = {
 		load: path + "webim/histories.php",
 		clear: path + "webim/clear_history.php"
+	};
+	webim.room.defaults.urls = {
+		join: path + "webim/join.php",
+		leave: path + "webim/leave.php"
 	};
 	webim.buddy.defaults.url = path + "webim/buddies.php";
 	webim.notification.defaults.url = path + "webim/notifications.php";
@@ -82,4 +87,4 @@ function imlog(ui){
 	(document.body ? create() : webim.ui.ready(create));
 	webim.ui.ready(init);
 
-})();
+})(window.webim);

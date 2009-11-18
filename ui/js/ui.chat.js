@@ -55,8 +55,8 @@ widget("chat",{
 	_init: function(){
 		var self = this, element = self.element, options = self.options, win = self.window = options.window;
 		var history = self.history = new webimUI.history(null,{
-			userInfo: options.userInfo,
-			buddyInfo: options.buddyInfo
+			user: options.user,
+			info: options.info
 		});
 		self.$.content.insertBefore(history.element, self.$.content.firstChild);
 		//self._initEvents();
@@ -65,27 +65,28 @@ widget("chat",{
 			self._bindWindow();
 			//self._fitUI();
 		}
-		self.update(options.buddyInfo);
+		self.update(options.info);
 		history.add(options.history);
-		plugin.call(self, "init", [null, self.plugin_ui()]);
+		plugin.call(self, "init", [null, self.ui()]);
 		self._adjustContent();
 	},
-	update: function(buddyInfo){
+	update: function(info){
 		var self = this;
-		if(buddyInfo){
-			self.option("buddyInfo", buddyInfo);
-			self.history.option("buddyInfo", buddyInfo);
-			self._updateInfo(buddyInfo);
+		if(info){
+			self.option("info", info);
+			self.history.option("info", info);
+			self._updateInfo(info);
 		}
-		var userOn = self.options.userInfo.presence == "online";
-		var buddyOn = self.options.buddyInfo.presence == "online";
+		var userOn = self.options.user.presence == "online";
+		var buddyOn = self.options.info.presence == "online";
 		if(!userOn){
 			self.notice(i18n("user offline notice"));
 		}else if(!buddyOn){
-			self.notice(i18n("buddy offline notice",{name: buddyInfo.name}));
+			self.notice(i18n("buddy offline notice",{name: self.options.info.name}));
 		}else{
 			self.notice("");
 		}
+		plugin.call(self, "update", [null, self.ui()]);
 	},
 	focus: function(){
 		this.$.input.focus();
@@ -142,17 +143,17 @@ widget("chat",{
 		}
 	},
 	_sendMsg: function(val){
-		var self = this, options = self.options, buddyInfo = options.buddyInfo;
+		var self = this, options = self.options, info = options.info;
 		var msg = {
 			type: "msg",
-			to: buddyInfo.id,
-			from: options.userInfo.id,
+			to: info.id,
+			from: options.user.id,
 			stype: '',
-			offline: buddyInfo.presence == "online" ? 0 : 1,
+			offline: info.presence == "online" ? 0 : 1,
 			body: val,
 			timestamp: (new Date()).getTime()
 		};
-		plugin.call(self, "send", [null, self.plugin_ui({msg: msg})]);
+		plugin.call(self, "send", [null, self.ui({msg: msg})]);
 		self.trigger('sendMsg', msg);
 		//self.sendStatus("");
 	},
@@ -254,7 +255,7 @@ widget("chat",{
 		if (!show || show == self._statusText) return;
 		self._statusText = show;
 		self.trigger('sendStatus', {
-			to: self.options.buddyInfo.id,
+			to: self.options.info.id,
 			show: show
 		});
 	},
@@ -272,7 +273,7 @@ widget("chat",{
 	status: function(type){
 		//type ['typing']
 		type = type || 'clear';
-		var self = this, el = self.$.status, name = self.options.buddyInfo.name, markup = '';
+		var self = this, el = self.$.status, name = self.options.info.name, markup = '';
 		markup = type == 'clear' ? '' : name + i18n(type);
 		el.innerHTML = markup;
 		self._adjustContent();
@@ -285,7 +286,7 @@ widget("chat",{
 	destroy: function(){
 		this.window.close();
 	},
-	plugin_ui:function(ext){
+	ui:function(ext){
 		var self = this;
 		return extend({
 			self: self,
@@ -323,8 +324,63 @@ plugin.add("chat","clearHistory",{
 		var trigger = createElement(tpl('<a href="#chat-clearHistory" title="<%=clear history%>"><em class="webim-icon webim-icon-clear"></em></a>'));
 		addEvent(trigger,"click",function(e){
 			preventDefault(e);
-			chat.trigger("clearHistory",[chat.options.buddyInfo]);
+			chat.trigger("clearHistory",[chat.options.info]);
 		});
 		ui.$.tools.appendChild(trigger);
+	}
+});
+webimUI.chat.defaults.block = true;
+plugin.add("chat","block",{
+	init:function(e, ui){
+		var chat = ui.self;
+		var blocked = chat.options.info.blocked,
+		name = chat.options.info.name,
+		block = createElement('<a href="#chat-block" style="display:'+(blocked ? 'none' : '')+'" title="'+ i18n('block group',{name:name}) +'"><em class="webim-icon webim-icon-unblock"></em></a>'),
+		unblock = createElement('<a href="#chat-block" style="display:'+(blocked ? '' : 'none')+'" title="'+ i18n('unblock group',{name:name}) +'"><em class="webim-icon webim-icon-block"></em></a>');
+		addEvent(block,"click",function(e){
+			preventDefault(e);
+			hide(block);
+			show(unblock);
+			chat.trigger("block",[chat.options.info]);
+		});
+		addEvent(unblock,"click",function(e){
+			preventDefault(e);
+			hide(unblock);
+			show(block);
+			chat.trigger("unblock",[chat.options.info]);
+		});
+		ui.$.tools.appendChild(block);
+		ui.$.tools.appendChild(unblock);
+	}
+});
+webimUI.chat.defaults.member = true;
+extend(webimUI.chat.prototype, {
+	addMember: function(id, name){
+		var self = this, ul = self.$.member, li = self.memberLi;
+		if(li[id])return;
+		var el = createElement('<li><a href="'+ id +'">'+ name +'</a></li>');
+		addEvent(el.firstChild,"click",function(e){
+			preventDefault(e);
+			self.trigger("select", [{id: id, name: name}]);
+		});
+		li[id] = el;
+		self.$.member.appendChild(el);
+
+	},
+	removeMember: function(id){
+		var self = this, el = self.memberLi[id];
+		if(el){
+			self.$.member.removeChild(el);
+			delete self.memberLi[id];
+		}
+	}
+});
+plugin.add("chat","member",{
+	init:function(e, ui){
+		var chat = ui.self, $ = ui.$;
+		chat.memberLi = {};
+		var member = createElement('<div class="webim-member ui-widget-content ui-corner-left"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><ul></ul></div>');
+		$.member = member.lastChild;
+		$.content.parentNode.insertBefore(member, $.content);
 	}
 });

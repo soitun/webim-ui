@@ -16,13 +16,13 @@
 }
 /**/
 .webim .webim-chat .webim-chat-header{
-		border-left-width:0;
-		border-right-width:0;
+	border-left-width:0;
+	border-right-width:0;
 }
 .webim .webim-chat-content{
         height: 16em;
         overflow-y:auto;
-        overflow-x:hidden;
+        overflow-x:visible;
         *background:url(about:blank);
 }
 .webim .webim-chat-status{
@@ -75,4 +75,30 @@
 .webim .webim-chat-tool-content{
         position: relative;
         height:0;
+}
+
+/*member*/
+.webim .webim-member{
+	margin-top:  -.1em;
+	height: 16em;
+	width: 7em;
+	left: -7.1em;
+	position: absolute;
+}
+.webim .webim-chat .webim-member .webim-bgiframe{
+	top: -.1em;
+	left: -.1em;
+	width: 7.2em;
+	height: 16.2em;
+}
+.webim .webim-member ul{
+	height: 16em;
+	width: 7em;
+	position: absolute;
+        overflow-y:auto;
+        overflow-x:hidden;
+	list-style: none;
+}
+.webim .webim-member li{
+	margin: 0.1em 0.1em 0.1em 0.5em;
 }

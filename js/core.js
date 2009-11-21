@@ -84,12 +84,14 @@ function removeClass(obj,name){
 function replaceClass(obj,_old, _new){
 	obj && (obj.className=obj.className.replace(new RegExp("(^|\\s+)("+_old.split(/\s+/).join("|")+")(\\s+|$)","g")," ") + " " + _new);
 }
-function hoverClass(obj, name){
+function hoverClass(obj, name, toggleClass){
 	addEvent(obj,"mouseover",function(){
 		addClass(this, name);
+		toggleClass && (removeClass(this, toggleClass));
 	});
 	addEvent(obj,"mouseout",function(){
 		removeClass(this, name);
+		toggleClass && (addClass(this, toggleClass));
 	});
 }
 function toggleClass(obj, name, is){

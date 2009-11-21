@@ -4,10 +4,16 @@
         font-size: 1.2em !important;
 }
 .ui-toolbar{ 
-	opacity:0.6;
-	filter:alpha(opacity=60);
+	opacity:0.75;
+	filter:alpha(opacity=75);
+	/*
         border: 1px solid #b5b5b5;
         background:#eee url(../images/bar_bg.gif) repeat-x scroll left top; color: #333; 
+	*/
+}
+
+.webim-layout .webim-window-tab-wrap .ui-state-default{
+	background: none;
 }
 .ui-widget-subheader { 
         border: 1px solid #ccc; 
@@ -57,6 +63,8 @@
 	height: 2.7em;
 	z-index:-1;
         border-bottom-width:0;
+}
+* html .webim-layout-bg{
 	width: expression(this.parentNode.offsetWidth+'px');
 }
 
@@ -110,7 +118,6 @@
 } 
 .webim-layout .webim-window-tab-wrap{
         float: left;
-        
 }
 .webim-layout .webim-window-tab .webim-icon{
         float: left;

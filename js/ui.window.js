@@ -201,7 +201,7 @@ widget("window", {
 			else self.minimize();
 			stop(e);
 		});
-		hoverClass(tab, "ui-state-hover");
+		hoverClass(tab, "ui-state-hover", "ui-state-default");
 		addEvent(tab,"mousedown",stop);
 		disableSelection(tab);
 

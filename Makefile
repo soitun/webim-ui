@@ -1,6 +1,6 @@
 PREFIX = .
 
-BUILD_DIR = ${PREFIX}/build
+BUILD_DIR = ${PREFIX}/im/build
 DOCS_DIR = ${PREFIX}/docs
 DIST_DIR = ${PREFIX}/dist
 

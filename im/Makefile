@@ -17,8 +17,9 @@ BASE_FILES = ${SRC_DIR}/core.js\
 	${SRC_DIR}/setting.js\
 	${SRC_DIR}/status.js\
 	${SRC_DIR}/buddy.js\
+	${SRC_DIR}/room.js\
 	${SRC_DIR}/notification.js\
-	${SRC_DIR}/history.js\
+	${SRC_DIR}/history.js
 
 
 WEBIM_FILES = ${SRC_DIR}/intro.js\

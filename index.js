@@ -11,7 +11,7 @@ function imlog(ui){
 (function(webim){
 	var path = "";
 	//webim.extend(webim.setting.defaults.data,{});
-	webim.extend(webim.setting.defaults.data,{block_list: ["1000001"]});
+	//webim.extend(webim.setting.defaults.data,{block_list: ["1000001"]});
 	
 	path = document.location.href.split("/webim");
 	path = path.length > 1 ? (path[0] + "/") : "";
@@ -31,6 +31,7 @@ function imlog(ui){
 		clear: path + "webim/clear_history.php"
 	};
 	webim.room.defaults.urls = {
+		member: path + "webim/members.php",
 		join: path + "webim/join.php",
 		leave: path + "webim/leave.php"
 	};

@@ -48,7 +48,7 @@ roomUserInfo:
 {
         "id": 2,
       //  "jid":"2@www.uchome.com",
-        "presence":"online", //["online", "offline"]
+        //"presence":"online", //["online", "offline"]
         "name":"test"
 }
 roomInfo:       //群组信息
@@ -142,6 +142,17 @@ webim/leave POST
         }
         response
 
+webim/members GET
+        params
+        {
+                ids:"1",
+		ticket: &key
+        }
+        response
+        {
+        	10001:[&roomUserInfo],
+        	10002:[&roomUserInfo]
+	}
 
 webim/histories GET
         params
@@ -155,7 +166,7 @@ webim/message POST
         params
         {
                 ticket: &key,
-                type: "msg",
+                type: "unicast", //[unicast, multicast] 一对一buddy, 一对多room
                 offline: 1, //to 离线消息
                 to: "11",
                 body: "sdf",
@@ -211,4 +222,5 @@ webim/refresh POST
         ok
 
 -------------------------end----------------------
+
 

@@ -36,12 +36,22 @@ var objectExtend = {
 		var self = this, _events = self._events = self._events || {};
 		if (!_events[type]) return this;
 		if (isFunction(fn)){
-			for (var i = _events.length; i--; i){
-				if (_events[i] === fn) _events.splice(i, 1);
+			var _e = _events[type];
+			for (var i = _e.length; i--; i){
+				if (_e[i] === fn || _e[i] === fn._proxy) _e.splice(i, 1);
 			}
 		} else {
 			delete _events[type];
 		}
 		return this;
+	},
+	one: function(type, fn){
+		if (!isFunction(fn)) return this;
+		var self = this,
+		one = fn._proxy = function(){
+			self.unbind(type, one);
+			return fn.apply(this, arguments);
+		};
+		self.bind(type, one);
 	}
 };

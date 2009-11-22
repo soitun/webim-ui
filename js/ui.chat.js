@@ -145,7 +145,7 @@ widget("chat",{
 	_sendMsg: function(val){
 		var self = this, options = self.options, info = options.info;
 		var msg = {
-			type: "msg",
+			type: options.msgType,
 			to: info.id,
 			from: options.user.id,
 			stype: '',
@@ -355,13 +355,13 @@ plugin.add("chat","block",{
 });
 webimUI.chat.defaults.member = true;
 extend(webimUI.chat.prototype, {
-	addMember: function(id, name){
+	addMember: function(id, name, disable){
 		var self = this, ul = self.$.member, li = self.memberLi;
 		if(li[id])return;
-		var el = createElement('<li><a href="'+ id +'">'+ name +'</a></li>');
+		var el = createElement('<li><a class="'+ (disable ? 'ui-state-disabled' : '') +'" href="'+ id +'">'+ name +'</a></li>');
 		addEvent(el.firstChild,"click",function(e){
 			preventDefault(e);
-			self.trigger("select", [{id: id, name: name}]);
+			disable || self.trigger("select", [{id: id, name: name}]);
 		});
 		li[id] = el;
 		self.$.member.appendChild(el);

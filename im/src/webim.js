@@ -154,15 +154,18 @@ extend(webim.prototype, objectExtend,{
 	},
 	stranger_ids:[],
 	online:function(){
-		var self = this, status = self.status;
+		var self = this, status = self.status, buddy_ids = [], tabs = status.get("tabs"), tabIds = status.get("tabIds");
 		//set auto open true
 		status.set("o", false);
 		self.ready();
+		tabIds && tabIds.length && tabs && each(tabs, function(k,v){
+			v["t"] == "buddy" && buddy_ids.push(k);
+		});
 		ajax({
 			type:"post",
 			dataType: "json",
 			data:{                                
-				buddy_ids: idsArray(status.get("tabIds")).join(","),
+				buddy_ids: buddy_ids.join(","),
 				stranger_ids: self.stranger_ids.join(",")
 			},
 			url: self.options.urls.online,
@@ -214,7 +217,7 @@ extend(webim.prototype, objectExtend,{
 
 });
 function idsArray(ids){
-	return ids && ids.split ? ids.split(",") : (isArray(ids) ? ids : []);
+	return ids && ids.split ? ids.split(",") : (isArray(ids) ? ids : (parseInt(ids) ? [parseInt(ids)] : []));
 }
 function model(name, defaults, proto){
 	function m(data,options){

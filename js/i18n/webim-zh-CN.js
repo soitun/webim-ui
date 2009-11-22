@@ -58,6 +58,7 @@ webim.ui.i18n.store('zh-CN',{
         "minimize_layout": "收缩工具条",
 	"emot":"表情",
 	"clear history":"清除历史记录",
+	"blocked": "已屏蔽",
 	"block group": "屏蔽来自{{name}}的消息",
 	"unblock group": "取消屏蔽",
         "empty buddy": "没有好友在线",

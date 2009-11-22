@@ -66,7 +66,7 @@ model("buddy", {
 		self.load(cache_ids);
 	},
 	update: function(ids){
-		this.load(idsArray(ids));
+		this.load(ids);
 	},
 	changeStatus:function(ids, type, needLoad, loadDelay){
 		ids = idsArray(ids);

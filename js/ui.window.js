@@ -108,7 +108,10 @@ widget("window", {
 		var self = this, $ = self.$;
 		if(type == "information"){
 			if(self.isMinimize()){
-				if(_countDisplay($.tabCount, count))addClass($.tab,"ui-state-highlight");
+				if(_countDisplay($.tabCount, count)){
+					addClass($.tab,"ui-state-highlight");
+					removeClass($.tab, "ui-state-default");
+				}
 			}
 		}
 	},
@@ -127,7 +130,9 @@ widget("window", {
 			}
 		}
 		$.tabTipC.innerHTML = title;
-		$.tabTitle.innerHTML = subVisibleLength(title, 0, self.options.titleVisibleLength);
+		var t = subVisibleLength(title, 0, self.options.titleVisibleLength);
+		$.tabTitle.innerHTML = t;
+		t && title && t.length < title.length && $.tabTitle.setAttribute("title",title);
 		$.headerTitle.innerHTML = title;
 	},
 	_changeState:function(state){
@@ -153,10 +158,9 @@ widget("window", {
 	},
 	_setVisibile: function(){
 		var self = this, $ = self.$;
-		addClass($.tab, "ui-state-active");
+		replaceClass($.tab, "ui-state-default ui-state-highlight", "ui-state-active");
 		self.activate();
 		_countDisplay($.tabCount, 0);
-		removeClass($.tab, "ui-state-highlight");
 	},
 	maximize: function(){
 		var self = this;
@@ -173,7 +177,7 @@ widget("window", {
 	minimize: function(){
 		var self = this;
 		if(self.isMinimize())return;
-		removeClass(self.$.tab, "ui-state-active");
+		replaceClass(self.$.tab, "ui-state-active", "ui-state-default");
 		self.deactivate();
 		self._changeState("minimize");
 	},
@@ -201,7 +205,14 @@ widget("window", {
 			else self.minimize();
 			stop(e);
 		});
-		hoverClass(tab, "ui-state-hover", "ui-state-default");
+		addEvent(tab,"mouseover",function(){
+			addClass(this, "ui-state-hover");
+			removeClass(this, "ui-state-default");
+		});
+		addEvent(tab,"mouseout",function(){
+			removeClass(this, "ui-state-hover");
+			this.className.indexOf("ui-state-") == -1 && addClass(this, "ui-state-default");
+		});
 		addEvent(tab,"mousedown",stop);
 		disableSelection(tab);
 

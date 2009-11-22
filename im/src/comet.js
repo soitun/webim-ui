@@ -128,7 +128,7 @@ extend(comet.prototype, objectExtend, {
                 };
                 if(options.jsonp){
                 	extend(o,{
-                	        timeout: 20000,
+                	        timeout: 40000,
                 	        dataType: 'jsonp',
                 	        jsonp: 'callback'
                 	});

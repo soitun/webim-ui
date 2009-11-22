@@ -91,7 +91,7 @@ extend(webimUI.prototype, objectExtend, {
 		sound.init(urls || this.options.soundUrls);
 	},
 	_initEvents: function(){
-		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting;
+		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting, room = im.room;
 		//im events
 		im.bind("ready",function(){
 			buddyUI.online();
@@ -109,16 +109,30 @@ extend(webimUI.prototype, objectExtend, {
 			type && buddyUI.notice(type);
 		});
 		//room
-		im.room.bind("join",function(rooms){
-			each(rooms, function(k, room){
-				room = extend({},room,{group:"group"});
-				buddyUI.add(room, true);
-			});
+		function updateRoom(info){
+			var name = info.name;
+			info = extend({},info,{group:"group", name: name + "(" + (parseInt(info.count) + "/"+ parseInt(info.all_count)) + ")"});
+			layout.updateChat(info);
+			info.blocked && (info.name = name + "(" + i18n("blocked") + ")");
+			buddyUI.li[info.id] ? buddyUI.update(info) : buddyUI.add(info, true);
+		}
+		room.bind("join",function(info){
+			updateRoom(info);
 		}).bind("leave", function(rooms){
 		}).bind("block", function(id, list){
 			setting.set("block_list",list);
+			updateRoom(room.get(id));
 		}).bind("unblock", function(id, list){
 			setting.set("block_list",list);
+			updateRoom(room.get(id));
+		}).bind("addMember", function(room_id, info){
+			var c = layout.chat(room_id);
+			c && c.addMember(info.id, info.name, info.id == im.data.user.id);
+			updateRoom(room.get(room_id));
+		}).bind("removeMember", function(room_id, info){
+			var c = layout.chat(room_id);
+			c && c.removeMember(info.id, info.name);
+			updateRoom(room.get(room_id));
 		});
 		//setting events
 		setting.bind("update",function(key, val){
@@ -210,7 +224,7 @@ extend(webimUI.prototype, objectExtend, {
 				var p = c.window.pos;
 				(p == -1) && layout.setNextMsgNum(count);
 				(p == 1) && layout.setPrevMsgNum(count);
-				if(d.to == uid && d.from != uid)show = true;
+				if(d.from != uid)show = true;
 			}
 			if(show){
 				sound.play('msg');
@@ -297,11 +311,16 @@ extend(webimUI.prototype, objectExtend, {
 		if(options && options.type == "room"){
 			var h = history.get(id), info = room.get(id), _info = info || {id:id, name: name || id};
 			_info.presence = "online";
-			layout.addChat(_info, extend({history: h, block: true, emot:true, clearHistory: false}, options), winOptions);
+			layout.addChat(_info, extend({history: h, block: true, emot:true, clearHistory: false, member: true, msgType: "multicast"}, options), winOptions);
+			if(!h) history.load(id);
 			var chat = layout.chat(id);
 			chat.bind("sendMsg", function(msg){
 				im.sendMsg(msg);
 				history.handle(msg);
+			}).bind("select", function(info){
+				buddy.online(info.id, 1);//online
+				self.addChat(info.id, {type: "buddy"}, null, info.name);
+				layout.focusChat(info.id);
 			}).bind("block", function(d){
 				room.block(d.id);
 			}).bind("unblock", function(d){
@@ -309,12 +328,18 @@ extend(webimUI.prototype, objectExtend, {
 			}).window.bind("close",function(){
 				chat.options.info.blocked && room.leave(id);
 			});
-			chat.options.info.blocked && room.join(id);
+			setTimeout(function(){
+				if(chat.options.info.blocked)room.join(id);
+				else room.initMember(id);
+			}, 500);
+			isArray(info.members) && each(info.members, function(n, info){
+				chat.addMember(info.id, info.name, info.id == im.data.user.id);
+			});
 
 		}else{
 			var h = history.get(id), info = buddy.get(id);
 			var _info = info || {id:id, name: name || id};
-			layout.addChat(_info, extend({history: h, block: false, emot:true, clearHistory: true}, options), winOptions);
+			layout.addChat(_info, extend({history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast"}, options), winOptions);
 			if(!info) buddy.update(id);
 			if(!h) history.load(id);
 			layout.chat(id).bind("sendMsg", function(msg){

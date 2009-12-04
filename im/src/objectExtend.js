@@ -48,7 +48,7 @@ var objectExtend = {
 	one: function(type, fn){
 		if (!isFunction(fn)) return this;
 		var self = this,
-		one = fn._proxy = function(){
+		one = fn._proxy = fun._proxy || function(){
 			self.unbind(type, one);
 			return fn.apply(this, arguments);
 		};

@@ -56,8 +56,8 @@ UI_ALL_JS_FILES = ${IM}\
 UI_VER = `cat ${SRC_DIR}/version.txt`
 #DATE=`svn info . | grep Date: | sed 's/.*: //g'`
 #REV=`svn info . | grep Rev: | sed 's/.*: //g'`
-DATE=`git show . | grep Date: | sed 's/.*: //g'`
-REV=`git show . | grep Rev: | sed 's/.*: //g'`
+DATE=`git log -n 1 | grep Date: | sed 's/.*: //g'`
+REV=`git log -n 1 | grep Rev: | sed 's/.*: //g'`
 
 REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
 		sed 's/Revision:./&'"${REV}"'/' | \

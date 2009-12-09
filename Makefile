@@ -54,14 +54,16 @@ UI_ALL_JS_FILES = ${IM}\
 	${UI_JS_FILES}\
 
 UI_VER = `cat ${SRC_DIR}/version.txt`
-DATE=`svn info . | grep Date: | sed 's/.*: //g'`
-REV=`svn info . | grep Rev: | sed 's/.*: //g'`
+#DATE=`svn info . | grep Date: | sed 's/.*: //g'`
+#REV=`svn info . | grep Rev: | sed 's/.*: //g'`
+DATE=`git show . | grep Date: | sed 's/.*: //g'`
+REV=`git show . | grep Rev: | sed 's/.*: //g'`
 
-#REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
+REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
 		sed 's/Revision:./&'"${REV}"'/' | \
 		sed s/@VERSION/${UI_VER}/
 
-REPLACE = sed s/@VERSION/${UI_VER}/
+#REPLACE = sed s/@VERSION/${UI_VER}/
 
 MINJAR = java -jar ${BUILD_DIR}/yuicompressor-2.4.2.jar
 UNICODE = native2ascii -encoding utf-8 

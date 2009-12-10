@@ -1,4 +1,4 @@
-webim.ui.i18n.locale = 'zh-CN';
+﻿webim.ui.i18n.locale = 'zh-CN';
 webim.ui.i18n.store('zh-CN',{
         "dt:monthdate": "{{month}}{{date}}日",
         "dt:today": "今天",
@@ -64,6 +64,7 @@ webim.ui.i18n.store('zh-CN',{
         "empty buddy": "没有好友在线",
         "empty menu": "没有工具",
         "empty notification": "空",
+        "empty hotpost":"空",
         "collapse": "收缩",
         "expand": "展开",
 	"friend":"好友",

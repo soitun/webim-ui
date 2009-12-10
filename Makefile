@@ -25,6 +25,8 @@ CSS_BASE_FILES = ${CSS_SRC_DIR}/core.css\
 	${CSS_SRC_DIR}/menu.css\
 	${CSS_SRC_DIR}/history.css\
 	${CSS_SRC_DIR}/layout.css\
+	${CSS_SRC_DIR}/hotpost.css\
+
 
 IM = ${SRC_DIR}/im/dist/webim.js
 
@@ -43,6 +45,7 @@ JS_BASE_FILES = ${JS_SRC_DIR}/core.js\
 	${JS_SRC_DIR}/ui.history.js\
 	${JS_SRC_DIR}/ui.menu.js\
 	${JS_SRC_DIR}/ui.chat.js\
+	${JS_SRC_DIR}/ui.hotpost.js\
 
 UI_CSS_FILES = ${CSS_BASE_FILES}
 

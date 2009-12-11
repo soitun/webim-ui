@@ -53,6 +53,25 @@ function imlog(ui){
 		imUI = new webim.ui(null,{menu: menu});
 		im = imUI.im;
 		layout = imUI.layout;
+		//hotpost start
+		var hotpost = new webim.hotpost();
+		var hotpostUI = new webimUI.hotpost();
+		layout.addApp(hotpostUI, {
+			title: i18n("hotpost"),
+			icon: "hotpost",
+			sticky: false,
+			onlyIcon: true,
+			isMinimize: true
+		}, "setting");
+		hotpost.bind("data",function( data){
+			hotpostUI.$.ul.innerHTML = "";
+			hotpostUI.add(data);
+		});
+		setTimeout(function(){
+			hotpost.load();
+		}, 2000);
+		//hotpost end
+
 		body.appendChild(layout.element);
 		//need timeout
 		setTimeout(function(){imUI.initSound(soundUrls)},1000);
@@ -90,3 +109,4 @@ function imlog(ui){
 	webim.ui.ready(init);
 
 })(window.webim);
+

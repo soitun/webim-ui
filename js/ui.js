@@ -29,7 +29,6 @@ extend(webimUI.prototype, objectExtend, {
 			chatAutoPop: im.setting.get("msg_auto_pop")
 		}),
 		options = self.options;
-                self.hotpost = new webimUI.hotpost();
 		self.notification = new webimUI.notification();
 		var d = im.setting.data;
 		self.setting = new webimUI.setting(null,{
@@ -64,13 +63,7 @@ extend(webimUI.prototype, objectExtend, {
 			isMinimize: !im.status.get("b"),
 			titleVisibleLength: 19
 		});
-	   	layout.addApp(self.hotpost, {
-			title: i18n("hotpost"),
-			icon: "hotpost",
-			sticky: false,
-			onlyIcon: true,
-			isMinimize: true
-		});
+
 		layout.addApp(self.notification, {
 			title: i18n("notification"),
 			icon: "notification",
@@ -99,7 +92,7 @@ extend(webimUI.prototype, objectExtend, {
 		sound.init(urls || this.options.soundUrls);
 	},
 	_initEvents: function(){
-		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, hotpostUI = self.hotpost,notificationUI = self.notification, settingUI = self.setting, room = im.room;
+		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting, room = im.room;
 		//im events
 		im.bind("ready",function(){
 			buddyUI.online();
@@ -290,14 +283,7 @@ extend(webimUI.prototype, objectExtend, {
     setTimeout(function(){
 			im.notification.load();
 		}, 2000);  
-                //hotpost
-    im.hotpost.bind("data",function( data){
-		    	hotpostUI.$.ul.innerHTML = "";
-			hotpostUI.add(data);
-		});
-    setInterval(function(){
-			im.hotpost.load();
-		}, 2000);
+
 	},
 	__status: false,
 	_initStatus: function(){

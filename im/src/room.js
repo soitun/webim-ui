@@ -98,9 +98,9 @@
 					}
 				}
 				if(!member){
-					room.count++;
 					info.name = info.nick || info.name;
 					members.push(info);
+					room.members.length;
 					self.trigger("addMember",[room_id, info]);
 				}
 			}

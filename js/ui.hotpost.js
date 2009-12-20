@@ -15,6 +15,28 @@
  events: 
 
  */
+app("hotpost",{
+	init: function(){
+		//hotpost start
+		var model = new webim.hotpost();
+		var widget = new webimUI.hotpost();
+		this.layout.addApp(widget, {
+			title: i18n("hotpost"),
+			icon: "hotpost",
+			sticky: false,
+			onlyIcon: true,
+			isMinimize: true
+		}, "setting");
+		model.bind("data",function( data){
+			widget.$.ul.innerHTML = "";
+			widget.add(data);
+		});
+		setTimeout(function(){
+			model.load();
+		}, 2000);
+		//hotpost end
+	}
+});
 widget("hotpost",{
         template: '<div id="webim-hotpost" class="webim-hotpost">\
                         <ul id=":ul"><%=list%></ul>\

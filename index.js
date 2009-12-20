@@ -43,67 +43,24 @@ function imlog(ui){
 		lib: path + "webim/static/assets/sound.swf",
 		msg: path + "webim/static/assets/sound/msg.mp3"
 	};
-	function mapIds(data){
-		return webim.map(data, function(v,i){ return v.id});
-	}
 
-	var body , imUI, im, layout, chatlink;
+	var body , imUI, im, layout;
 	function create(){
 		body = document.body;
 		imUI = new webim.ui(null,{menu: menu});
 		im = imUI.im;
 		layout = imUI.layout;
-		//hotpost start
-		var hotpost = new webim.hotpost();
-		var hotpostUI = new webimUI.hotpost();
-		layout.addApp(hotpostUI, {
-			title: i18n("hotpost"),
-			icon: "hotpost",
-			sticky: false,
-			onlyIcon: true,
-			isMinimize: true
-		}, "setting");
-		hotpost.bind("data",function( data){
-			hotpostUI.$.ul.innerHTML = "";
-			hotpostUI.add(data);
-		});
-		setTimeout(function(){
-			hotpost.load();
-		}, 2000);
-		//hotpost end
-
+		imUI.addApp("hotpost");
+		imUI.addApp("chatlink");
 		body.appendChild(layout.element);
 		//need timeout
 		setTimeout(function(){imUI.initSound(soundUrls)},1000);
-		im.bind("ready",ready).bind("go",go).bind("stop",stop);
 		//log
 		imlog(imUI);
 	}
 	function init(){
 		layout.buildUI();
-		chatlink = new webim.ui.chatlink(null).bind("select",function(id){
-			imUI.addChat(id);
-			layout.focusChat(id);
-		});
-		im.buddy.bind("online",function(data){
-			chatlink.online(mapIds(data));
-		}).bind("onlineDelay",function(data){
-			chatlink.online(mapIds(data));
-		}).bind("offline",function(data){
-			chatlink.offline(mapIds(data));
-		});
-		im.setStranger(chatlink.idsArray());
 		im.autoOnline() && im.online();
-	}
-	function ready(){
-		chatlink.enable();
-	}
-	function go(){
-		chatlink.remove(im.data.user.id);
-	}
-	function stop(){
-		chatlink.disable();
-		chatlink.offline(chatlink.idsArray());
 	}
 	(document.body ? create() : webim.ui.ready(create));
 	webim.ui.ready(init);

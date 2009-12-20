@@ -88,6 +88,19 @@ extend(webimUI.prototype, objectExtend, {
 
 		self._initEvents();
 	},
+	addApp: function(name){
+		var e = webimUI.apps[name];
+		if(!e)return;
+		var self = this;
+		isFunction(e.init) && e.init.apply(self, []);
+		self.im.bind("ready", function(){
+			isFunction(e.ready) && e.ready.apply(self, []);
+		}).bind("go", function(){
+			isFunction(e.go) && e.go.apply(self, []);
+		}).bind("stop", function(){
+			isFunction(e.stop) && e.stop.apply(self, []);
+		});
+	},
 	initSound: function(urls){
 		sound.init(urls || this.options.soundUrls);
 	},
@@ -485,15 +498,19 @@ extend(widget.prototype, {
 	_init: function(){
 	}
 });
-
+function app(name, events){
+	webimUI.apps[name] = events || {};
+}
 extend(webimUI,{
 	version: "@VERSION",
 	widget: widget,
+	app: app,
 	plugin: plugin,
 	i18n: i18n,
 	date: date,
 	ready: ready,
-	createElement: createElement
+	createElement: createElement,
+	apps:{}
 });
 webim.ui = webimUI;
 

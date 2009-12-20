@@ -18,7 +18,36 @@ select
 
 */
 
-
+app("chatlink",{
+	init: function(){
+		var ui = this, im = ui.im;
+		var chatlink = ui.chatlink = new webim.ui.chatlink(null).bind("select",function(id){
+			ui.addChat(id);
+			ui.layout.focusChat(id);
+		});
+		im.buddy.bind("online",function(data){
+			chatlink.online(mapIds(data));
+		}).bind("onlineDelay",function(data){
+			chatlink.online(mapIds(data));
+		}).bind("offline",function(data){
+			chatlink.offline(mapIds(data));
+		});
+		im.setStranger(chatlink.idsArray());
+		function mapIds(data){
+			return webim.map(data, function(v,i){ return v.id});
+		}
+	},
+	ready: function(){
+		this.chatlink.enable();
+	},
+	go: function(){
+		this.chatlink.remove(this.im.data.user.id);
+	},
+	stop: function(){
+		this.chatlink.disable();
+		this.chatlink.offline(this.chatlink.idsArray());
+	}
+});
 widget("chatlink",{
 	filterId: function(link){
 		if(!link)return false;

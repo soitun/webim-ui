@@ -26,7 +26,7 @@
  */
 
 widget("layout",{
-        template: '<div id="webim" class="webim">\
+        template: '<div id="webim" class="webim webim-state-ready">\
                     <div class="webim-preload ui-helper-hidden-accessible">\
                     <div id="webim-flashlib-c">\
                     </div>\
@@ -108,6 +108,9 @@ widget("layout",{
 		//self.element.parent("body").length && self.buildUI();
 		//
 		//test
+	},
+	changeState: function(state){
+		this.element.className = "webim webim-state-" + state;//ready,go,stop
 	},
 	_ready:false,
 	buildUI: function(e){

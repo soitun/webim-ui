@@ -108,8 +108,10 @@ extend(webimUI.prototype, objectExtend, {
 		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting, room = im.room;
 		//im events
 		im.bind("ready",function(){
+			layout.changeState("reactive");
 			buddyUI.online();
 		}).bind("go",function(data){
+			layout.changeState("active");
 			layout.option("user", data.user);
 			date.init(data.server_time);
 			self._initStatus();
@@ -117,36 +119,11 @@ extend(webimUI.prototype, objectExtend, {
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 			setting.set(data.setting);
 		}).bind("stop", function(type){
+			layout.changeState("inactive");
 			type == "offline" && layout.removeAllChat();
 			layout.updateAllChat();
 			buddyUI.offline();
 			type && buddyUI.notice(type);
-		});
-		//room
-		function updateRoom(info){
-			var name = info.name;
-			info = extend({},info,{group:"group", name: name + "(" + (parseInt(info.count) + "/"+ parseInt(info.all_count)) + ")"});
-			layout.updateChat(info);
-			info.blocked && (info.name = name + "(" + i18n("blocked") + ")");
-			buddyUI.li[info.id] ? buddyUI.update(info) : buddyUI.add(info, true);
-		}
-		room.bind("join",function(info){
-			updateRoom(info);
-		}).bind("leave", function(rooms){
-		}).bind("block", function(id, list){
-			setting.set("block_list",list);
-			updateRoom(room.get(id));
-		}).bind("unblock", function(id, list){
-			setting.set("block_list",list);
-			updateRoom(room.get(id));
-		}).bind("addMember", function(room_id, info){
-			var c = layout.chat(room_id);
-			c && c.addMember(info.id, info.name, info.id == im.data.user.id);
-			updateRoom(room.get(room_id));
-		}).bind("removeMember", function(room_id, info){
-			var c = layout.chat(room_id);
-			c && c.removeMember(info.id, info.name);
-			updateRoom(room.get(room_id));
 		});
 		//setting events
 		setting.bind("update",function(key, val){
@@ -186,7 +163,7 @@ extend(webimUI.prototype, objectExtend, {
 
 		//select a buddy
 		buddyUI.bind("select", function(info){
-			self.addChat(info.id, {type: info.group == "group" ? "room" : "buddy"});
+			self.addChat(info.id, {type: "buddy"});
 			layout.focusChat(info.id);
 		}).bind("offline",function(){
 			im.offline();

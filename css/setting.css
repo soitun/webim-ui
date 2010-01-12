@@ -3,6 +3,7 @@
  */
 #webim-setting{
         padding: 1em 0;
+        width:20em;
 
 }
 #webim-setting ul{
@@ -22,12 +23,12 @@
   float:right;
   position:absolute;
   bottom:.5em;
-  left:19em;
+  left:17em;
 }
 .webim-setting-online{
   float:right;
   position:absolute;
   bottom:.5em;
-  left:19em;
+  left:17em;
   display:none;
 }

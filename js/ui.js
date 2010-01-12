@@ -111,6 +111,7 @@ extend(webimUI.prototype, objectExtend, {
 			layout.changeState("reactive");
 			buddyUI.online();
       settingUI.online();
+      show(layout.app("room").window.element);
 		}).bind("go",function(data){
 			layout.changeState("active");
 			layout.option("user", data.user);
@@ -126,7 +127,7 @@ extend(webimUI.prototype, objectExtend, {
 			buddyUI.offline();
 			type && buddyUI.notice(type);
       settingUI.offline();
-      layout.app("buddy");
+      hide(layout.app("room").window.element);
 		});
 		//setting events
 		setting.bind("update",function(key, val){

@@ -110,6 +110,7 @@ extend(webimUI.prototype, objectExtend, {
 		im.bind("ready",function(){
 			layout.changeState("reactive");
 			buddyUI.online();
+      settingUI.online();
 		}).bind("go",function(data){
 			layout.changeState("active");
 			layout.option("user", data.user);
@@ -124,6 +125,8 @@ extend(webimUI.prototype, objectExtend, {
 			layout.updateAllChat();
 			buddyUI.offline();
 			type && buddyUI.notice(type);
+      settingUI.offline();
+      layout.app("buddy");
 		});
 		//setting events
 		setting.bind("update",function(key, val){
@@ -147,6 +150,14 @@ extend(webimUI.prototype, objectExtend, {
 		settingUI.bind("change",function(key, val){
 			setting.set(key, val);
 		});
+    //handle 
+    settingUI.bind("offline",function(){
+      im.trigger("stop");
+    });
+    settingUI.bind("online",function(){
+      im.trigger("ready");  
+    });
+
 		layout.bind("collapse", function(){
 			setting.set("minimize_layout", true);
 		});
@@ -164,8 +175,6 @@ extend(webimUI.prototype, objectExtend, {
 		//select a buddy
 		buddyUI.bind("select", function(info){
 			self.addChat(info.id, {type: "buddy"});
-			layout.focusChat(info.id);
-		}).bind("offline",function(){
 			im.offline();
 		}).bind("online",function(){
 			im.online();

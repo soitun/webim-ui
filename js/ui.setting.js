@@ -17,6 +17,8 @@
 widget("setting",{
         template: '<div id="webim-setting" class="webim-setting">\
                         <ul id=":ul"><%=tags%></ul>\
+                        <div id=":offline" class="webim-setting-offline"><a href="#offline"><%=offline%></a></div>\
+                        <div id=":online" class="webim-setting-online"><a href="#online"><%=online%></a></div>\
                   </div>',
         tpl_check: '<li id=":<%=name%>"><input type="checkbox" <%=checked%> id="webim-setting-<%=name%>" name="<%=name%>"/><label for="webim-setting-<%=name%>"><%=label%></label></li>'
 },{
@@ -37,7 +39,23 @@ widget("setting",{
 		data && each(data, function(key, val){
 			$[key] && self._check_event($[key]);
 		});
+    addEvent($.offline,"click",function(e){
+      self.trigger("offline");
+    });
+    addEvent($.online,"click",function(e){
+      self.trigger("online");
+    });
 	},
+  offline:function(){
+    var $ = this.$;
+      hide($.offline);//.style.display="none";
+      show($.online);//.style.display="block";   
+  },
+  online:function(){
+      var $ = this.$;
+      show($.offline);//.style.display="block";
+      hide($.online);//.style.display="none";   
+  },
 	_check_tpl: function(name, isChecked){
 		return tpl(this.options.tpl_check,{
 			label: i18n(name),

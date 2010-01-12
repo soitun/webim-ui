@@ -18,3 +18,16 @@
 #webim-setting ul li label{
         padding-left: .2em;
 }
+.webim-setting-offline{
+  float:right;
+  position:absolute;
+  bottom:.5em;
+  left:19em;
+}
+.webim-setting-online{
+  float:right;
+  position:absolute;
+  bottom:.5em;
+  left:19em;
+  display:none;
+}

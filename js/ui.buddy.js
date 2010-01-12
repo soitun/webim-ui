@@ -23,10 +23,8 @@
 
 widget("buddy",{
         template: '<div id="webim-buddy" class="webim-buddy">\
-                        <div id=":online" class="webim-buddy-online"><a class="ui-state-default ui-corner-all" href="#online"><%=online%></a></div>\
                         <div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
                         <div class="webim-buddy-content">\
-                                <div id=":offline" class="webim-buddy-offline"><a href="#offline"><%=offline%></a></div>\
                                 <div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
                                 <ul id=":ul"></ul>\
                         </div>\
@@ -66,6 +64,7 @@ widget("buddy",{
 				else show(li);
 			});
 		});
+    /*
 		var a = $.online.firstChild;
 		addEvent(a, "click", function(e){
 			preventDefault(e);
@@ -76,6 +75,7 @@ widget("buddy",{
 			preventDefault(e);
 			self.trigger("offline");
 		});
+    */
 
 	},
 	_titleCount: function(){
@@ -99,7 +99,7 @@ widget("buddy",{
 	_titleBuddyOnline: function(name){
 		var self = this, win = self.window;
 		if(!name) name = "";
-		win && win.title(subVisibleLength(name, 0, 8) + " " + i18n("online"));
+	//	win && win.title(subVisibleLength(name, 0, 8) + " " + i18n("online"));
 		if(self._time) clearTimeout(self._time);
 		self._time = setTimeout(function(){
 			self._titleCount();
@@ -128,14 +128,14 @@ widget("buddy",{
 	online: function(){
 		var self = this, $ = self.$, win = self.window;
 		self.notice("connect");
-		hide($.online);
+		//hide($.online);
 		show($.empty);
 		show($.offline);
 	},
 	offline: function(){
 		var self = this, $ = self.$, win = self.window;
 		self.notice("offline");
-		show($.online);
+		//show($.online);
 		hide($.offline);
 		hide($.empty);
 		self.scroll(false);

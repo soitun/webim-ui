@@ -190,7 +190,7 @@
         border-top:1px solid #eee;
 }
 .webim-layout .webim-apps .webim-window-window {
-        width: 20em;
+        width: 22.2em;
 }
 
 
@@ -322,7 +322,6 @@
 	top:expression(eval(document.compatMode &&document.compatMode=='CSS1Compat') ? documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight) : document.body.scrollTop + (document.body.clientHeight-this.clientHeight));
 }
 * html  .webim-layout .webim-apps .webim-window-window {
-        width: 17.2em;
 }
 * html  .webim-layout-minimize{
         left: auto;

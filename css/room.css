@@ -96,3 +96,7 @@
 #webim-room ul li a span{
         display: block;
 }
+.webim-state-stop .webim-icon-room{
+        display:none;
+        position:absolute;
+}

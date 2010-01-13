@@ -108,10 +108,10 @@ extend(webimUI.prototype, objectExtend, {
 		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting, room = im.room;
 		//im events
 		im.bind("ready",function(){
-			layout.changeState("reactive");
+			layout.changeState("ready");
+      show(layout.app("room").window.element);
 			buddyUI.online();
       settingUI.online();
-      show(layout.app("room").window.element);
 		}).bind("go",function(data){
 			layout.changeState("active");
 			layout.option("user", data.user);
@@ -121,13 +121,14 @@ extend(webimUI.prototype, objectExtend, {
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 			setting.set(data.setting);
 		}).bind("stop", function(type){
-			layout.changeState("inactive");
+			layout.changeState("stop");
+      hide(layout.app("room").window.element);
+      layout.app("buddy").window.element;
 			type == "offline" && layout.removeAllChat();
 			layout.updateAllChat();
 			buddyUI.offline();
 			type && buddyUI.notice(type);
       settingUI.offline();
-      hide(layout.app("room").window.element);
 		});
 		//setting events
 		setting.bind("update",function(key, val){

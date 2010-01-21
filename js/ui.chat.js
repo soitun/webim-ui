@@ -89,7 +89,10 @@ widget("chat",{
 		plugin.call(self, "update", [null, self.ui()]);
 	},
 	focus: function(){
-		this.$.input.focus();
+		//this.$.input.focus();
+    //fix firefox
+    var item = this.$.input;
+    window.setTimeout(function(){item.focus()},0);
 	},
 	_noticeTime: null,
 	_noticeTxt:"",
@@ -129,7 +132,9 @@ widget("chat",{
 		var self = this, win = self.window;
 		win.bind("displayStateChange", function(type){
 			if(type != "minimize"){
-				self.$.input.focus();
+        //fix firefox
+        window.setTimeout(function(){self.$.input.focus();},0);
+				//self.$.input.focus();
 				self._adjustContent();
 			}
 		});
@@ -180,7 +185,11 @@ widget("chat",{
 
 		//var val = el.setSelectionRange ? el.value.substring(el.selectionStart, el.selectionEnd) : (window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : ""));
 		var val = window.getSelection ? window.getSelection().toString() : (document.selection ? document.selection.createRange().text : "");
-		if(!val)self.$.input.focus();
+		if(!val){
+      //self.$.input.focus();
+      //fix firefox
+      window.setTimeout(function(){self.$.input.focus();},0);
+    }
 	},
 	_initEvents: function(){
 		var self = this, options = self.options, $ = self.$, placeholder = i18n("input notice"), gray = "webim-gray", input = $.input;
@@ -303,6 +312,7 @@ plugin.add("chat","emot",{
 		var chat = ui.self;
 		var emot = new webimUI.emot();
 		emot.bind("select",function(alt){
+     
 			chat.focus();
 			chat.insert(alt, true);
 		});

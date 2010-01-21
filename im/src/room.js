@@ -143,7 +143,7 @@
 				}
 			});
 		},
-		join:function(id){
+		join:function(id,user){
 			var self = this, options = self.options;
 			ajax({
 				cache: false,
@@ -151,7 +151,8 @@
 				dataType: "json",
 				data: {
 					ticket: options.ticket,
-					id: id
+					id: id,
+          nick: user.name
 				},
 				success: function(data){
 					//self.trigger("join",[data]);
@@ -160,7 +161,7 @@
 				}
 			});
 		},
-		leave: function(id){
+		leave: function(id,user){
 			var self = this, options = self.options, d = self.dataHash[id];
 			if(d){
 				d.initMember = false;
@@ -169,7 +170,8 @@
 					url: options.urls.leave,
 					data: {
 						ticket: options.ticket,
-						id: id
+						id: id,
+            nick: user.name
 					}
 				});
 				self.trigger("leave",[d]);

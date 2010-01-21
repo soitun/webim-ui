@@ -158,6 +158,7 @@ extend(webimUI.prototype, objectExtend, {
     });
     settingUI.bind("online",function(){
       im.trigger("ready");  
+      im.online();
     });
 
 		layout.bind("collapse", function(){
@@ -177,7 +178,6 @@ extend(webimUI.prototype, objectExtend, {
 		//select a buddy
 		buddyUI.bind("select", function(info){
 			self.addChat(info.id, {type: "buddy"});
-			im.offline();
 		}).bind("online",function(){
 			im.online();
 		});
@@ -210,7 +210,8 @@ extend(webimUI.prototype, objectExtend, {
 		//all ready.
 		//message
 		im.bind("message",function(data){
-			var show = false, l = data.length, d, uid = im.data.user.id, id, c, online_ids = [], count = "+1";
+			var show = false,roomData = this.room.dataHash,
+          l = data.length, d, uid = im.data.user.id, id, c, online_ids = [], count = "+1";
 			for(var i = 0; i < l; i++){
 				d = data[i];
 				id = d.to == uid ? d.from : d.to;
@@ -218,9 +219,14 @@ extend(webimUI.prototype, objectExtend, {
 				c = layout.chat(id);
 				c && c.status("");//clear status
 				if(!c){	
-					self.addChat(id, null, null, d.nick);
-					c = layout.chat(id);
-				}
+           var titlename = (d.type === "unicast")?d.nick:roomData[id].name;
+           if (d.type === "unicast"){
+				 	    self.addChat(id, null, null, titlename);
+          }else{
+              self.addChat(id,{type:"room"});  
+          }
+				  c = layout.chat(id);
+			  }
 				c && setting.get("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
 				c.window.notifyUser("information", count);
 				var p = c.window.pos;

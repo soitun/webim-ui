@@ -22,7 +22,7 @@
  */
 app("room",{
 	init: function(){
-		var ui = this, im = ui.im, room = im.room, setting = im.setting, layout = ui.layout;
+		var ui = this, im = ui.im, room = im.room, setting = im.setting,u = im.data.user, layout = ui.layout;
 		var roomUI = ui.room = new webim.ui.room(null).bind("select",function(info){
 			ui.addChat(info.id, {type: "room"});
 			ui.layout.focusChat(info.id);
@@ -42,9 +42,11 @@ app("room",{
 		}).bind("block", function(id, list){
 			setting.set("block_list",list);
 			updateRoom(room.get(id));
+      room.leave(id,u);
 		}).bind("unblock", function(id, list){
 			setting.set("block_list",list);
 			updateRoom(room.get(id));
+      room.join(id,u);
 		}).bind("addMember", function(room_id, info){
 			var c = layout.chat(room_id);
 			c && c.addMember(info.id, info.name, info.id == im.data.user.id);

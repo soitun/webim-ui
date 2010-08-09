@@ -1,0 +1,3 @@
+[submodule "im"]
+	path = im
+	url = git@github.com:nextim/nextim-js.git

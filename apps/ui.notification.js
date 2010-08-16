@@ -1,35 +1,45 @@
 //
-/* ui.menu:
+/* ui.notification:
 *
 options:
-attributes
+data [{}]
+attributes：
 
 methods:
-add
 
 destroy()
 events: 
 
 */
-app("menu", {
+app("notification", {
 	init: function(options){
-		var ui = this, layout = ui.layout;
-		var menuUI = ui.menu = new webimUI.menu(null, options);
-		layout.addWidget(menuUI, {
-			title: i18n("menu"),
-			icon: "home",
+		var ui = this, im = ui.im, layout = ui.layout;
+		var notificationUI = ui.notification = new webimUI.notification(null, options);
+		var notification = im.notification = new webim.notification();
+		layout.addWidget(notificationUI, {
+			title: i18n("notification"),
+			icon: "notification",
 			sticky: false,
-			onlyIcon: false,
+			onlyIcon: true,
 			isMinimize: true
-		}, null,"shortcut");
+		});
+		///notification
+		notification.bind("data",function( data){
+			notificationUI.window.notifyUser("information", "+" + data.length);
+			notificationUI.add(data);
+		});
+		setTimeout(function(){
+			notification.load();
+		}, 2000);  
 	}
 });
-widget("menu",{
-	template: '<div id="webim-menu" class="webim-menu">\
+
+widget("notification",{
+	template: '<div id="webim-notification" class="webim-notification">\
 		<ul id=":ul"><%=list%></ul>\
-			<div id=":empty" class="webim-menu-empty"><%=empty menu%></div>\
+			<div id=":empty" class="webim-notification-empty"><%=empty notification%></div>\
 				</div>',
-	tpl_li: '<li><a href="<%=link%>" target="<%=target%>"><img src="<%=icon%>"/><span><%=title%></span></a></li>'
+	tpl_li: '<li><a href="<%=link%>" target="<%=target%>"><%=text%></a></li>'
 },{
 	_init: function(){
 		var self = this, element = self.element, options = self.options;
@@ -48,10 +58,9 @@ widget("menu",{
 	},
 	_li_tpl: function(data){
 		return tpl(this.options.tpl_li, {
-			title: i18n(data.title),
-			icon: data.icon,
-			link: data.link,
-			target: data.isExtlink ? "_blank" : ""
+			text: text,
+			link: link,
+			target: isExtlink ? "_blank" : ""
 		});
 	},
 	_fitUI:function(){

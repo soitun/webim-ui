@@ -82,7 +82,7 @@ widget("chat",{
 		if(!userOn){
 			self.notice(i18n("user offline notice"));
 		}else if(!buddyOn){
-			self.notice(i18n("buddy offline notice",{name: self.options.info.name}));
+			self.notice(i18n("buddy offline notice",{name: self.options.info.nick}));
 		}else{
 			self.notice("");
 		}
@@ -153,10 +153,10 @@ widget("chat",{
 			type: options.msgType,
 			to: info.id,
 			from: options.user.id,
-			stype: '',
-			offline: info.presence == "online" ? 0 : 1,
-			body: val,
-			timestamp: (new Date()).getTime()
+			//stype: '',
+			offline: info.presence != "online",
+			timestamp: (new Date()).getTime(),
+			body: val
 		};
 		plugin.call(self, "send", [null, self.ui({msg: msg})]);
 		self.trigger('sendMsg', msg);
@@ -227,9 +227,11 @@ widget("chat",{
 		var self = this, $ = self.$;
 		$.userPic.setAttribute("href", info.url);
 		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
+		setTimeout(function(){
 		$.userPic.firstChild.setAttribute("src", info.pic_url);
+		},100);
 		$.userStatus.innerHTML = info.status;
-		self.window.title(info.name);
+		self.window.title(info.nick);
 	},
 	insert:function(value, isCursorPos){
 		//http://hi.baidu.com/beileyhu/blog/item/efe29910f31fd505203f2e53.html
@@ -261,7 +263,7 @@ widget("chat",{
 	_statusText: '',
 	sendStatus: function(show){
 		var self = this;
-		if (!show || show == self._statusText) return;
+		if (!show || show == self._statusText || self.options.info.presence == "offline") return;
 		self._statusText = show;
 		self.trigger('sendStatus', {
 			to: self.options.info.id,
@@ -282,8 +284,8 @@ widget("chat",{
 	status: function(type){
 		//type ['typing']
 		type = type || 'clear';
-		var self = this, el = self.$.status, name = self.options.info.name, markup = '';
-		markup = type == 'clear' ? '' : name + i18n(type);
+		var self = this, el = self.$.status, nick = self.options.info.nick, markup = '';
+		markup = type == 'clear' ? '' : nick + i18n(type);
 		el.innerHTML = markup;
 		self._adjustContent();
 		if (self._setST)  clearTimeout(self._setST);
@@ -344,9 +346,9 @@ plugin.add("chat","block",{
 	init:function(e, ui){
 		var chat = ui.self;
 		var blocked = chat.options.info.blocked,
-		name = chat.options.info.name,
-		block = createElement('<a href="#chat-block" style="display:'+(blocked ? 'none' : '')+'" title="'+ i18n('block group',{name:name}) +'"><em class="webim-icon webim-icon-unblock"></em></a>'),
-		unblock = createElement('<a href="#chat-block" style="display:'+(blocked ? '' : 'none')+'" title="'+ i18n('unblock group',{name:name}) +'"><em class="webim-icon webim-icon-block"></em></a>');
+		nick = chat.options.info.nick,
+		block = createElement('<a href="#chat-block" style="display:'+(blocked ? 'none' : '')+'" title="'+ i18n('block group',{name:nick}) +'"><em class="webim-icon webim-icon-unblock"></em></a>'),
+		unblock = createElement('<a href="#chat-block" style="display:'+(blocked ? '' : 'none')+'" title="'+ i18n('unblock group',{name:nick}) +'"><em class="webim-icon webim-icon-block"></em></a>');
 		addEvent(block,"click",function(e){
 			preventDefault(e);
 			hide(block);
@@ -365,13 +367,13 @@ plugin.add("chat","block",{
 });
 webimUI.chat.defaults.member = true;
 extend(webimUI.chat.prototype, {
-	addMember: function(id, name, disable){
+	addMember: function(id, nick, disable){
 		var self = this, ul = self.$.member, li = self.memberLi;
 		if(li[id])return;
-		var el = createElement('<li><a class="'+ (disable ? 'ui-state-disabled' : '') +'" href="'+ id +'">'+ name +'</a></li>');
+		var el = createElement('<li><a class="'+ (disable ? 'ui-state-disabled' : '') +'" href="'+ id +'">'+ nick +'</a></li>');
 		addEvent(el.firstChild,"click",function(e){
 			preventDefault(e);
-			disable || self.trigger("select", [{id: id, name: name}]);
+			disable || self.trigger("select", [{id: id, nick: nick}]);
 		});
 		li[id] = el;
 		self.$.member.appendChild(el);

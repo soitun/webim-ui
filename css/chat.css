@@ -10,7 +10,7 @@
 }
 .webim .webim-user-pic img{
 }
-.webim .webim-user-status{
+.webim .webim-user-show{
         height: 3em;
         display: block;
 }
@@ -25,7 +25,7 @@
         overflow-x:visible;
         *background:url(about:blank);
 }
-.webim .webim-chat-status{
+.webim .webim-chat-show{
         font-style: italic;
         margin-left: .8em;
 
@@ -82,7 +82,7 @@
 	margin-top:  -.1em;
 	height: 16em;
 	width: 7em;
-	left: -7.1em;
+	left: -7.06em;
 	position: absolute;
 }
 .webim .webim-chat .webim-member .webim-bgiframe{

@@ -1,36 +1,108 @@
 //
 /* ui.buddy:
- *
- options:
- attributes：
+*
+options:
+attributes：
 
- methods:
- add(data, [index]) //
- remove(ids)
- select(id)
- update(data, [index])
- notice
- online
- offline
+methods:
+add(data, [index]) //
+remove(ids)
+select(id)
+update(data, [index])
+notice
+online
+offline
 
- destroy()
- events: 
- select
- offline
- online
+destroy()
+events: 
+select
+offline
+online
 
- */
+*/
+app("buddy", {
+	init: function(options){
+		var ui = this, im = ui.im, buddy = im.buddy, layout = ui.layout;
+		var buddyUI = ui.buddy = new webimUI.buddy(null, options);
+		layout.addWidget(buddyUI, {
+			title: i18n("chat"),
+			icon: "buddy",
+			sticky: im.setting.get("buddy_sticky"),
+			className: "webim-buddy-window",
+			//       onlyIcon: true,
+			isMinimize: !im.status.get("b"),
+			titleVisibleLength: 19
+		});
+		//buddy events
+		im.setting.bind("update",function(key, val){
+			if(key == "buddy_sticky")buddyUI.window.option("sticky", val);
+		});
+		//select a buddy
+		buddyUI.bind("select", function(info){
+			ui.addChat("buddy", info.id);
+			ui.layout.focusChat("buddy", info.id);
+		}).bind("online",function(){
+			im.online();
+		});
+		buddyUI.window.bind("displayStateChange",function(type){
+			if(type != "minimize"){
+				buddy.option("loadDelay", false);
+				buddy.loadDelay();
+			}else{
+				buddy.option("loadDelay", true);
+			}
+		});
+		//some buddies online.
+		buddy.bind("online", function(data){
+			buddyUI.add(data);
+			buddyUI.notice("count", buddy.count({presence:"online"}));
+		});
+		buddy.bind("onlineDelay", function(data){
+			buddyUI.notice("count", buddy.count({presence:"online"}));
+		});
+		//some buddies offline.
+		var mapId = function(a){ return isObject(a) ? a.id : a };
+		buddy.bind("offline", function(data){
+			buddyUI.remove(map(data, mapId));
+			buddyUI.notice("count", buddy.count({presence:"online"}));
+		});
+		//some information has been modified.
+		buddy.bind("update", function(data){
+			buddyUI.update(data);
+		});
+	},
+	ready: function(){
+		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		//buddyUI.online();
+	},
+	go: function(){
+		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		!buddyUI.window.isMinimize() && buddy.loadDelay();
+		buddyUI.notice("count", buddy.count({presence:"online"}));
+	},
+	stop: function(type){
+		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		//buddyUI.offline();
+		type && buddyUI.notice(type);
+	}
+});
 
 widget("buddy",{
-        template: '<div id="webim-buddy" class="webim-buddy">\
-                        <div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
-                        <div class="webim-buddy-content">\
-                                <div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
-                                <ul id=":ul"></ul>\
-                        </div>\
-                  </div>',
-        tpl_group: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
-        tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=name%></strong><span><%=status%></span></a></li>'
+	template: '<div id="webim-buddy" class="webim-buddy">\
+                         <div id=":header" class="webim-buddy-header ui-widget-subheader">  \
+                              <div id=":user" class="webim-user"> \
+                                      <a id=":userPic" class="webim-user-pic" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;"></a> \
+                                      <span id=":userStatus" title="" class="webim-user-status">Hello</span> \
+                              </div> \
+                        </div> \
+		<div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
+			<div class="webim-buddy-content">\
+				<div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
+					<ul id=":ul"></ul>\
+						</div>\
+							</div>',
+	tpl_group: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
+	tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=nick%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
 		var self = this;
@@ -64,18 +136,18 @@ widget("buddy",{
 				else show(li);
 			});
 		});
-    /*
-		var a = $.online.firstChild;
-		addEvent(a, "click", function(e){
-			preventDefault(e);
-			self.trigger("online");
-		});
-		hoverClass(a, "ui-state-hover");
-		addEvent($.offline.firstChild, "click", function(e){
-			preventDefault(e);
-			self.trigger("offline");
-		});
-    */
+/*
+var a = $.online.firstChild;
+addEvent(a, "click", function(e){
+preventDefault(e);
+self.trigger("online");
+});
+hoverClass(a, "ui-state-hover");
+addEvent($.offline.firstChild, "click", function(e){
+preventDefault(e);
+self.trigger("offline");
+});
+*/
 
 	},
 	_titleCount: function(){
@@ -99,7 +171,7 @@ widget("buddy",{
 	_titleBuddyOnline: function(name){
 		var self = this, win = self.window;
 		if(!name) name = "";
-	//	win && win.title(subVisibleLength(name, 0, 8) + " " + i18n("online"));
+		//	win && win.title(subVisibleLength(name, 0, 8) + " " + i18n("online"));
 		if(self._time) clearTimeout(self._time);
 		self._time = setTimeout(function(){
 			self._titleCount();
@@ -131,7 +203,7 @@ widget("buddy",{
 		//hide($.online);
 		show($.empty);
 		show($.offline);
-    show(win.element);
+		show(win.element);
 	},
 	offline: function(){
 		var self = this, $ = self.$, win = self.window;
@@ -141,7 +213,17 @@ widget("buddy",{
 		hide($.empty);
 		self.scroll(false);
 		self.removeAll();
-    hide(win.element);
+		hide(win.element);
+	},
+	_updateUserInfo:function(info){
+		var self = this, $ = self.$;
+		$.userPic.setAttribute("href", info.url);
+		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
+		setTimeout(function(){
+		$.userPic.firstChild.setAttribute("src", info.pic_url);
+		},100);
+		$.userStatus.innerHTML = info.status;
+		self.window.title(info.nick);
 	},
 	_updateInfo:function(el, info){
 		el = el.firstChild;
@@ -150,7 +232,7 @@ widget("buddy",{
 		el.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
 		el.setAttribute("src", info.pic_url);
 		el = el.nextSibling;
-		el.innerHTML = info.name;
+		el.innerHTML = info.nick;
 		el = el.nextSibling;
 		el.innerHTML = info.status;
 		return el;

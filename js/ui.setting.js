@@ -1,37 +1,73 @@
 //
 /* ui.setting:
- *
- options:
- 	data
+*
+options:
+data
 
- attributes：
+attributes：
 
- methods:
- check_tag
+methods:
+check_tag
 
- destroy()
- events: 
- change
+destroy()
+events: 
+change
 
- */
+*/
+app("setting", {
+	init: function(options){
+		var ui = this, im = ui.im, setting = im.setting, layout = ui.layout;
+		var settingUI = ui.setting = new webimUI.setting(null, options);
+		layout.addWidget(settingUI, {
+			title: i18n("setting"),
+			icon: "setting",
+			sticky: false,
+			onlyIcon: true,
+			isMinimize: true
+		});
+		//setting events
+		setting.bind("update",function(key, val){
+			if(typeof val != "object"){
+				settingUI.check_tag(key, val);
+			}
+		});
+		settingUI.bind("change", function(key, val){
+			setting.set(key, val);
+		});
+		//handle 
+		//settingUI.bind("offline",function(){
+		//	im.trigger("stop");
+		//});
+		//settingUI.bind("online",function(){
+		//	im.trigger("ready");  
+		//	im.online();
+		//});
+	},
+	//ready: function(){
+	//	//this.setting.online();
+	//},
+	//go: function(){
+	//},
+	stop: function(){
+		//this.setting.offline();
+	}
+});
 widget("setting",{
-        template: '<div id="webim-setting" class="webim-setting">\
-                        <ul id=":ul"><%=tags%></ul>\
-                        <div id=":offline" class="webim-setting-offline"><a href="#offline"><%=offline%></a></div>\
-                        <div id=":online" class="webim-setting-online"><a href="#online"><%=online%></a></div>\
-                  </div>',
-        tpl_check: '<li id=":<%=name%>"><input type="checkbox" <%=checked%> id="webim-setting-<%=name%>" name="<%=name%>"/><label for="webim-setting-<%=name%>"><%=label%></label></li>'
+	template: '<div id="webim-setting" class="webim-setting">\
+			<ul id=":ul"><%=tags%></ul>\
+		   </div>',
+	tpl_check: '<li id=":<%=name%>"><input type="checkbox" <%=checked%> id="webim-setting-<%=name%>" name="<%=name%>"/><label for="webim-setting-<%=name%>"><%=label%></label></li>'
 },{
-        _init: function(){
-                //this._initEvents();
-        },
+	_init: function(){
+		//this._initEvents();
+	},
 	template: function(){
 		var self = this, temp = [], data = self.options.data;
 		data && each(data, function(key, val){
 			temp.push(self._check_tpl(key, val));
 		});
 		return tpl(self.options.template,{
-		   tags:temp.join("")
+			tags:temp.join("")
 		});
 	},
 	_initEvents:function(){
@@ -39,23 +75,23 @@ widget("setting",{
 		data && each(data, function(key, val){
 			$[key] && self._check_event($[key]);
 		});
-    addEvent($.offline,"click",function(e){
-      self.trigger("offline");
-    });
-    addEvent($.online,"click",function(e){
-      self.trigger("online");
-    });
+		//addEvent($.offline,"click",function(e){
+		//	self.trigger("offline");
+		//});
+		//addEvent($.online,"click",function(e){
+		//	self.trigger("online");
+		//});
 	},
-  offline:function(){
-    var $ = this.$;
-      hide($.offline);//.style.display="none";
-      show($.online);//.style.display="block";   
-  },
-  online:function(){
-      var $ = this.$;
-      show($.offline);//.style.display="block";
-      hide($.online);//.style.display="none";   
-  },
+	//offline:function(){
+	//	var $ = this.$;
+	//	hide($.offline);//.style.display="none";
+	//	show($.online);//.style.display="block";   
+	//},
+	//online:function(){
+	//	var $ = this.$;
+	//	show($.offline);//.style.display="block";
+	//	hide($.online);//.style.display="none";   
+	//},
 	_check_tpl: function(name, isChecked){
 		return tpl(this.options.tpl_check,{
 			label: i18n(name),
@@ -66,10 +102,10 @@ widget("setting",{
 	_check_event: function(el){
 		var self = this;
 		addEvent(el.firstChild, "click", function(e){
-                        self._change(this.name, this.checked);
+			self._change(this.name, this.checked);
 		});
 	},
-        check_tag: function(name, isChecked){
+	check_tag: function(name, isChecked){
 		var self = this;
 		if(isObject(name)){
 			each(name, function(key,val){
@@ -77,18 +113,18 @@ widget("setting",{
 			});
 			return;
 		}
-                var $ = self.$, tag = $[name];
-                if(tag){
-                        tag.firstChild.checked = isChecked;
-                        return;
-                }
+		var $ = self.$, tag = $[name];
+		if(tag){
+			tag.firstChild.checked = isChecked;
+			return;
+		}
 		var el = $[name] = createElement(self._check_tpl(name, isChecked));
 		self._check_event(el);
 		$.ul.appendChild(el);
-        },
-        _change:function(name, value){
-                this.trigger("change", [name, value]);
-        },
-        destroy: function(){
-        }
+	},
+	_change:function(name, value){
+		this.trigger("change", [name, value]);
+	},
+	destroy: function(){
+	}
 });

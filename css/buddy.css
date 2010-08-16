@@ -1,5 +1,4 @@
 #webim-buddy{
-        padding: .3em 0;
 
 }
 #webim-buddy .webim-buddy-search{
@@ -32,7 +31,7 @@
         padding: 1em 2em;
 }
 #webim-buddy .webim-buddy-content{
-        padding: .2em .5em 0;
+        padding: .2em .5em .3em;
         position:relative;
 }
 /*fuck ie6  why ?*/

@@ -5,13 +5,13 @@
  attributes：
 
  methods:
- addApp(widget, options)
+ addWidget(widget, options)
  addShortcut(title,icon,link, isExtlink)
- chat(id)
- addChat(info, options)
- focusChat(id)
- updateChat(data)
- removeChat(ids)
+ chat(type, id)
+ addChat(type, info, options)
+ focusChat(type, id)
+ updateChat(type, data)
+ removeChat(type, id)
 
  online() //
  offline()
@@ -24,7 +24,6 @@
  displayUpdate //ui displayUpdate
 
  */
-
 widget("layout",{
         template: '<div id="webim" class="webim webim-state-ready">\
                     <div class="webim-preload ui-helper-hidden-accessible">\
@@ -69,7 +68,7 @@ widget("layout",{
                                             </div>\
                                 </div>\
                             </div>\
-                            <div id=":apps" class="webim-apps">\
+                            <div id=":widgets" class="webim-widgets">\
                             </div>\
                             </div>\
             </div></div>\
@@ -88,7 +87,7 @@ widget("layout",{
 		var self = this, options = self.options;
 		extend(self,{
 			window: window,
-			apps : {},
+			widgets : {},
 			panels: {},
 			tabWidth : 136,
 			maxVisibleTabs: null,
@@ -115,8 +114,8 @@ widget("layout",{
 	_ready:false,
 	buildUI: function(e){
 		var self = this, $ = self.$;
-		//var w = self.element.width() - $.shortcut.outerWidth() - $.apps.outerWidth() - 55;
-		var w = (windowWidth() - 45) - $.shortcut.offsetWidth - $.apps.offsetWidth - 70;
+		//var w = self.element.width() - $.shortcut.outerWidth() - $.widgets.outerWidth() - 55;
+		var w = (windowWidth() - 45) - $.shortcut.offsetWidth - $.widgets.offsetWidth - 70;
 		self.maxVisibleTabs = parseInt(w / self.tabWidth);
 		self._fitUI();
 		self._ready = true;
@@ -331,7 +330,7 @@ widget("layout",{
 		this._ready && this.trigger("displayUpdate");
 	},
 	_fitUI: function(){
-		var self = this, $ = self.$, apps = $.apps;
+		var self = this, $ = self.$, widgets = $.widgets;
 		self._updateCount();
 		self.$.tabs.style.left = -1 * self.tabWidth * self.nextCount + 'px';
 		self._updateCountUI();
@@ -340,10 +339,10 @@ widget("layout",{
 		self._displayUpdate();
 	},
 	_stickyWin: null,
-	_appStateChange:function(win, state){
+	_widgetStateChange:function(win, state){
 		var self = this;
 		if(state != "minimize"){
-			each(self.apps, function(key, val){
+			each(self.widgets, function(key, val){
 				if(val.window != win){
 					val.window.minimize();
 				}
@@ -351,33 +350,34 @@ widget("layout",{
 		}
 		self._displayUpdate();
 	},
-	app:function(name){
-		return this.apps[name];
+	widget:function(name){
+		return this.widgets[name];
 	},
-	addApp: function(app, options, before, container){
+	addWidget: function(widget, options, before, container){
 		var self = this, options = extend(options,{closeable: false});
-		var win, el = app.element;
+		var win, el = widget.element;
 		win = new webimUI.window(null, options);
 		win.html(el);
-		self.$[container ? container : "apps"].insertBefore(win.element, before && self.apps[before] ? self.apps[before].window.element : null);
-		app.window = win;
-		win.bind("displayStateChange", function(state){ self._appStateChange(this, state);});
-		self.apps[app.name] = app;
+		self.$[container ? container : "widgets"].insertBefore(win.element, before && self.widgets[before] ? self.widgets[before].window.element : null);
+		widget.window = win;
+		win.bind("displayStateChange", function(state){ self._widgetStateChange(this, state);});
+		self.widgets[widget.name] = widget;
 	},
-	focusChat: function(id){
+	focusChat: function(type, id){
+		id = _id_with_type(type, id);
 		var self = this, tab = self.tabs[id], panel = self.panels[id];
 		tab && tab.isMinimize() && tab.restore();
 		panel && panel.focus();
 	},
-	chat:function(id){
-		return this.panels[id];
+	chat:function(type, id){
+		return this.panels[_id_with_type(type, id)];
 	},
-	updateChat: function(data){
+	updateChat: function(type, data){
 		data = makeArray(data);
 		var self = this, info, l = data.length, panel;
 		for(var i = 0; i < l; i++){
 			info = data[i];
-			panel = self.panels[info.id];
+			panel = self.panels[_id_with_type(type, info.id)];
 			panel && panel.update(info);
 		}
 	},
@@ -416,8 +416,9 @@ widget("layout",{
 			self._updatePrevCount(id);
 		}
 	},
-	addChat: function(info, options,winOptions){
+	addChat: function(type, info, options, winOptions){
 		var self = this, panels = self.panels, id = info.id, chat;
+		id = _id_with_type(type, id);
 		if(!panels[id]){
 			var win = self.tabs[id] = new webimUI.window(null, extend({
 				isMinimize: self.activeTabId || !self.options.chatAutoPop,
@@ -434,13 +435,14 @@ widget("layout",{
 			self._fitUI();
 		}//else self.focusChat(id);
 	},
-	removeChat: function(ids){
-		ids = idsArray(ids);
-		var self = this, id, l = ids.length, tab;
-		for(var i = 0; i < l; i++){
-			tab = self.tabs[ids[i]];
+	removeChat: function(type, id){
+		//ids = idsArray(ids);
+		//var self = this, id, l = ids.length, tab;
+		//for(var i = 0; i < l; i++){
+			//tab = self.tabs[ids[i]];
+			tab = self.tabs[_id_with_type(type, id)];
 			tab && tab.close();
-		}
+		//}
 	},
 	removeAllChat: function(){
 		this.removeChat(this.tabIds);
@@ -475,4 +477,7 @@ widget("layout",{
 });
 function windowWidth(){
 	return document.compatMode === "CSS1Compat" && document.documentElement.clientWidth || document.body.clientWidth;
+}
+function _id_with_type(type, id){
+	return id ? (type == "b" || type == "buddy" || type == "unicast" ? ("b_" + id) : ("r_" + id)) : type;
 }

@@ -49,7 +49,7 @@ widget("history",{
 		var fromSelf = from == user.id;
 		var other = !fromSelf && user.id != to;
 
-		var name = other ? logItem.nick : fromSelf ? user.name : (info.name ? '<a href="' + info.url + '">' + info.name + '</a>' : info.id);
+		var nick = other ? logItem.nick : fromSelf ? user.nick : (info.nick ? '<a href="' + info.url + '">' + info.nick + '</a>' : info.id);
 		if (last && last.to == to && last.from == from && time - last.timestamp < 60000){
 			shouldTilte = false;
 		}
@@ -62,7 +62,7 @@ widget("history",{
 			markup.push(" ");
 			markup.push(t.getTime());
 			markup.push('</span>');
-			markup.push(name);
+			markup.push(nick);
 			markup.push('</h4>');
 		}
 

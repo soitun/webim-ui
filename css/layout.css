@@ -78,7 +78,7 @@
 .webim-layout-r{
 		float: right;
 }
-.webim-apps{
+.webim-widgets{
         float:left;
         position:relative;
 }
@@ -189,8 +189,8 @@
 .webim-layout .webim-window-normal .webim-window-tab-inner, .webim-layout .webim-window-maximize .webim-window-tab-inner{
         border-top:1px solid #eee;
 }
-.webim-layout .webim-apps .webim-window-window {
-        width: 22.2em;
+.webim-layout .webim-widgets .webim-window-window {
+        width: 19.7em;
 }
 
 
@@ -321,7 +321,7 @@
     left: 1.5em;/*ie6 1px bug. http://www.pmob.co.uk/temp/onepxgap.htm */
 	top:expression(eval(document.compatMode &&document.compatMode=='CSS1Compat') ? documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight) : document.body.scrollTop + (document.body.clientHeight-this.clientHeight));
 }
-* html  .webim-layout .webim-apps .webim-window-window {
+* html  .webim-layout .webim-widgets .webim-window-window {
 }
 * html  .webim-layout-minimize{
         left: auto;
@@ -337,7 +337,7 @@
         left:auto;
         right:0;
 }
-.webim-state-stop .webim-apps{
+.webim-state-stop .webim-widgets{
         right:0;
 }
 .webim-state-stop .webim-pannels{

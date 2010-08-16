@@ -3,8 +3,6 @@
  */
 #webim-setting{
         padding: 1em 0;
-        width:20em;
-
 }
 #webim-setting ul{
 	list-style: none;
@@ -25,6 +23,7 @@
   bottom:.5em;
   left:18em;
 }
+/*
 .webim-setting-online{
   auto:left;
   float:right;
@@ -32,3 +31,4 @@
   bottom:.5em;
   left:18em;
 }
+*/

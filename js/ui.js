@@ -4,10 +4,6 @@
 * attributes:
 * 	im
 * 	layout
-* 	setting
-* 	buddy
-* 	notification
-* 	menu
 *
 * methods:
 *
@@ -22,144 +18,73 @@ function webimUI(element, options){
 	self._init();
 }
 extend(webimUI.prototype, objectExtend, {
-	_init:function(){
+	render:function(){
+		var self = this, layout = self.layout;
+		self.element.appendChild(layout.element);
+		setTimeout(function(){self.initSound()}, 1000);
+		layout.buildUI();
+	},
+	_init: function(){
 		var self = this,
 		im = self.im = new webim(),
 		layout = self.layout = new webimUI.layout(null,{
 			chatAutoPop: im.setting.get("msg_auto_pop")
 		}),
 		options = self.options;
-		self.notification = new webimUI.notification();
-		var d = im.setting.data;
-		self.setting = new webimUI.setting(null,{
-			data: {
-				"buddy_sticky": d["buddy_sticky"],
-				"play_sound": d["play_sound"],
-				"msg_auto_pop": d["msg_auto_pop"],
-				"minimize_layout": d["minimize_layout"]
-			}
-		});
-		self.buddy = new webimUI.buddy(null,{
-		});
-		var menuData = self.options.menu;
-	       	self.menu = new webimUI.menu(null,{
-			data: menuData
-		});
-					    //render start
-		layout.addApp(self.menu, {
-			title: i18n("menu"),
-			icon: "home",
-			sticky: false,
-			onlyIcon: false,
-			isMinimize: true
-		}, null,"shortcut");
-		layout.addShortcut(menuData);
-		layout.addApp(self.buddy, {
-			title: i18n("chat"),
-			icon: "buddy",
-			sticky: im.setting.get("buddy_sticky"),
-			className: "webim-buddy-window",
-			//       onlyIcon: true,
-			isMinimize: !im.status.get("b"),
-			titleVisibleLength: 19
-		});
-
-		layout.addApp(self.notification, {
-			title: i18n("notification"),
-			icon: "notification",
-			sticky: false,
-			onlyIcon: true,
-			isMinimize: true
-		});
- 		layout.addApp(self.setting, {
-			title: i18n("setting"),
-			icon: "setting",
-			sticky: false,
-			onlyIcon: true,
-			isMinimize: true
-		});
 		im.setting.get("play_sound") ? sound.enable() : sound.disable() ;
 		im.setting.get("minimize_layout") ? layout.collapse() : layout.expand(); 
-		self.buddy.offline();
-		//document.body.appendChild(layout.element);
-		//layout.buildUI();
-
-		//render end
-
 		self._initEvents();
 	},
-	addApp: function(name){
+	addApp: function(name, options){
 		var e = webimUI.apps[name];
 		if(!e)return;
-		var self = this;
-		isFunction(e.init) && e.init.apply(self, []);
-		self.im.bind("ready", function(){
-			isFunction(e.ready) && e.ready.apply(self, []);
-		}).bind("go", function(){
-			isFunction(e.go) && e.go.apply(self, []);
-		}).bind("stop", function(){
-			isFunction(e.stop) && e.stop.apply(self, []);
-		});
+		var self = this, im = self.im;
+		isFunction(e.init) && e.init.apply(self, [options]);
+		isFunction(e.ready) && im.bind("ready", function(){e.ready.apply(self, arguments);});
+		isFunction(e.go) && im.bind("go", function(){e.go.apply(self, arguments);});
+		isFunction(e.stop) && im.bind("stop", function(){e.stop.apply(self, arguments);});
 	},
 	initSound: function(urls){
 		sound.init(urls || this.options.soundUrls);
 	},
 	_initEvents: function(){
-		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, notificationUI = self.notification, settingUI = self.setting, room = im.room;
+		var self = this, im = self.im, buddy = im.buddy, history = im.history, status = im.status, setting = im.setting, buddyUI = self.buddy, layout = self.layout, room = im.room;
 		//im events
 		im.bind("ready",function(){
 			layout.changeState("ready");
-      show(layout.app("room").window.element);
-			buddyUI.online();
-      settingUI.online();
+			//show(layout.widget("room").window.element);
 		}).bind("go",function(data){
 			layout.changeState("active");
 			layout.option("user", data.user);
 			date.init(data.server_time);
 			self._initStatus();
-			!buddyUI.window.isMinimize() && buddy.loadDelay();
-			buddyUI.notice("count", buddy.count({presence:"online"}));
-			setting.set(data.setting);
+			//setting.set(data.setting);
 		}).bind("stop", function(type){
 			layout.changeState("stop");
-      hide(layout.app("room").window.element);
-      layout.app("buddy").window.element;
+			//hide(layout.widget("room").window.element);
 			type == "offline" && layout.removeAllChat();
 			layout.updateAllChat();
-			buddyUI.offline();
-			type && buddyUI.notice(type);
-      settingUI.offline();
 		});
 		//setting events
 		setting.bind("update",function(key, val){
-
 			switch(key){
-				case "buddy_sticky": buddyUI.window.option("sticky", val);
-				settingUI.check_tag(key, val);
-				break;
 				case "play_sound": (val ? sound.enable() : sound.disable() ); 
-				settingUI.check_tag(key, val);
 				break;
 				case "msg_auto_pop": layout.option("chatAutoPop", val); 
-				settingUI.check_tag(key, val);
 				break;
 				case "minimize_layout": 
-					settingUI.check_tag(key, val);
 				(val ? layout.collapse() : layout.expand()); 
 				break;
 			}
 		});
-		settingUI.bind("change",function(key, val){
-			setting.set(key, val);
+
+		buddy.bind("online", function(data){
+			layout.updateChat("buddy", data);
+		}).bind("offline", function(data){
+			layout.updateChat("buddy", data);
+		}).bind("update", function(data){
+			layout.updateChat("buddy", data);
 		});
-    //handle 
-    settingUI.bind("offline",function(){
-      im.trigger("stop");
-    });
-    settingUI.bind("online",function(){
-      im.trigger("ready");  
-      im.online();
-    });
 
 		layout.bind("collapse", function(){
 			setting.set("minimize_layout", true);
@@ -173,60 +98,25 @@ extend(webimUI.prototype, objectExtend, {
 			self._updateStatus(); //save status
 		});
 
-		//buddy events
-
-		//select a buddy
-		buddyUI.bind("select", function(info){
-			self.addChat(info.id, {type: "buddy"});
-		}).bind("online",function(){
-			im.online();
-		});
-		buddyUI.window.bind("displayStateChange",function(type){
-			if(type != "minimize")buddy.loadDelay();
-		});
-		//some buddies online.
-		buddy.bind("online", function(data){
-			buddyUI.add(data);
-			layout.updateChat(data);
-			buddyUI.notice("count", buddy.count({presence:"online"}));
-		});
-		buddy.bind("onlineDelay", function(data){
-			buddyUI.notice("count", buddy.count({presence:"online"}));
-		});
-
-		//some buddies offline.
-		var mapId = function(a){ return isObject(a) ? a.id : a };
-		buddy.bind("offline", function(data){
-			buddyUI.remove(map(data, mapId));
-			layout.updateChat(data);
-			buddyUI.notice("count", buddy.count({presence:"online"}));
-		});
-		//some information has been modified.
-		buddy.bind("update", function(data){
-			buddyUI.update(data);
-			layout.updateChat(data);
-		});
-
 		//all ready.
 		//message
-		im.bind("message",function(data){
+		im.bind("message", function(data){
 			var show = false,roomData = this.room.dataHash,
-          l = data.length, d, uid = im.data.user.id, id, c, online_ids = [], count = "+1";
+			l = data.length, d, uid = im.data.user.id, id, c, count = "+1";
 			for(var i = 0; i < l; i++){
 				d = data[i];
-				id = d.to == uid ? d.from : d.to;
-				if(!d["new"])online_ids.push(id);
-				c = layout.chat(id);
+				id = d["id"], type = d["type"];
+				c = layout.chat(type, id);
 				c && c.status("");//clear status
 				if(!c){	
-           var titlename = (d.type === "unicast")?d.nick:roomData[id].name;
-           if (d.type === "unicast"){
-				 	    self.addChat(id, null, null, titlename);
-          }else{
-              self.addChat(id,{type:"room"});  
-          }
-				  c = layout.chat(id);
-			  }
+					var titlename = (d.type === "unicast")?d.nick:roomData[id].nick;
+					if (d.type === "unicast"){
+						self.addChat(type, id, null, null, titlename);
+					}else{
+						self.addChat(type, id);  
+					}
+					c = layout.chat(type, id);
+				}
 				c && setting.get("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
 				c.window.notifyUser("information", count);
 				var p = c.window.pos;
@@ -238,24 +128,8 @@ extend(webimUI.prototype, objectExtend, {
 				sound.play('msg');
 				titleShow(i18n("new message"), 5);
 			}
-			history.handle(data);
-			buddy.online(online_ids, 1);
 		});
-		function grepOffline(msg){
-			return msg.type == "offline";
-		}
-		function grepOnline(msg){
-			return msg.type == "online";
-		}
-		function mapFrom(a){ return a.from; }
 
-		im.bind("presence",function(data){
-			offline = grep(data, grepOffline);
-			online = grep(data, grepOnline);
-			buddy.online(map(online, mapFrom), buddyUI.window.isMinimize());
-			buddy.offline(map(offline, mapFrom));
-			online.length && buddyUI.notice("buddyOnline", online.pop()["nick"]);
-		});
 		im.bind("status",function(data){
 			each(data,function(n,msg){
 				var userId = im.data.user.id;
@@ -264,32 +138,31 @@ extend(webimUI.prototype, objectExtend, {
 					id = msg.to; //群消息
 					var nick = msg.nick;
 				}else{
-					var c = layout.chat(id);
+					var c = layout.chat("buddy", id);
 					c && c.status(msg['show']);
 				}
 			});
 		});
-				//for test
-		history.bind("data", function( id, data){
-			var c = layout.chat(id), count = "+" + data.length;
+		//for test
+		history.bind("unicast", function( id, data){
+			var c = layout.chat("unicast", id), count = "+" + data.length;
 			if(c){
 				c.history.add(data);
 			}
 			//(c ? c.history.add(data) : im.addChat(id));
 		});
-		history.bind("clear", function( id){
-			var c = layout.chat(id);
+		history.bind("multicast", function(id, data){
+			var c = layout.chat("multicast", id), count = "+" + data.length;
+			if(c){
+				c.history.add(data);
+			}
+			//(c ? c.history.add(data) : im.addChat(id));
+		});
+		history.bind("clear", function(type, id){
+			var c = layout.chat(type, id);
 			c && c.history.clear();
 		});
 
-		///notification
-		im.notification.bind("data",function( data){
-			notificationUI.window.notifyUser("information", "+" + data.length);
-			notificationUI.add(data);
-		});
-    setTimeout(function(){
-			im.notification.load();
-		}, 2000);  
 
 	},
 	__status: false,
@@ -307,29 +180,31 @@ extend(webimUI.prototype, objectExtend, {
 		a = status.get("a");
 
 		tabIds && tabIds.length && tabs && each(tabs, function(k,v){
-			self.addChat(k, {type: v["t"]}, { isMinimize: true});
+			var id = k.slice(2), type = k[0];
+			self.addChat(type, id, {}, { isMinimize: true});
 			layout.chat(k).window.notifyUser("information", v["n"]);
 		});
 		p && (layout.prevCount = p) && layout._fitUI();
 		a && layout.focusChat(a);
 		// status end
 	},
-	addChat: function(id, options, winOptions, name){
+	addChat: function(type, id, options, winOptions, nick){
+		type = _tr_type(type);
 		var self = this, layout = self.layout, im = self.im, history = self.im.history, buddy = im.buddy, room = im.room;
-		if(layout.chat(id))return;
-		if(options && options.type == "room"){
-			var h = history.get(id), info = room.get(id), _info = info || {id:id, name: name || id};
+		if(layout.chat(type, id))return;
+		if(type == "room"){
+			var h = history.multicast(id), info = room.get(id), _info = info || {id:id, nick: nick || id};
 			_info.presence = "online";
-			layout.addChat(_info, extend({history: h, block: true, emot:true, clearHistory: false, member: true, msgType: "multicast"}, options), winOptions);
-			if(!h) history.load(id);
-			var chat = layout.chat(id);
+			layout.addChat(type, _info, extend({history: h, block: true, emot:true, clearHistory: false, member: true, msgType: "multicast"}, options), winOptions);
+			if(!h) history.load("multicast", id);
+			var chat = layout.chat(type, id);
 			chat.bind("sendMsg", function(msg){
 				im.sendMsg(msg);
 				history.handle(msg);
 			}).bind("select", function(info){
-				buddy.online(info.id, 1);//online
-				self.addChat(info.id, {type: "buddy"}, null, info.name);
-				layout.focusChat(info.id);
+				buddy.online(info.id);//online
+				self.addChat("buddy", info.id, null, null, info.nick);
+				layout.focusChat("buddy", info.id);
 			}).bind("block", function(d){
 				room.block(d.id);
 			}).bind("unblock", function(d){
@@ -341,23 +216,23 @@ extend(webimUI.prototype, objectExtend, {
 				if(chat.options.info.blocked)room.join(id);
 				else room.initMember(id);
 			}, 500);
-			isArray(info.members) && each(info.members, function(n, info){
-				chat.addMember(info.id, info.name, info.id == im.data.user.id);
+			isArray(_info.members) && each(_info.members, function(n, info){
+				chat.addMember(info.id, info.nick, info.id == im.data.user.id);
 			});
 
 		}else{
-			var h = history.get(id), info = buddy.get(id);
-			var _info = info || {id:id, name: name || id};
-			layout.addChat(_info, extend({history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast"}, options), winOptions);
+			var h = history.unicast(id), info = buddy.get(id);
+			var _info = info || {id:id, nick: nick || id};
+			layout.addChat(type, _info, extend({history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast"}, options), winOptions);
 			if(!info) buddy.update(id);
-			if(!h) history.load(id);
-			layout.chat(id).bind("sendMsg", function(msg){
+			if(!h) history.load("unicast", id);
+			layout.chat(type, id).bind("sendMsg", function(msg){
 				im.sendMsg(msg);
 				history.handle(msg);
 			}).bind("sendStatus", function(msg){
 				im.sendStatus(msg);
 			}).bind("clearHistory", function(info){
-				history.clear(info.id);
+				history.clear("unicast", info.id);
 			});
 		}
 	},
@@ -365,8 +240,8 @@ extend(webimUI.prototype, objectExtend, {
 		var self = this, layout = self.layout, _tabs = {}, panels = layout.panels;
 		each(layout.tabs, function(n, v){
 			_tabs[n] = {
-				n: v._count(),
-				t: panels[n].options.type //type: buddy,room
+				n: v._count()//,
+				//t: panels[n].options.type //type: buddy,room
 			};
 		});
 		var d = {
@@ -374,8 +249,8 @@ extend(webimUI.prototype, objectExtend, {
 			tabs: _tabs, // n -> notice count
 			tabIds: layout.tabIds,
 			p: layout.prevCount, //tab prevCount
-			a: layout.activeTabId, //tab activeTabId
-			b: layout.app("buddy").window.isMinimize() ? 0 : 1 //is buddy open
+			//b: layout.widget("buddy").window.isMinimize() ? 0 : 1, //is buddy open
+			a: layout.activeTabId //tab activeTabId
 		}
 		self.im.status.set(d);
 	}
@@ -492,6 +367,9 @@ extend(widget.prototype, {
 	_init: function(){
 	}
 });
+function _tr_type(type){
+	return type == "b" || type == "buddy" || type == "unicast" ? "buddy" : "room";
+}
 function app(name, events){
 	webimUI.apps[name] = events || {};
 }
@@ -504,6 +382,7 @@ extend(webimUI,{
 	date: date,
 	ready: ready,
 	createElement: createElement,
+	defaults: {},
 	apps:{}
 });
 webim.ui = webimUI;

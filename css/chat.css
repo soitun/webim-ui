@@ -1,19 +1,4 @@
 
-/*webim user*/
-.webim .webim-user{
-        margin-left: 6em;
-}
-.webim .webim-user-pic{
-        float: left;
-        margin-left: -5.5em;
-        margin-top: -1.8em;
-}
-.webim .webim-user-pic img{
-}
-.webim .webim-user-show{
-        height: 3em;
-        display: block;
-}
 /**/
 .webim .webim-chat .webim-chat-header{
 	border-left-width:0;
@@ -25,7 +10,7 @@
         overflow-x:visible;
         *background:url(about:blank);
 }
-.webim .webim-chat-show{
+.webim .webim-chat-status{
         font-style: italic;
         margin-left: .8em;
 
@@ -91,8 +76,12 @@
 	width: 7.2em;
 	height: 16.2em;
 }
+.webim .webim-member h4{
+	height: 1.5em;
+	padding: .2em .3em 0;
+}
 .webim .webim-member ul{
-	height: 16em;
+	height: 14.3em;
 	width: 7em;
 	position: absolute;
         overflow-y:auto;

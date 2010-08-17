@@ -101,7 +101,7 @@ extend(webimUI.prototype, objectExtend, {
 		//all ready.
 		//message
 		im.bind("message", function(data){
-			var show = false,roomData = this.room.dataHash,
+			var show = false,
 			l = data.length, d, uid = im.data.user.id, id, c, count = "+1";
 			for(var i = 0; i < l; i++){
 				d = data[i];
@@ -109,9 +109,8 @@ extend(webimUI.prototype, objectExtend, {
 				c = layout.chat(type, id);
 				c && c.status("");//clear status
 				if(!c){	
-					var titlename = (d.type === "unicast")?d.nick:roomData[id].nick;
 					if (d.type === "unicast"){
-						self.addChat(type, id, null, null, titlename);
+						self.addChat(type, id, null, null, d.nick);
 					}else{
 						self.addChat(type, id);  
 					}

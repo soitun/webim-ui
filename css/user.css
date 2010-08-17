@@ -1,0 +1,54 @@
+/*webim user*/
+.webim .webim-user{
+        margin-left: 5.4em;
+	height: 3.1em;
+}
+.webim .webim-user-pic{
+        float: left;
+        margin-left: -5.5em;
+        /*margin-top: -1.8em;*/
+        margin-top: -1.4em;
+	width: 50px;
+	height: 50px;
+	padding: 1px;
+}
+.webim .webim-user-pic img{
+}
+.webim .webim-user-show{
+}
+
+.webim .webim-user-show h4{
+	text-align: left;
+	font-weight: normal;
+	overflow: hidden;
+	line-height: 1.4;
+}
+.webim .webim-user-show h4 *{
+	float: left;
+}
+.webim .webim-user-show h4 strong{
+	padding-right: .5em;
+}
+
+.webim .webim-user-show p{
+	position: absolute;
+	z-index: 2;
+}
+
+.webim .webim-user-show p a{
+	display: block;
+	margin: 0 1em 0 .5em;
+}
+
+.webim .webim-user-show p a .webim-icon{
+	float: left;
+}
+
+.webim .webim-user-show .webim-icon{
+	margin-right: .5em;
+}
+
+.webim .webim-user-status{
+	font-size: .8em;
+        display: block;
+}

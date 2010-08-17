@@ -25,7 +25,7 @@ app("buddy", {
 		var ui = this, im = ui.im, buddy = im.buddy, layout = ui.layout;
 		var buddyUI = ui.buddy = new webimUI.buddy(null, options);
 		layout.addWidget(buddyUI, {
-			title: i18n("chat"),
+			title: i18n("buddy"),
 			icon: "buddy",
 			sticky: im.setting.get("buddy_sticky"),
 			className: "webim-buddy-window",
@@ -47,8 +47,10 @@ app("buddy", {
 		buddyUI.window.bind("displayStateChange",function(type){
 			if(type != "minimize"){
 				buddy.option("loadDelay", false);
+				im.status.set("b", 1);
 				buddy.loadDelay();
 			}else{
+				im.status.set("b", 0);
 				buddy.option("loadDelay", true);
 			}
 		});
@@ -70,31 +72,36 @@ app("buddy", {
 		buddy.bind("update", function(data){
 			buddyUI.update(data);
 		});
+		buddyUI.offline();
+		//user events
+		var user = buddyUI.user;
+		user.bind("online", function(params){
+			im.online(params);
+		}).bind("offline", function(){
+			im.offline();
+		}).bind("presence", function(params){
+			im.sendPresence(params);
+		});
 	},
 	ready: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
-		//buddyUI.online();
+		buddyUI.online();
 	},
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		!buddyUI.window.isMinimize() && buddy.loadDelay();
 		buddyUI.notice("count", buddy.count({presence:"online"}));
+		buddyUI.user.update(im.data.user);
 	},
 	stop: function(type){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
-		//buddyUI.offline();
+		buddyUI.offline();
 		type && buddyUI.notice(type);
 	}
 });
 
 widget("buddy",{
 	template: '<div id="webim-buddy" class="webim-buddy">\
-                         <div id=":header" class="webim-buddy-header ui-widget-subheader">  \
-                              <div id=":user" class="webim-user"> \
-                                      <a id=":userPic" class="webim-user-pic" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;"></a> \
-                                      <span id=":userStatus" title="" class="webim-user-status">Hello</span> \
-                              </div> \
-                        </div> \
 		<div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
 			<div class="webim-buddy-content">\
 				<div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
@@ -114,6 +121,11 @@ widget("buddy",{
 		};
 		self._count = 0;
 		//self._initEvents();
+		self.user = new webimUI.user();
+		self.header = self.user.element;
+		if(self.window){
+			self.window.subHeader(self.header);
+		}
 	},
 	_initEvents: function(){
 		var self = this, $ = self.$, search = $.search, input = $.searchInput, placeholder = i18n("search buddy"), activeClass = "ui-state-active";
@@ -152,7 +164,7 @@ self.trigger("offline");
 	},
 	_titleCount: function(){
 		var self = this, _count = self._count, win = self.window, empty = self.$.empty, element = self.element;
-		win && win.title(i18n("chat") + "(" + (_count ? _count : "0") + ")");
+		win && win.title(i18n("buddy") + "(" + (_count ? _count : "0") + ")");
 		if(!_count){
 			show(empty);
 		}else{
@@ -180,7 +192,7 @@ self.trigger("offline");
 	_title: function(type){
 		var win = this.window;
 		if(win){
-			win.title(i18n("chat") + "[" + i18n(type) + "]");
+			win.title(i18n("buddy") + "[" + i18n(type) + "]");
 		}
 	},
 	notice: function(type, nameOrCount){
@@ -200,30 +212,14 @@ self.trigger("offline");
 	online: function(){
 		var self = this, $ = self.$, win = self.window;
 		self.notice("connect");
-		//hide($.online);
 		show($.empty);
-		show($.offline);
-		show(win.element);
 	},
 	offline: function(){
 		var self = this, $ = self.$, win = self.window;
 		self.notice("offline");
-		//show($.online);
-		hide($.offline);
-		hide($.empty);
+		show($.empty);
 		self.scroll(false);
 		self.removeAll();
-		hide(win.element);
-	},
-	_updateUserInfo:function(info){
-		var self = this, $ = self.$;
-		$.userPic.setAttribute("href", info.url);
-		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
-		setTimeout(function(){
-		$.userPic.firstChild.setAttribute("src", info.pic_url);
-		},100);
-		$.userStatus.innerHTML = info.status;
-		self.window.title(info.nick);
 	},
 	_updateInfo:function(el, info){
 		el = el.firstChild;

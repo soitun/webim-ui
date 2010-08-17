@@ -64,6 +64,7 @@ widget("window", {
                                                                     <a id=":close" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
                                                             </span>\
                                                             <h4 id=":headerTitle"><%=title%></h4>\
+                                                            <div id=":subHeader" class="webim-window-subheader"></div>\
                                                     </div>\
                                                     <div id=":content" class="webim-window-content ui-widget-content">\
                                                     </div>\
@@ -75,12 +76,17 @@ widget("window", {
 	html: function(obj){
 		return this.$.content.appendChild(obj);
 	},
+	subHeader: function(obj){
+		this.$.subHeader.innerHTML = "";
+		return this.$.subHeader.appendChild(obj);
+	},
 	_init: function(element, options){
 		var self = this, options = self.options, $ = self.$;
 		element = self.element;
 		element.window = self;
 		//$.title = $.headerTitle.add($.tabTitle);
 		options.tabWidth && ($.tab.style.width = options.tabWidth + "px");
+		options.subHeader && self.subHeader(options.subHeader);
 		self.title(options.title, options.icon);
 		!options.minimizable && hide($.minimize);
 		!options.maximizable && hide($.maximize);
@@ -199,7 +205,7 @@ widget("window", {
 		var minimize = function(e){
 			self.minimize();
 		};
-		addEvent($.header, "click", minimize);
+		//addEvent($.header, "click", minimize);
 		addEvent(tab, "click", function(e){
 			if(self.isMinimize())self.restore();
 			else self.minimize();
@@ -215,6 +221,9 @@ widget("window", {
 		});
 		addEvent(tab,"mousedown",stop);
 		disableSelection(tab);
+		each($.actions.childNodes, function(n,el){
+			hoverClass(el, "ui-state-hover");
+		});
 
 		each(["minimize", "maximize", "close", "tabClose"], function(n,v){
 			addEvent($[v], "click", function(e){

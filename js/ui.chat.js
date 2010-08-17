@@ -23,14 +23,12 @@ function ieCacheSelection(e){
         document.selection && (this.caretPos = document.selection.createRange());
 }
 widget("chat",{
+	tpl_header: '<div><div id=":user" class="webim-user"> \
+			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
+			<span id=":userStatus" title="" class="webim-user-status">&nbsp;</span> \
+		     </div></div>',
         template:'<div class="webim-chat"> \
-                                                <div id=":header" class="webim-chat-header ui-widget-subheader">  \
-                                                        <div id=":user" class="webim-user"> \
-                                                                <a id=":userPic" class="webim-user-pic" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;"></a> \
-                                                                <span id=":userStatus" title="" class="webim-user-status">Hello</span> \
-                                                        </div> \
-                                                </div> \
-                                                                                                                                        <div class="webim-chat-notice-wrap"><div id=":notice" class="webim-chat-notice ui-state-highlight"></div></div> \
+				<div class="webim-chat-notice-wrap"><div id=":notice" class="webim-chat-notice ui-state-highlight"></div></div> \
                                                 <div id=":content" class="webim-chat-content"> \
                                                                                                                 <div id=":status" class="webim-chat-status webim-gray"></div> \
                                                 </div> \
@@ -59,8 +57,11 @@ widget("chat",{
 			info: options.info
 		});
 		self.$.content.insertBefore(history.element, self.$.content.firstChild);
+		self.header = createElement(tpl(options.tpl_header));
+		extend(self.$, mapElements(self.header));
 		//self._initEvents();
 		if(win){
+			win.subHeader(self.header);
 			win.html(element);
 			self._bindWindow();
 			//self._fitUI();
@@ -230,8 +231,8 @@ widget("chat",{
 		setTimeout(function(){
 		$.userPic.firstChild.setAttribute("src", info.pic_url);
 		},100);
-		$.userStatus.innerHTML = info.status;
-		self.window.title(info.nick);
+		$.userStatus.innerHTML = info.status || "&nbsp";
+		self.window.title(info.nick, info.show);
 	},
 	insert:function(value, isCursorPos){
 		//http://hi.baidu.com/beileyhu/blog/item/efe29910f31fd505203f2e53.html
@@ -377,13 +378,14 @@ extend(webimUI.chat.prototype, {
 		});
 		li[id] = el;
 		self.$.member.appendChild(el);
-
+		self.$.memberCount.innerHTML = parseInt(self.$.memberCount.innerHTML) + 1;
 	},
 	removeMember: function(id){
 		var self = this, el = self.memberLi[id];
 		if(el){
 			self.$.member.removeChild(el);
 			delete self.memberLi[id];
+			self.$.memberCount.innerHTML = parseInt(self.$.memberCount.innerHTML) - 1;
 		}
 	}
 });
@@ -391,8 +393,9 @@ plugin.add("chat","member",{
 	init:function(e, ui){
 		var chat = ui.self, $ = ui.$;
 		chat.memberLi = {};
-		var member = createElement('<div class="webim-member ui-widget-content ui-corner-left"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><ul></ul></div>');
-		$.member = member.lastChild;
+		var member = createElement(tpl('<div class="webim-member ui-widget-content ui-corner-left"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><h4><%=room member%>(<span id=":memberCount">0</span>)</h4><ul id=":ul"></ul></div>')), els = mapElements(member);
+		$.member = els.ul;
+		$.memberCount = els.memberCount;
 		$.content.parentNode.insertBefore(member, $.content);
 	}
 });

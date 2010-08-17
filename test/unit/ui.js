@@ -29,7 +29,7 @@ test("webim.ui", 1, function() {
 		ui.addApp("notification");
 		ui.addApp("setting", {"data": _sd});
 		ui.render();
-		//im.autoOnline() && im.online();
+		im.autoOnline() && im.online();
 		//im.online();
 		im.bind("go", function(data){
 			data.connection.server = "../im/test/" + data.connection.server;

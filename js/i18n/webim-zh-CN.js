@@ -64,13 +64,21 @@ webim.ui.i18n.store('zh-CN',{
 	"block group": "屏蔽来自{{name}}的消息",
 	"unblock group": "取消屏蔽",
 	"empty buddy": "没有好友在线",
+	"empty room": "未加入任何群组",
 	"empty menu": "没有工具",
 	"empty notification": "空",
+	"empty hotpost":"空",
+	"room member": "群成员",
 	"empty hotpost":"空",
 	"collapse": "收缩",
 	"expand": "展开",
 	"friend":"好友",
-	"stranger":"陌生人"
+	"stranger":"陌生人",
+	"available": "在线",
+	"dnd": "忙碌",
+	"away": "离开",
+	"invisible": "隐身",
+	"unavailable": "离线"
 });
 
 webim.ui.i18n.store('zh-CN',{

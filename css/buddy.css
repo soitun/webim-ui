@@ -1,11 +1,10 @@
 #webim-buddy{
-
+	padding: .3em 0;
 }
 #webim-buddy .webim-buddy-search{
         padding: 0em 1.6em 0em 0em;
         margin: .3em .5em .5em;
-        display: none;
-        
+	display: none;
 }
 #webim-buddy .webim-buddy-search input{
         border: none;
@@ -57,7 +56,6 @@
 	*/
 }
 #webim-buddy .webim-buddy-empty{
-        display: none;
         padding: 0 0 1em;
 }
 
@@ -95,9 +93,6 @@
 }
 #webim-buddy ul li a span{
         display: block;
+	font-size: .8em;
 }
-.webim-state-stop .webim-buddy-window{
-        width:0;
-        display:none;
-        position:absolute;
-}
+

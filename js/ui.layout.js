@@ -354,7 +354,7 @@ widget("layout",{
 		return this.widgets[name];
 	},
 	addWidget: function(widget, options, before, container){
-		var self = this, options = extend(options,{closeable: false});
+		var self = this, options = extend(options,{closeable: false, subHeader: widget.header});
 		var win, el = widget.element;
 		win = new webimUI.window(null, options);
 		win.html(el);
@@ -439,13 +439,15 @@ widget("layout",{
 		//ids = idsArray(ids);
 		//var self = this, id, l = ids.length, tab;
 		//for(var i = 0; i < l; i++){
-			//tab = self.tabs[ids[i]];
-			tab = self.tabs[_id_with_type(type, id)];
+			//tab = this.tabs[ids[i]];
+			var tab = this.tabs[_id_with_type(type, id)];
 			tab && tab.close();
 		//}
 	},
 	removeAllChat: function(){
-		this.removeChat(this.tabIds);
+		each(this.tabs, function(n, tab){
+			tab.close();
+		});
 	},
 	addShortcut: function(data){
 		var self = this;

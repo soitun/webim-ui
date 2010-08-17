@@ -30,11 +30,14 @@ app("room",{
 		layout.addWidget(roomUI, {
 			title: i18n("room"),
 			icon: "room",
-			sticky: false,
+			sticky: im.setting.get("buddy_sticky"),
 			onlyIcon: true,
 			isMinimize: true
 		}, "notification");
-
+		//
+		im.setting.bind("update",function(key, val){
+			if(key == "buddy_sticky")roomUI.window.option("sticky", val);
+		});
 		room.bind("join",function(info){
 			updateRoom(info);
 		}).bind("leave", function(rooms){
@@ -87,6 +90,7 @@ widget("room",{
 		self.li = {
 		};
 		self._count = 0;
+		show(self.$.empty);
 		//self._initEvents();
 	},
 	_initEvents: function(){
@@ -111,20 +115,6 @@ widget("room",{
 			});
 		});
 
-	},
-	_titleCount: function(){
-		var self = this, _count = self._count, win = self.window, empty = self.$.empty, element = self.element;
-		win && win.title(i18n("chat") + "(" + (_count ? _count : "0") + ")");
-		if(!_count){
-			show(empty);
-		}else{
-			hide(empty);
-		}
-		if(_count > 8){
-			self.scroll(true);
-		}else{
-			self.scroll(false);
-		}
 	},
 	scroll:function(is){
 		toggleClass(this.element, "webim-room-scroll", is);
@@ -167,6 +157,7 @@ widget("room",{
 		}
 	},
 	add: function(data){
+		hide(this.$.empty);
 		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
 			this._addOne(data[i]);
@@ -180,18 +171,12 @@ widget("room",{
 		this.remove(ids);
 	},
 	remove: function(ids){
-		var id, el, li = this.li, group, li_group = this.li_group;
+		var id, el, li = this.li;
 		ids = idsArray(ids);
 		for(var i=0; i < ids.length; i++){
 			id = ids[i];
 			el = li[id];
 			if(el){
-				group = li_group[id];
-				if(group){
-					group.count --;
-					if(group.count == 0)hide(group.el);
-					group.title.innerHTML = group.nick + "("+ group.count+")";
-				}
 				remove(el);
 				delete(li[id]);
 			}

@@ -7,6 +7,7 @@ DIST_DIR = ${PREFIX}/dist
 SRC_DIR = ${PREFIX}
 CSS_SRC_DIR = ${SRC_DIR}/css
 JS_SRC_DIR = ${SRC_DIR}/js
+APP_SRC_DIR = ${SRC_DIR}/apps
 I18N_SRC_DIR = ${SRC_DIR}/js/i18n
 
 IMAGE_SRC_DIR = ${SRC_DIR}/images
@@ -17,15 +18,17 @@ CSS_BASE_FILES = ${CSS_SRC_DIR}/core.css\
 	${CSS_SRC_DIR}/ui.core.css\
 	${CSS_SRC_DIR}/icons.css\
 	${CSS_SRC_DIR}/emot.css\
-	${CSS_SRC_DIR}/chatlink.css\
-	${CSS_SRC_DIR}/notification.css\
 	${CSS_SRC_DIR}/setting.css\
+	${CSS_SRC_DIR}/user.css\
 	${CSS_SRC_DIR}/buddy.css\
 	${CSS_SRC_DIR}/chat.css\
 	${CSS_SRC_DIR}/menu.css\
 	${CSS_SRC_DIR}/history.css\
 	${CSS_SRC_DIR}/layout.css\
-	${CSS_SRC_DIR}/hotpost.css\
+
+CSS_APP_FILES = ${APP_SRC_DIR}/chatlink.css\
+	${APP_SRC_DIR}/notification.css\
+	${APP_SRC_DIR}/hotpost.css\
 
 
 IM = ${SRC_DIR}/im/dist/webim.js
@@ -38,14 +41,17 @@ JS_BASE_FILES = ${JS_SRC_DIR}/core.js\
 	${JS_SRC_DIR}/ui.window.js\
 	${JS_SRC_DIR}/ui.layout.js\
 	${JS_SRC_DIR}/ui.emot.js\
-	${JS_SRC_DIR}/ui.chatlink.js\
 	${JS_SRC_DIR}/ui.setting.js\
+	${JS_SRC_DIR}/ui.user.js\
 	${JS_SRC_DIR}/ui.buddy.js\
-	${JS_SRC_DIR}/ui.notification.js\
 	${JS_SRC_DIR}/ui.history.js\
 	${JS_SRC_DIR}/ui.menu.js\
 	${JS_SRC_DIR}/ui.chat.js\
-	${JS_SRC_DIR}/ui.hotpost.js\
+
+JS_APP_FILES = ${APP_SRC_DIR}/ui.chatlink.js\
+	${APP_SRC_DIR}/notification.js\
+	${APP_SRC_DIR}/ui.notification.js\
+	${APP_SRC_DIR}/ui.hotpost.js\
 
 UI_CSS_FILES = ${CSS_BASE_FILES}
 
@@ -57,16 +63,12 @@ UI_ALL_JS_FILES = ${IM}\
 	${UI_JS_FILES}\
 
 UI_VER = `cat ${SRC_DIR}/version.txt`
-#DATE=`svn info . | grep Date: | sed 's/.*: //g'`
-#REV=`svn info . | grep Rev: | sed 's/.*: //g'`
-DATE=`git log -n 1 | grep Date: | sed 's/.*: //g'`
-REV=`git log -n 1 | grep Rev: | sed 's/.*: //g'`
+DATE=`git log -n 1 | grep Date: | sed 's/Date:   //g'`
+COMMIT=`git log -n 1 | grep commit | sed 's/commit //g'`
 
-REPLACE = sed 's/Date:./&'"${DATE}"'/' | \
-		sed 's/Revision:./&'"${REV}"'/' | \
+REPLACE = sed 's/@DATE/'"${DATE}"'/' | \
+		sed 's/@COMMIT/'"${COMMIT}"'/' | \
 		sed s/@VERSION/${UI_VER}/
-
-#REPLACE = sed s/@VERSION/${UI_VER}/
 
 MINJAR = java -jar ${BUILD_DIR}/yuicompressor-2.4.2.jar
 UNICODE = native2ascii -encoding utf-8 
@@ -104,7 +106,7 @@ copy:
 
 min:
 	@@echo "Building"
-	@@echo " - Compressing using Minifier"
+	@@echo " - Compressing"
 
 	@@${MINJAR} --type css ${UI_CSS} > ${UI_MIN_CSS}
 	@@echo ${UI_MIN_CSS} "Built"

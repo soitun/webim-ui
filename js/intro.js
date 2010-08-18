@@ -1,11 +1,11 @@
 /*!
  * Webim UI v@VERSION
- * http://www.nextim.cn/
+ * http://www.webim20.cn/
  *
- * Copyright (c) 2009 Hidden
+ * Copyright (c) 2010 Hidden
  *
- * Date: 
- * Revision: 
+ * Date: @DATE
+ * Commit: @COMMIT
  */
 (function(window,document,undefined){
 

@@ -1,4 +1,4 @@
-﻿webim.ui.i18n.locale = 'zh-CN';
+webim.ui.i18n.locale = 'zh-CN';
 webim.ui.i18n.store('zh-CN',{
 	"dt:monthdate": "{{month}}{{date}}日",
 	"dt:today": "今天",

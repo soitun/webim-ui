@@ -27,7 +27,7 @@ widget("user",{
 		});
 		each(children(list), function(n, el){
 			addEvent(el, "click", function(e){
-				self._set(this.getAttribute("href").slice(1));
+				self._set(this.href.split("#")[1]);
 				hide(list);
 				preventDefault(e);
 			});

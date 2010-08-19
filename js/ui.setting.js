@@ -114,6 +114,9 @@ widget("setting",{
 			return;
 		}
 		var $ = self.$, tag = $[name];
+		if(isChecked && typeof isChecked == "boolean") {
+			return;
+		}
 		if(tag){
 			tag.firstChild.checked = isChecked;
 			return;

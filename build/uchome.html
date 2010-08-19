@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>WebIM For UChome</title>
+	</head>
+	<body>
+		<div>
+			<h1>WebIM For UChome</h1>
+		</div>
+		<link href="webim.uchome.css" media="all" type="text/css" rel="stylesheet"/>
+		<link href="themes/base/ui.theme.css" media="all" type="text/css" rel="stylesheet"/>
+		<script type="text/javascript" src="webim.uchome.js" ></script>
+		<script type="text/javascript" src="i18n/webim-zh-CN.js" ></script>
+		<script type="text/javascript">
+			webim = window.webim;
+			//webim.extend(webim.setting.defaults.data,{});
+			//webim.extend(webim.setting.defaults.data,{block_list: ["1000001"]});
+			_path = "./";
+			webim.ui.emot.init({"dir": _path + "images/emot/default"});
+			var ui = new webim.ui(document.body, {
+				soundUrls: {
+					lib: _path + "assets/sound.swf",
+					msg: _path + "assets/sound/msg.mp3"
+				}
+			}), im = ui.im;
+			//ui.addApp("menu", {"data": menu});
+			//ui.layout.addShortcut( menu);
+			ui.addApp("buddy");
+			ui.addApp("room");
+			ui.addApp("notification");
+			ui.addApp("setting", {"data": webim.setting.defaults.data});
+			ui.render();
+			//im.autoOnline() && im.online();
+		</script>
+	</body>
+</html>
+

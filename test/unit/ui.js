@@ -10,12 +10,6 @@ test("webim.ui", 1, function() {
 		var menu = [{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"album","icon": _path + "image\/app\/album.gif","link":"space.php?do=album"},{"title":"blog","icon": _path + "image\/app\/blog.gif","link":"space.php?do=blog"},{"title":"thread","icon": _path + "image\/app\/mtag.gif","link":"space.php?do=thread"},{"title":"share","icon": _path + "image\/app\/share.gif","link":"space.php?do=share"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"},{"title":"doing","icon": _path + "image\/app\/doing.gif","link":"space.php?do=doing"}];
 		_path = "../";
 		webim.ui.emot.init({"dir": _path + "images/emot/default"});
-		var _d = webim.setting.defaults.data, _sd = {};
-		for(var k in _d){
-			if(typeof _d[k] == "boolean"){
-				_sd[k] = _d[k];
-			}
-		}
 		var ui = new webim.ui(document.body, {
 			soundUrls: {
 				lib: _path + "assets/sound.swf",
@@ -27,7 +21,7 @@ test("webim.ui", 1, function() {
 		ui.addApp("buddy");
 		ui.addApp("room");
 		ui.addApp("notification");
-		ui.addApp("setting", {"data": _sd});
+		ui.addApp("setting", {"data": webim.setting.defaults.data});
 		ui.render();
 		im.autoOnline() && im.online();
 		//im.online();

@@ -96,6 +96,7 @@ app("buddy", {
 	stop: function(type){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		buddyUI.offline();
+		buddyUI.user.show("unavailable");
 		type && buddyUI.notice(type);
 	}
 });

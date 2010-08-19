@@ -5,6 +5,8 @@
 }
 .webim .webim-user-pic{
         float: left;
+	position: static !important;
+	position: fixed;/*display in ie6*/
         margin-left: -5.5em;
         /*margin-top: -1.8em;*/
         margin-top: -1.4em;
@@ -22,6 +24,7 @@
 	font-weight: normal;
 	overflow: hidden;
 	line-height: 1.4;
+	width: 100%;
 }
 .webim .webim-user-show h4 *{
 	float: left;

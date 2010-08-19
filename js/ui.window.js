@@ -221,7 +221,7 @@ widget("window", {
 		});
 		addEvent(tab,"mousedown",stop);
 		disableSelection(tab);
-		each($.actions.childNodes, function(n,el){
+		each(children($.actions), function(n,el){
 			hoverClass(el, "ui-state-hover");
 		});
 

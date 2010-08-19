@@ -10,6 +10,10 @@ extend = webim.extend,
 each = webim.each,
 inArray = webim.inArray,
 grep = webim.grep,
+JSON = webim.JSON,
+ajax = webim.ajax,
+comet = webim.comet,
+model = webim.model,
 objectExtend = webim.objectExtend,
 map = webim.map;
 

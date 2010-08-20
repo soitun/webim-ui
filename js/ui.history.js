@@ -45,11 +45,12 @@ widget("history",{
 		var self = this;
 		logItem = extend({}, logItem);
 		plugin.call(self, "render", [null, self.ui({msg: logItem})]);
-		var  from = logItem.from, to = logItem.to, time = logItem.timestamp, msg = logItem.body, shouldTilte = true, last = self._lastLogItem, markup = [], info = self.options.info, user = self.options.user;
-		var fromSelf = from == user.id;
-		var other = !fromSelf && user.id != to;
+		var  from = logItem.from, to = logItem.to, time = logItem.timestamp, msg = logItem.body, shouldTilte = true, last = self._lastLogItem, markup = [], info = self.options.info, user = self.options.user, nick;
+		nick = logItem.nick;
+		//var fromSelf = from == user.id;
+		//var other = !fromSelf && user.id != to;
 
-		var nick = other ? logItem.nick : fromSelf ? user.nick : (info.nick ? '<a href="' + info.url + '">' + info.nick + '</a>' : info.id);
+		//var nick = other ? logItem.nick : fromSelf ? user.nick : (info.nick ? '<a href="' + info.url + '">' + info.nick + '</a>' : info.id);
 		if (last && last.to == to && last.from == from && time - last.timestamp < 60000){
 			shouldTilte = false;
 		}

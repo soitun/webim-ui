@@ -69,7 +69,6 @@ webim.ui.i18n.store('zh-CN',{
 	"empty notification": "空",
 	"empty hotpost":"空",
 	"room member": "群成员",
-	"empty hotpost":"空",
 	"collapse": "收缩",
 	"expand": "展开",
 	"friend":"好友",

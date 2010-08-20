@@ -58,7 +58,7 @@ ${UI_JS}: ${DIST_DIR} ${IM}
 	       ${REPLACE} > ${UI_JS};
 	@@echo "	"${UI_JS}
 
-${UI_MIN_CSS}: ${UI_CSS}
+${UI_MIN_CSS}: ${IM_SRC} ${UI_CSS}
 	@@echo "Compressing css..."
 	@@${MINJAR} --type css ${UI_CSS} > ${UI_MIN_CSS}
 	@@echo "	"${UI_MIN_CSS}

@@ -1,6 +1,7 @@
 //
 /* ui.chatlink:
 *
+* TODO: 支持群组Link
 options:
 
 methods:

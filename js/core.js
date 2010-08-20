@@ -83,10 +83,11 @@ function addClass(obj,name){
 	}
 }
 function removeClass(obj,name){
-	obj && (obj.className=obj.className.replace(new RegExp("(^|\\s+)("+name.split(/\s+/).join("|")+")(\\s+|$)","g")," "));
+	//支持重复className，后面的空格留给下一个重复的class匹配
+	obj && (obj.className=obj.className.replace(new RegExp("(^|\\s+)("+name.split(/\s+/).join("|")+")(?=(\\s+|$))","g")," "));
 }
 function replaceClass(obj,_old, _new){
-	obj && (obj.className=obj.className.replace(new RegExp("(^|\\s+)("+_old.split(/\s+/).join("|")+")(\\s+|$)","g")," ") + " " + _new);
+	obj && (obj.className=obj.className.replace(new RegExp("(^|\\s+)("+_old.split(/\s+/).join("|")+")(?=(\\s+|$))","g")," ") + " " + _new);
 }
 function hoverClass(obj, name, toggleClass){
 	addEvent(obj,"mouseover",function(){

@@ -57,7 +57,7 @@ widget("history",{
 		if (shouldTilte) {
 			self._lastLogItem = logItem;
 			var t = (new date(time));
-			markup.push('<h4><span class="webim-gray">');
+			markup.push('<h4 class="ui-state-default"><span class="webim-gray">');
 			markup.push(t.getDay(true));
 			markup.push(" ");
 			markup.push(t.getTime());

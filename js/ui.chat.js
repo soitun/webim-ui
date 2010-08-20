@@ -42,7 +42,7 @@ widget("chat",{
                                                                         </td> \
                                                                         <td style="vertical-align:top;width:100%;"> \
                                                                         <div class="webim-chat-input-wrap">\
-                                                                                <textarea id=":input" class="webim-chat-input webim-gray"><%=input notice%></textarea> \
+                                                                                <textarea id=":input" class="webim-chat-input webim-gray ui-widget-content"><%=input notice%></textarea> \
                                                                         </div> \
                                                                         </td> \
                                                                 </tr> \

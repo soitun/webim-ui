@@ -46,7 +46,7 @@ body {
 	filter:alpha(opacity=50);
 	zoom:1;
         */
-        color: gray;
+        color: gray !important;
 }
 
 .webim-icon{ 

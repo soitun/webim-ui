@@ -10,7 +10,9 @@
         padding: 0 .4em;
 }
 .webim .webim-history h4{
-        border-top: 1px solid #eee;
+        background:none;
+        border-width: 0;
+        border-bottom-width: 1px;
         margin-top: .1em;
         padding: .2em .3em .1em;
         font-weight: normal;

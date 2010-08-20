@@ -3,6 +3,11 @@
 .ui-widget{
         font-size: 1.2em !important;
 }
+
+.ui-widget input, .ui-widget textarea{
+        font-size: 1em;
+}
+
 .ui-toolbar{ 
 	opacity:0.75;
 	filter:alpha(opacity=75);

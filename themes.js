@@ -5,7 +5,7 @@ function render_themes(){
 	for(var i in themes){
 		theme = themes[i];
 		href = 'href="javascript:void(select_theme(\'' + theme + '\'));"';
-		content += '<li style="float: left;"><h4 style="margin: 0;"><a ' + href + '>' + theme + '</a>' + clippy(theme) + '</h4><p style="margin: 5px;"><a ' + href + '><img border="0" alt="' + theme + '" title="' + theme + '" src="themes/images/' + theme + '.png" /></a></p></li>';
+		content += '<li style="float: left;list-style:none;margin: 5px;"><h4 style="margin: 0;"><a ' + href + '>' + theme + '</a>' + clippy(theme) + '</h4><p style="margin:0;"><a ' + href + '><img border="0" width="" alt="' + theme + '" title="' + theme + '" src="themes/images/' + theme + '.png" /></a></p></li>';
 	}
 	content += "</ul>";
 	if(wrapper)wrapper.innerHTML = content;

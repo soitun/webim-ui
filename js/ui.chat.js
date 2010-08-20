@@ -38,7 +38,7 @@ widget("chat",{
                                                         <table class="webim-chat-t" cellSpacing="0"> \
                                                                 <tr> \
                                                                         <td style="vertical-align:top;"> \
-                                                                        <em class="webim-icon webim-icon-chat"></em>\
+                                                                        <em class="webim-icon webim-icon-chat-edit"></em>\
                                                                         </td> \
                                                                         <td style="vertical-align:top;width:100%;"> \
                                                                         <div class="webim-chat-input-wrap">\

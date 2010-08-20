@@ -215,18 +215,19 @@
 .webim-layout  .webim-window-tab-count {
         font-size: 10px;
         font-weight: bold;
-        height: 17px;
-        width: 22px;
+        height: 23px;
+        width: 24px;
         padding-top: 2px;
         position: absolute;
         right: 0px;
-        top: -16px;
+        top: -18px;
+	z-index: 3;
         text-align: center;
         overflow: hidden;
         line-height: 1.2;
         display:none;
         color:#fff;
-        background: url(../images/count_bg.gif) no-repeat;
+        background: url(../images/icon16.png) no-repeat -65px -50px;
 }
 
 .webim-layout  .webim-window-tab-tip {

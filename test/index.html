@@ -39,7 +39,7 @@
 		<link href="../css/menu.css" media="all" type="text/css" rel="stylesheet"/>
 		<link href="../css/history.css" media="all" type="text/css" rel="stylesheet"/>
 		<link href="../css/hotpost.css" media="all" type="text/css" rel="stylesheet"/>
-		<link href="../themes/blitzer/ui.theme.css" media="all" type="text/css" rel="stylesheet"/>
+		<link href="../themes/ui-darkness/jquery.ui.theme.css" media="all" type="text/css" rel="stylesheet"/>
 		<script type="text/javascript" src="../swfobject-2.1.js" ></script>
 		<script type="text/javascript" src="../js/core.js" ></script>
 		<script type="text/javascript" src="../js/date.js" ></script>
@@ -69,6 +69,7 @@
 		<!-- webim apps end -->
 		<script type="text/javascript">var _path = "../im/test/";</script>
 		<script type="text/javascript" src="../im/test/config.js"></script>
+		<script type="text/javascript" src="unit/core.js" ></script>
 		<script type="text/javascript" src="unit/ui.js" ></script>
 	</head>
 	<body class="flora">
@@ -76,7 +77,10 @@
 		<h2 id="qunit-banner"></h2>
 		<h2 id="qunit-userAgent"></h2>
 		<ol id="qunit-tests"></ol>
-		<div id="qunit-fixture">test markup, will be hidden</div>
+		<div id="qunit-fixture">
+			<div id="className">
+			</div>
+		</div>
 	</body>
 </html>
 

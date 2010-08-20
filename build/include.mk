@@ -28,8 +28,10 @@ UI_MIN_JS = ${DIST_DIR}/webim.${PRODUCT_NAME}.min.js
 
 all: min copy i18n
 	@@echo "WebIM UI build complete."
+${IM_SRC}:
+	@@git submodule update --init im
 
-${IM}:
+${IM}: ${IM_SRC}
 	@@echo "Build webim..."
 	$(MAKE) webim -C ${PREFIX}/im
 

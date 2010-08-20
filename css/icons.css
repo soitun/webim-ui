@@ -23,6 +23,9 @@
  .webim-icon-chat{
 	 background-position:0 -16px;
  }
+ .webim-icon-comments{
+	 background-position:-48px -16px;
+ }
  .webim-icon-clear{
 	 background-position:-16px -16px;
 
@@ -55,4 +58,21 @@
 }
 .webim-icon-unavailable{
 	background-position:-64px -80px;
+}
+/*use bullet*/
+.webim-icon-available{
+	 background-position:0 -64px;
+}
+
+.webim-icon-dnd{
+	background-position:-16px -64px;
+}
+.webim-icon-away{
+	background-position:-32px -64px;
+}
+.webim-icon-invisible{
+	background-position:-48px -64px;
+}
+.webim-icon-unavailable{
+	background-position:-64px -64px;
 }

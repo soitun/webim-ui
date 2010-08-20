@@ -50,7 +50,7 @@ widget("window", {
                                                     <div id=":tabCount" class="webim-window-tab-count">\
                                                             0\
                                                     </div>\
-                                                    <em id=":tabIcon" class="webim-icon webim-icon-chat"></em>\
+                                                    <em id=":tabIcon" class="webim-icon webim-icon-comments"></em>\
                                                     <h4 id=":tabTitle"><%=title%></h4>\
                                             </div>\
                                             </div>\

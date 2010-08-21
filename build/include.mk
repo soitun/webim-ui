@@ -89,6 +89,7 @@ ${DIST_DIR}/i18n: ${DIST_DIR}
 	@@${UNICODE} ${I18N_SRC_DIR}/webim-en.js > ${DIST_DIR}/i18n/webim-en.js
 
 clean:
+	$(MAKE) clean -C ${PREFIX}/im
 	@@echo "Removing Distribution directory:" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
 

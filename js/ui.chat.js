@@ -154,6 +154,7 @@ widget("chat",{
 			type: options.msgType,
 			to: info.id,
 			from: options.user.id,
+			nick: options.user.nick,
 			//stype: '',
 			offline: info.presence != "online",
 			timestamp: (new Date()).getTime(),

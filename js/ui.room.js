@@ -45,11 +45,11 @@ app("room",{
 		}).bind("block", function(id, list){
 			setting.set("blocked_rooms",list);
 			updateRoom(room.get(id));
-			room.leave(id,u);
+			room.leave(id);
 		}).bind("unblock", function(id, list){
 			setting.set("blocked_rooms",list);
 			updateRoom(room.get(id));
-			room.join(id,u);
+			room.join(id);
 		}).bind("addMember", function(room_id, info){
 			var c = layout.chat("room", room_id);
 			c && c.addMember(info.id, info.nick, info.id == im.data.user.id);

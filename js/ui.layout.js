@@ -301,11 +301,15 @@ widget("layout",{
 		addEvent($.prev,"mouseup", function(){self._slideUp();});
 		disableSelection($.prev);
 		addEvent($.expand, "click", function(){
+			if(!self.isMinimize()) return false;
 			self.expand();
+			self.trigger("expand");
 			return false;
 		});
 		addEvent($.collapse, "click", function(){
+			if(self.isMinimize()) return false;
 			self.collapse();
+			self.trigger("collapse");
 			return false;
 		});
 		hoverClass($.collapse, "ui-state-hover", "ui-state-default");
@@ -318,13 +322,11 @@ widget("layout",{
 		var self = this;
 		if(self.isMinimize()) return;
 		addClass(this.$.layout, "webim-layout-minimize");
-		self.trigger("collapse");
 	},
 	expand: function(){
 		var self = this;
 		if(!self.isMinimize()) return;
 		removeClass(self.$.layout, "webim-layout-minimize");
-		self.trigger("expand");
 	},
 	_displayUpdate:function(e){
 		this._ready && this.trigger("displayUpdate");

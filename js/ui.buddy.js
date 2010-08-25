@@ -82,6 +82,7 @@ app("buddy", {
 		}).bind("presence", function(params){
 			im.sendPresence(params);
 		});
+		buddyUI.user.update(im.data.user);
 	},
 	ready: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;

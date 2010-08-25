@@ -64,6 +64,9 @@ widget("setting",{
 	template: function(){
 		var self = this, temp = [], data = self.options.data;
 		data && each(data, function(key, val){
+			if(val && typeof val != "boolean") {
+				return;
+			}
 			temp.push(self._check_tpl(key, val));
 		});
 		return tpl(self.options.template,{

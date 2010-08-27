@@ -1,5 +1,5 @@
 <?php
-$path = dirname(__FILE__).DIRECTORY_SEPARATOR."themes";
+$path = dirname(__FILE__);
 $files = scandir($path);
 $themes = array();
 foreach ($files as $k => $v){

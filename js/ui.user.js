@@ -34,7 +34,7 @@ widget("user",{
 		});
 	},
 	update: function(info){
-		var self = this, type = info.show || "available", $ = self.$;
+		var self = this, type = info.show || "unavailable", $ = self.$;
 		self.options.info = info;
 		$.userStatus.innerHTML = info.status || i18n(type);
 		$.userNick.innerHTML = info.nick || "";

@@ -345,12 +345,4 @@
 	float: left;
 }
 /* end */
-.webim-state-stop{
-        left:auto;
-        right:0;
-}
-.webim-state-stop .webim-widgets{
-        right:0;
-}
-.webim-state-stop .webim-pannels{
-}
+

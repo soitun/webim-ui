@@ -60,10 +60,10 @@ extend(webimUI.prototype, objectExtend, {
 			self._initStatus();
 			//setting.set(data.setting);
 		}).bind("stop", function(type){
-			layout.changeState("stop");
 			//hide(layout.widget("room").window.element);
 			type == "offline" && layout.removeAllChat();
 			layout.updateAllChat();
+			layout.changeState("stop");
 		});
 		//setting events
 		setting.bind("update",function(key, val){

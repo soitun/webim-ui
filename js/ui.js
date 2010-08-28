@@ -179,7 +179,7 @@ extend(webimUI.prototype, objectExtend, {
 		a = status.get("a");
 
 		tabIds && tabIds.length && tabs && each(tabs, function(k,v){
-			var id = k.slice(2), type = k[0];
+			var id = k.slice(2), type = k.slice(0,1);
 			self.addChat(type, id, {}, { isMinimize: true});
 			layout.chat(k).window.notifyUser("information", v["n"]);
 		});

@@ -293,7 +293,14 @@ widget("layout",{
 	},
 	_initEvents: function(){
 		var self = this, win = self.window, $ = self.$;
-		addEvent(win,"resize", function(){self.buildUI();});
+		//Ie will call resize events after onload.
+		var c = false;
+		addEvent(win,"resize", function(){
+			if(c){
+				c = true;
+				self.buildUI();
+			}
+		});
 		addEvent($.next,"mousedown", function(){self._slide(-1);});
 		addEvent($.next,"mouseup", function(){self._slideUp();});
 		disableSelection($.next);
@@ -424,7 +431,8 @@ widget("layout",{
 		if(!panels[id]){
 			var win = self.tabs[id] = new webimUI.window(null, extend({
 				isMinimize: self.activeTabId || !self.options.chatAutoPop,
-				tabWidth: self.tabWidth -2
+				tabWidth: self.tabWidth -2,
+				titleVisibleLength: 9
 			},winOptions)).bind("close", function(){ self._onChatClose(id)}).bind("displayStateChange", function(state){ self._onChatChange(id,state)});
 			self.tabIds.push(id);
 			self.$.tabs.insertBefore(win.element, self.$.tabs.firstChild);

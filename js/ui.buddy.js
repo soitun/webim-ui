@@ -46,20 +46,17 @@ app("buddy", {
 		});
 		buddyUI.window.bind("displayStateChange",function(type){
 			if(type != "minimize"){
-				buddy.option("loadDelay", false);
+				buddy.option("active", true);
 				im.status.set("b", 1);
-				buddy.loadDelay();
+				buddy.complete();
 			}else{
 				im.status.set("b", 0);
-				buddy.option("loadDelay", true);
+				buddy.option("active", false);
 			}
 		});
 		//some buddies online.
 		buddy.bind("online", function(data){
 			buddyUI.add(data);
-			buddyUI.notice("count", buddy.count({presence:"online"}));
-		});
-		buddy.bind("onlineDelay", function(data){
 			buddyUI.notice("count", buddy.count({presence:"online"}));
 		});
 		//some buddies offline.

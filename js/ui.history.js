@@ -58,13 +58,13 @@ widget("history",{
 		if (shouldTilte) {
 			self._lastLogItem = logItem;
 			var t = (new date(time));
-			markup.push('<h4 class="ui-state-default"><span class="webim-gray">');
+			markup.push('<h4><span class="webim-gray">');
 			markup.push(t.getDay(true));
 			markup.push(" ");
 			markup.push(t.getTime());
 			markup.push('</span>');
 			markup.push(nick);
-			markup.push('</h4>');
+			markup.push('</h4><hr class="webim-line ui-state-default" />');
 		}
 
 		markup.push('<p>');

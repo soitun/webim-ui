@@ -11,7 +11,7 @@ widget("user",{
 						<a href="#unavailable" class="webim-user-show-unavailable"><em class="webim-icon webim-icon-unavailable"><%=unavailable%></em><%=unavailable%></a>\
 					</p>\
 				</div> \
-					<span id=":userStatus" title="" class="webim-user-status">Hello</span> \
+					<span id=":userStatus" title="" class="webim-user-status"></span> \
 						</div> \
 							</div>'
 },{
@@ -36,7 +36,7 @@ widget("user",{
 	update: function(info){
 		var self = this, type = info.show || "unavailable", $ = self.$;
 		self.options.info = info;
-		$.userStatus.innerHTML = info.status || i18n(type);
+		$.userStatus.innerHTML = info.status || "&nbsp;";
 		$.userNick.innerHTML = info.nick || "";
 		$.userPic.setAttribute("href", info.url);
 		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");

@@ -109,7 +109,7 @@ widget("buddy",{
 					<ul id=":ul"></ul>\
 						</div>\
 							</div>',
-	tpl_group: '<li><h4 class="ui-state-default"><%=title%>(<%=count%>)</h4><ul></ul></li>',
+	tpl_group: '<li><h4><%=title%>(<%=count%>)</h4><hr class="webim-line ui-state-default" /><ul></ul></li>',
 	tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=nick%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
@@ -231,13 +231,14 @@ self.trigger("offline");
 		el = el.nextSibling;
 		el.innerHTML = info.nick;
 		el = el.nextSibling;
-		el.innerHTML = info.status;
+		el.innerHTML = info.status || "&nbsp;";
 		return el;
 	},
 	_addOne:function(info, end){
 		var self = this, li = self.li, id = info.id, ul = self.$.ul;
 		if(!li[id]){
 			if(!info.default_pic_url)info.default_pic_url = "";
+			info.status = info.status || "&nbsp;";
 			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
 			//self._updateInfo(el, info);
 			var a = el.firstChild;

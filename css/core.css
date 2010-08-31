@@ -57,7 +57,14 @@ body {
         height:16px;
         width:16px;
 }
+
 a .webim-icon, a .ui-icon{
 		cursor: pointer;
 }
 
+.webim-line{
+        background: none;
+        border-width: 0 0 1px !important;
+	height: 0;
+	line-height: 0;
+}

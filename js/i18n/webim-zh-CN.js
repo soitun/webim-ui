@@ -42,6 +42,7 @@ webim.ui.i18n.store('zh-CN',{
 	"connecting":"连接中",
 	"offline":"离线",
 	"search buddy": "搜索联系人",
+	"search room": "搜索群组",
 	"user offline notice": "您处于离线状态，不能收到消息",
 	"buddy offline notice": "{{name}}已离线，您所发送的消息{{name}}将在下次登录时收到",
 	"input notice": "这里输入消息，Enter键发送",

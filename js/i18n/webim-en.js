@@ -42,6 +42,7 @@ webim.ui.i18n.store('en',{
 	"connecting":"Connecting",
 	"offline":"Offline",
 	"search buddy": "Search Friend",
+	"search room": "Search Room",
 	"user offline notice": "You are offline! Cannot receive message",
 	"buddy offline notice": "{{name}} is offline，{{name}} will receive your messsage when next online",
 	"input notice": "Input message here，type 'Enter'",

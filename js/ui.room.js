@@ -87,6 +87,7 @@ widget("room",{
 },{
 	_init: function(){
 		var self = this;
+		self.size = 0;
 		self.li = {
 		};
 		self._count = 0;
@@ -133,6 +134,7 @@ widget("room",{
 	},
 	_addOne:function(info, end){
 		var self = this, li = self.li, id = info.id, ul = self.$.ul;
+		self.size++;
 		if(!li[id]){
 			if(!info.default_pic_url)info.default_pic_url = "";
 			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
@@ -157,10 +159,14 @@ widget("room",{
 		}
 	},
 	add: function(data){
-		hide(this.$.empty);
+		var self = this;
+		hide(self.$.empty);
 		data = makeArray(data);
 		for(var i=0; i < data.length; i++){
-			this._addOne(data[i]);
+			self._addOne(data[i]);
+		}
+		if(self.size > 8){
+			self.scroll(true);
 		}
 	},
 	removeAll: function(){

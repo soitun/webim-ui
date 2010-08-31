@@ -64,7 +64,8 @@ a .webim-icon, a .ui-icon{
 
 .webim-line{
         background: none;
-        border-width: 0 0 1px !important;
-	height: 0;
-	line-height: 0;
+        border-width: 1px 0 0 !important;
+	height: 0px;
+	*margin: -7px 0;
+	display:block;
 }

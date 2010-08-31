@@ -78,6 +78,12 @@
         margin-left:3em;
         padding: .3em 0;
 }
+
+#webim-buddy ul li .webim-icon{
+	float: right;
+	margin: 2px;
+}
+
 #webim-buddy ul li a img{
         display:block;
         float:left;

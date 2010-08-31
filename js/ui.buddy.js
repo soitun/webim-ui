@@ -110,7 +110,7 @@ widget("buddy",{
 						</div>\
 							</div>',
 	tpl_group: '<li><h4><%=title%>(<%=count%>)</h4><hr class="webim-line ui-state-default" /><ul></ul></li>',
-	tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=nick%></strong><span><%=status%></span></a></li>'
+	tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><em class="webim-icon webim-icon-<%=show%>" title="<%=human_show%>"><%=show%></em><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=nick%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
 		var self = this;
@@ -226,6 +226,10 @@ self.trigger("offline");
 		el = el.firstChild;
 		el.setAttribute("href", info.url);
 		el = el.firstChild;
+		var show = info.show ? info.show : "available";
+		el.className = "webim-icon webim-icon-" + show;
+		el.setAttribute("title", i18n(show));
+		el = el.nextSibling;
 		el.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
 		el.setAttribute("src", info.pic_url);
 		el = el.nextSibling;
@@ -239,6 +243,8 @@ self.trigger("offline");
 		if(!li[id]){
 			if(!info.default_pic_url)info.default_pic_url = "";
 			info.status = info.status || "&nbsp;";
+			info.show = info.show || "available";
+			info.human_show = i18n(info.show);
 			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
 			//self._updateInfo(el, info);
 			var a = el.firstChild;

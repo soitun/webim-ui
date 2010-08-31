@@ -54,20 +54,26 @@ app("buddy", {
 				buddy.option("active", false);
 			}
 		});
+		function count_buddy(){
+			return buddy.count({presence:"online"}) - buddy.count({presence:"online", show: "invisible"});
+		}
+
+		var mapId = function(a){ return isObject(a) ? a.id : a };
+		var grepVisible = function(a){ return a.show != "invisible" && a.presence == "online"};
+		var grepInvisible = function(a){ return a.show == "invisible"; };
 		//some buddies online.
 		buddy.bind("online", function(data){
-			buddyUI.add(data);
-			buddyUI.notice("count", buddy.count({presence:"online"}));
+			buddyUI.add(grep(data, grepVisible));
 		});
 		//some buddies offline.
-		var mapId = function(a){ return isObject(a) ? a.id : a };
 		buddy.bind("offline", function(data){
 			buddyUI.remove(map(data, mapId));
-			buddyUI.notice("count", buddy.count({presence:"online"}));
 		});
 		//some information has been modified.
 		buddy.bind("update", function(data){
-			buddyUI.update(data);
+			buddyUI.add(grep(data, grepVisible));
+			buddyUI.update(grep(data, grepVisible));
+			buddyUI.remove(map(grep(data, grepInvisible), mapId));
 		});
 		buddyUI.offline();
 		//user events
@@ -87,7 +93,6 @@ app("buddy", {
 	},
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
-		buddyUI.notice("count", buddy.count({presence:"online"}));
 		buddyUI.user.update(im.data.user);
 	},
 	stop: function(type){
@@ -117,7 +122,7 @@ widget("buddy",{
 		};
 		self.li_group = {
 		};
-		self._count = 0;
+		self.size = 0;
 		//self._initEvents();
 		self.user = new webimUI.user();
 		self.header = self.user.element;
@@ -161,14 +166,14 @@ self.trigger("offline");
 
 	},
 	_titleCount: function(){
-		var self = this, _count = self._count, win = self.window, empty = self.$.empty, element = self.element;
-		win && win.title(i18n("buddy") + "(" + (_count ? _count : "0") + ")");
-		if(!_count){
+		var self = this, size = self.size, win = self.window, empty = self.$.empty, element = self.element;
+		win && win.title(i18n("buddy") + "(" + (size ? size : "0") + ")");
+		if(!size){
 			show(empty);
 		}else{
 			hide(empty);
 		}
-		if(_count > 8){
+		if(size > 8){
 			self.scroll(true);
 		}else{
 			self.scroll(false);
@@ -193,15 +198,11 @@ self.trigger("offline");
 			win.title(i18n("buddy") + "[" + i18n(type) + "]");
 		}
 	},
-	notice: function(type, nameOrCount){
+	notice: function(type, name){
 		var self = this;
 		switch(type){
 			case "buddyOnline":
-				self._titleBuddyOnline(nameOrCount);
-			break;
-			case "count":
-				self._count = nameOrCount;
-			self._titleCount();
+				self._titleBuddyOnline(name);
 			break;
 			default:
 				self._title(type);
@@ -238,6 +239,7 @@ self.trigger("offline");
 	_addOne:function(info, end){
 		var self = this, li = self.li, id = info.id, ul = self.$.ul;
 		if(!li[id]){
+			self.size++;
 			if(!info.default_pic_url)info.default_pic_url = "";
 			info.status = info.status || "&nbsp;";
 			info.show = info.show || "available";
@@ -289,6 +291,7 @@ self.trigger("offline");
 		for(var i=0; i < data.length; i++){
 			this._addOne(data[i], end);
 		}
+		this._titleCount();
 	},
 	removeAll: function(){
 		var ids = [], li = this.li;
@@ -296,14 +299,16 @@ self.trigger("offline");
 			ids.push(k);
 		}
 		this.remove(ids);
+		this._titleCount();
 	},
 	remove: function(ids){
-		var id, el, li = this.li, group, li_group = this.li_group;
+		var self = this, id, el, li = self.li, group, li_group = self.li_group;
 		ids = idsArray(ids);
 		for(var i=0; i < ids.length; i++){
 			id = ids[i];
 			el = li[id];
 			if(el){
+				self.size--;
 				group = li_group[id];
 				if(group){
 					group.count --;
@@ -314,6 +319,7 @@ self.trigger("offline");
 				delete(li[id]);
 			}
 		}
+		self._titleCount();
 	},
 	select: function(id){
 		var self = this, el = self.li[id];

@@ -58,9 +58,9 @@ widget("notification",{
 	},
 	_li_tpl: function(data){
 		return tpl(this.options.tpl_li, {
-			text: text,
-			link: link,
-			target: isExtlink ? "_blank" : ""
+			text: data.text,
+			link: data.link,
+			target: data.isExtlink ? "_blank" : ""
 		});
 	},
 	_fitUI:function(){

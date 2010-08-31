@@ -1,5 +1,5 @@
 module("ui");
-webim.notification.defaults.url = _path + "data/notifications.php";
+webim.notification.defaults.url = "data/notifications.php";
 test("webim.ui", 1, function() {
 	stop();
 	webim.ui.ready(function(){

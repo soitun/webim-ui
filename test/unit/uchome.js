@@ -24,6 +24,7 @@ test("webim.ui", 1, function() {
 		ui.addApp("notification");
 		ui.addApp("setting", {"data": webim.setting.defaults.data});
 		ui.addApp("chatlink", {
+			link_class_out: /out_link/i
 		});
 		ui.render();
 		im.autoOnline() && im.online();

@@ -94,6 +94,7 @@ app("buddy", {
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		buddyUI.user.update(im.data.user);
+		buddyUI.titleCount();
 	},
 	stop: function(type){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
@@ -165,7 +166,7 @@ self.trigger("offline");
 */
 
 	},
-	_titleCount: function(){
+	titleCount: function(){
 		var self = this, size = self.size, win = self.window, empty = self.$.empty, element = self.element;
 		win && win.title(i18n("buddy") + "(" + (size ? size : "0") + ")");
 		if(!size){
@@ -189,7 +190,7 @@ self.trigger("offline");
 		//	win && win.title(subVisibleLength(name, 0, 8) + " " + i18n("online"));
 		if(self._time) clearTimeout(self._time);
 		self._time = setTimeout(function(){
-			self._titleCount();
+			self.titleCount();
 		}, 5000);
 	},
 	_title: function(type){
@@ -291,7 +292,7 @@ self.trigger("offline");
 		for(var i=0; i < data.length; i++){
 			this._addOne(data[i], end);
 		}
-		this._titleCount();
+		this.titleCount();
 	},
 	removeAll: function(){
 		var ids = [], li = this.li;
@@ -299,7 +300,7 @@ self.trigger("offline");
 			ids.push(k);
 		}
 		this.remove(ids);
-		this._titleCount();
+		this.titleCount();
 	},
 	remove: function(ids){
 		var self = this, id, el, li = self.li, group, li_group = self.li_group;
@@ -319,7 +320,7 @@ self.trigger("offline");
 				delete(li[id]);
 			}
 		}
-		self._titleCount();
+		self.titleCount();
 	},
 	select: function(id){
 		var self = this, el = self.li[id];

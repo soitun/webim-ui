@@ -23,7 +23,8 @@ test("webim.ui", 1, function() {
 		ui.addApp("room");
 		ui.addApp("notification");
 		ui.addApp("setting", {"data": webim.setting.defaults.data});
-		ui.addApp("chatlink");
+		ui.addApp("chatlink", {
+		});
 		ui.render();
 		im.autoOnline() && im.online();
 		//im.online();

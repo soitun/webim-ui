@@ -230,7 +230,9 @@ self.trigger("offline");
 		el.setAttribute("title", i18n(show));
 		el = el.nextSibling;
 		el.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
-		el.setAttribute("src", info.pic_url);
+		if(info.pic_url || info.default_pic_url) {
+			el.setAttribute("src", info.pic_url || info.default_pic_url);
+		}
 		el = el.nextSibling;
 		el.innerHTML = info.nick;
 		el = el.nextSibling;
@@ -245,6 +247,7 @@ self.trigger("offline");
 			info.status = info.status || "&nbsp;";
 			info.show = info.show || "available";
 			info.human_show = i18n(info.show);
+			info.pic_url = info.pic_url || "";
 			var el = li[id] = createElement(tpl(self.options.tpl_li, info));
 			//self._updateInfo(el, info);
 			var a = el.firstChild;

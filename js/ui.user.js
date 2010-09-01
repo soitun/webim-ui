@@ -1,7 +1,7 @@
 widget("user",{
 	template: '<div>  \
 		<div id=":user" class="webim-user"> \
-			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
+			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
 				<div class="webim-user-show"><h4><a  id=":userShowTrigger" href="#show"><strong id=":userNick"></strong><span id=":userShow"><em class="webim-icon webim-icon-unavailable"><%=unavailable%></em><%=unavailable%></span><em class="ui-icon ui-icon-triangle-1-s"><%=show_status_list%></em></a></h4>\
 					<p id=":userShowList" class="ui-state-active ui-corner-all" style="display: none;">\
 						<a href="#available" class="webim-user-show-available"><em class="webim-icon webim-icon-available"><%=available%></em><%=available%></a>\
@@ -41,7 +41,9 @@ widget("user",{
 		$.userPic.setAttribute("href", info.url);
 		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
 		setTimeout(function(){
-			$.userPic.firstChild.setAttribute("src", info.pic_url);
+			if(info.pic_url || info.default_pic_url) {
+				$.userPic.firstChild.setAttribute("src", info.pic_url || info.default_pic_url);
+			}
 		},100);
 		self.show(type);
 	},

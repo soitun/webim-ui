@@ -230,7 +230,9 @@ widget("chat",{
 		$.userPic.setAttribute("href", info.url);
 		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");
 		setTimeout(function(){
-		$.userPic.firstChild.setAttribute("src", info.pic_url);
+			if(info.pic_url || info.default_pic_url) {
+				$.userPic.firstChild.setAttribute("src", info.pic_url || info.default_pic_url);
+			}
 		},100);
 		$.userStatus.innerHTML = info.status || "&nbsp";
 		self.window.title(info.nick, info.show);

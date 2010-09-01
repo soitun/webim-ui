@@ -37,7 +37,7 @@ app("chatlink", {
 		});
 	},
 	ready: function(params){
-		params.stranger_id = this.chatlink.idsArray();
+		params.stranger_ids = this.chatlink.idsArray();
 	},
 	go: function(){
 		this.chatlink.remove(this.im.data.user);

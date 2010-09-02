@@ -8,5 +8,6 @@ JS_APP_FILES = ${APP_SRC_DIR}/ui.chatlink.js\
 
 CSS_APP_FILES = ${APP_SRC_DIR}/chatlink.css\
 	${APP_SRC_DIR}/notification.css\
+	${APP_SRC_DIR}/discuz.css\
 
 include build/include.mk

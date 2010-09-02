@@ -11,6 +11,7 @@
         border: none;
         background: none;
 	display: block;
+	color: inherit;
 	width:95%;
         padding: .2em;
 	/*

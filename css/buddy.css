@@ -9,6 +9,7 @@
 #webim-buddy .webim-buddy-search input{
         border: none;
         background: none;
+	color: inherit;
 	display: block;
 	width:95%;
         padding: .2em;

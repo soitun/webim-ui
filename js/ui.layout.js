@@ -99,10 +99,12 @@ widget("layout",{
 			prevCount : 0
 
 		});
-
+		if(options.unscalable){
+			addClass(this.$.layout, "webim-layout-unscalable");
+		}
+		options.isMinimize && self.collapse();
 		//self.addShortcut(options.shortcuts);
 		//self._initEvents();
-		options.isMinimize && self.collapse();
 		//self.buildUI();
 		//self.element.parent("body").length && self.buildUI();
 		//

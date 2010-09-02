@@ -322,6 +322,11 @@
 .webim-layout-minimize .webim-collapse-wrap{
         display: none;
 }
+.webim-layout-unscalable .webim-expand-wrap, 
+.webim-layout-unscalable .webim-collapse-wrap{
+	display: none;
+}
+
 /*****ie 6 *********/
 *  html{
 	background:url(blank) fixed; /*To prevent the jitter.*/

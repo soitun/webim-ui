@@ -27,10 +27,10 @@ extend(webimUI.prototype, objectExtend, {
 	_init: function(){
 		var self = this,
 		im = self.im = new webim(),
-		layout = self.layout = new webimUI.layout(null,{
+		options = self.options,
+		layout = self.layout = new webimUI.layout(null,extend({
 			chatAutoPop: im.setting.get("msg_auto_pop")
-		}),
-		options = self.options;
+		}, options.layoutOptions));
 		im.setting.get("play_sound") ? sound.enable() : sound.disable() ;
 		im.setting.get("minimize_layout") ? layout.collapse() : layout.expand(); 
 		self._initEvents();

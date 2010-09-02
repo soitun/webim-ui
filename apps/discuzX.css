@@ -1,4 +1,11 @@
+/*discuz X1*/
 #pcd .webim-chatlink{
-	padding: 0;
-	background: none;
+	padding-left: 0;
+	background-position: -30px 0;
+}
+
+/*discuz X1.5*/
+#pcd .ul_list .webim-chatlink{
+	background-position: 0px center;
+	padding-left: 20px;
 }

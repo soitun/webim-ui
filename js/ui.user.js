@@ -1,3 +1,32 @@
+/* 
+* ui.user:
+*
+*/
+app("user", {
+	init: function(options){
+		options = options || {};
+		var ui = this, im = ui.im;
+		var userUI = ui.user = new webimUI.user();
+		options.container && options.container.appendChild(userUI.element);
+		userUI.bind("online", function(params){
+			im.online(params);
+		}).bind("offline", function(){
+			im.offline();
+		}).bind("presence", function(params){
+			im.sendPresence(params);
+		});
+		userUI.update(im.data.user);
+	},
+	ready: function(){
+	},
+	go: function(){
+		this.user.update(this.im.data.user);
+	},
+	stop: function(type){
+		this.user.show("unavailable");
+	}
+});
+
 widget("user",{
 	template: '<div>  \
 		<div id=":user" class="webim-user"> \

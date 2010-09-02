@@ -22,9 +22,13 @@ online
 */
 app("buddy", {
 	init: function(options){
+		options = options || {};
 		var ui = this, im = ui.im, buddy = im.buddy, layout = ui.layout;
-		var buddyUI = ui.buddy = new webimUI.buddy(null, options);
-		layout.addWidget(buddyUI, {
+		var buddyUI = ui.buddy = new webimUI.buddy(null, extend({
+			title: i18n("buddy")
+		}, options));
+
+		layout.addWidget(buddyUI, extend({
 			title: i18n("buddy"),
 			icon: "buddy",
 			sticky: im.setting.get("buddy_sticky"),
@@ -32,7 +36,11 @@ app("buddy", {
 			//       onlyIcon: true,
 			isMinimize: !im.status.get("b"),
 			titleVisibleLength: 19
-		});
+		}, options.windowOptions));
+		if(!options.disable_user){
+			ui.addApp("user");
+			buddyUI.window.subHeader(ui.user.element);
+		}
 		//buddy events
 		im.setting.bind("update",function(key, val){
 			if(key == "buddy_sticky")buddyUI.window.option("sticky", val);
@@ -76,16 +84,6 @@ app("buddy", {
 			buddyUI.remove(map(grep(data, grepInvisible), mapId));
 		});
 		buddyUI.offline();
-		//user events
-		var user = buddyUI.user;
-		user.bind("online", function(params){
-			im.online(params);
-		}).bind("offline", function(){
-			im.offline();
-		}).bind("presence", function(params){
-			im.sendPresence(params);
-		});
-		buddyUI.user.update(im.data.user);
 	},
 	ready: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
@@ -93,13 +91,11 @@ app("buddy", {
 	},
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
-		buddyUI.user.update(im.data.user);
 		buddyUI.titleCount();
 	},
 	stop: function(type){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		buddyUI.offline();
-		buddyUI.user.show("unavailable");
 		type && buddyUI.notice(type);
 	}
 });
@@ -124,12 +120,7 @@ widget("buddy",{
 		self.li_group = {
 		};
 		self.size = 0;
-		//self._initEvents();
-		self.user = new webimUI.user();
-		self.header = self.user.element;
-		if(self.window){
-			self.window.subHeader(self.header);
-		}
+
 	},
 	_initEvents: function(){
 		var self = this, $ = self.$, search = $.search, input = $.searchInput, placeholder = i18n("search buddy"), activeClass = "ui-state-active";
@@ -168,7 +159,7 @@ self.trigger("offline");
 	},
 	titleCount: function(){
 		var self = this, size = self.size, win = self.window, empty = self.$.empty, element = self.element;
-		win && win.title(i18n("buddy") + "(" + (size ? size : "0") + ")");
+		win && win.title(self.options.title + "(" + (size ? size : "0") + ")");
 		if(!size){
 			show(empty);
 		}else{
@@ -196,7 +187,7 @@ self.trigger("offline");
 	_title: function(type){
 		var win = this.window;
 		if(win){
-			win.title(i18n("buddy") + "[" + i18n(type) + "]");
+			win.title(this.options.title + "[" + i18n(type) + "]");
 		}
 	},
 	notice: function(type, name){

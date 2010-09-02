@@ -51,12 +51,8 @@ app("room",{
 			updateRoom(room.get(id));
 			room.join(id);
 		}).bind("addMember", function(room_id, info){
-			var c = layout.chat("room", room_id);
-			c && c.addMember(info.id, info.nick, info.id == im.data.user.id);
 			updateRoom(room.get(room_id));
 		}).bind("removeMember", function(room_id, info){
-			var c = layout.chat("room", room_id);
-			c && c.removeMember(info.id, info.nick);
 			updateRoom(room.get(room_id));
 		});
 		//room

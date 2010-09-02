@@ -52,7 +52,6 @@ extend(webimUI.prototype, objectExtend, {
 		//im events
 		im.bind("ready",function(){
 			layout.changeState("ready");
-			//show(layout.widget("room").window.element);
 		}).bind("go",function(data){
 			layout.changeState("active");
 			layout.option("user", data.user);
@@ -60,7 +59,6 @@ extend(webimUI.prototype, objectExtend, {
 			self._initStatus();
 			//setting.set(data.setting);
 		}).bind("stop", function(type){
-			//hide(layout.widget("room").window.element);
 			type == "offline" && layout.removeAllChat();
 			layout.updateAllChat();
 			layout.changeState("stop");
@@ -85,7 +83,13 @@ extend(webimUI.prototype, objectExtend, {
 		}).bind("update", function(data){
 			layout.updateChat("buddy", data);
 		});
-
+		room.bind("addMember", function(room_id, info){
+			var c = layout.chat("room", room_id);
+			c && c.addMember(info.id, info.nick, info.id == im.data.user.id);
+		}).bind("removeMember", function(room_id, info){
+			var c = layout.chat("room", room_id);
+			c && c.removeMember(info.id, info.nick);
+		});
 		layout.bind("collapse", function(){
 			setting.set("minimize_layout", true);
 		});

@@ -78,7 +78,8 @@ webim.ui.i18n.store('zh-CN',{
 	"dnd": "忙碌",
 	"away": "离开",
 	"invisible": "隐身",
-	"unavailable": "离线"
+	"unavailable": "离线",
+	"online support": "在线支持"
 });
 
 webim.ui.i18n.store('zh-CN',{

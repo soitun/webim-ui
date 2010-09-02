@@ -18,14 +18,20 @@ test("webim.ui", 1, function() {
 			soundUrls: {
 				lib: _path + "assets/sound.swf",
 				msg: _path + "assets/sound/msg.mp3"
+			},
+			layoutOptions: {
+				unscalable: true
 			}
 		}), im = ui.im;
-		im.user({"uid":"1","id":"admin","nick":"admin","pic_url":"http:\/\/test.com\/project\/uc\/discuzX\/uc_server\/avatar.php?uid=0&size=small","show":"available","url":"home.php?mod=space&uid=1"});
-		ui.addApp("buddy");
-		ui.addApp("setting", {"data": webim.setting.defaults.data});
+		//im.user({"uid":"1","id":"admin","nick":"admin","pic_url":"http:\/\/test.com\/project\/uc\/discuzX\/uc_server\/avatar.php?uid=0&size=small","show":"available","url":"home.php?mod=space&uid=1"});
+		ui.addApp("buddy", {
+			title: webim.ui.i18n("online support"),
+			disable_user: true
+		});
+		//ui.addApp("setting", {"data": webim.setting.defaults.data});
 		ui.render();
 		//im.autoOnline() && im.online();
-		//im.online();
+		im.online();
 		im.bind("go", function(data){
 			data.connection.server = "../im/test/" + data.connection.server;
 		});

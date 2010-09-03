@@ -17,6 +17,7 @@ body {
 .webim, .webim *{ 
         margin:0;
         padding:0;
+	clear: none;
 }
 .webim img{
         border:0;

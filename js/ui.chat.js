@@ -24,7 +24,7 @@ function ieCacheSelection(e){
 }
 widget("chat",{
 	tpl_header: '<div><div id=":user" class="webim-user"> \
-			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" src="about:blank" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
+			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" src="" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
 			<span id=":userStatus" title="" class="webim-user-status">&nbsp;</span> \
 		     </div></div>',
         template:'<div class="webim-chat"> \

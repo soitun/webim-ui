@@ -64,7 +64,7 @@ webim.ui.i18n.store('zh-CN',{
 	"blocked": "已屏蔽",
 	"block group": "屏蔽来自{{name}}的消息",
 	"unblock group": "取消屏蔽",
-	"empty buddy": "没有好友在线",
+	"empty buddy": "没有联系人在线",
 	"empty room": "未加入任何群组",
 	"empty menu": "没有工具",
 	"empty notification": "空",

@@ -1,4 +1,4 @@
-all: uchome discuzX discuz
+all: uchome discuzX discuz service
 
 uchome:
 	@@echo "Build webim for uchome"
@@ -24,6 +24,14 @@ clean_discuz:
 	@@echo "Clean discuz"
 	@@$(MAKE) clean -f build/discuz.mk
 
+service:
+	@@echo "Build webim for service"
+	@@$(MAKE) -f build/service.mk
 
-clean: clean_uchome clean_discuzX clean_discuz
+clean_service:
+	@@echo "Clean service"
+	@@$(MAKE) clean -f build/service.mk
+
+
+clean: clean_uchome clean_discuzX clean_discuz clean_service
 

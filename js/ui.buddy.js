@@ -123,6 +123,9 @@ widget("buddy",{
 		if(options.disable_group){
 			addClass(self.element, "webim-buddy-hidegroup");
 		}
+		if(options.simple){
+			addClass(self.element, "webim-buddy-simple");
+		}
 
 	},
 	_initEvents: function(){

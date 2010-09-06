@@ -191,14 +191,15 @@ extend(webimUI.prototype, objectExtend, {
 		a && layout.focusChat(a);
 		// status end
 	},
-	addChat: function(type, id, options, winOptions, nick){
+	addChat: function(type, id, chatOptions, winOptions, nick){
 		type = _tr_type(type);
-		var self = this, layout = self.layout, im = self.im, history = self.im.history, buddy = im.buddy, room = im.room;
+		var self = this, layout = self.layout, im = self.im, history = self.im.history, buddy = im.buddy, room = im.room, options = self.options;
 		if(layout.chat(type, id))return;
 		if(type == "room"){
+			chatOptions = extend({}, options.roomChatOptions, chatOptions);
 			var h = history.multicast(id), info = room.get(id), _info = info || {id:id, nick: nick || id};
 			_info.presence = "online";
-			layout.addChat(type, _info, extend({history: h, block: true, emot:true, clearHistory: false, member: true, msgType: "multicast"}, options), winOptions);
+			layout.addChat(type, _info, extend({history: h, block: true, emot:true, clearHistory: false, member: true, msgType: "multicast"}, chatOptions), winOptions);
 			if(!h) history.load("multicast", id);
 			var chat = layout.chat(type, id);
 			chat.bind("sendMsg", function(msg){
@@ -224,9 +225,10 @@ extend(webimUI.prototype, objectExtend, {
 			});
 
 		}else{
+			chatOptions = extend({}, options.buddyChatOptions, chatOptions);
 			var h = history.unicast(id), info = buddy.get(id);
 			var _info = info || {id:id, nick: nick || id};
-			layout.addChat(type, _info, extend({history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast"}, options), winOptions);
+			layout.addChat(type, _info, extend({history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast"}, chatOptions), winOptions);
 			if(!info) buddy.update(id);
 			if(!h) history.load("unicast", id);
 			layout.chat(type, id).bind("sendMsg", function(msg){

@@ -99,6 +99,21 @@
 	display: none;
 }
 
+#webim-buddy.webim-buddy-simple ul li a img{
+	display: none;
+}
+
+#webim-buddy.webim-buddy-simple ul li a{
+	margin-left: .3em;
+}
+#webim-buddy.webim-buddy-simple ul li a strong{
+	display: inline;
+	padding-right: 5px;
+}
+#webim-buddy.webim-buddy-simple ul li a span{
+	display: inline;
+}
+
 /*fuck ie6  why ?*/
 * html  #webim-buddy ul li a img{
         position: fixed;

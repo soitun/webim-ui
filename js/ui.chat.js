@@ -66,6 +66,9 @@ widget("chat",{
 			self._bindWindow();
 			//self._fitUI();
 		}
+		if(options.simple){
+			hide(self.header);
+		}
 		self.update(options.info);
 		history.add(options.history);
 		plugin.call(self, "init", [null, self.ui()]);

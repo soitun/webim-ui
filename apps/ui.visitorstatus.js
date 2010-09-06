@@ -52,7 +52,7 @@ app("visitorstatus", {
 					}
 				}
 				if( body ){
-					im.sendMsg(extend({}, msg, {body: body}));
+					im.sendMsg(extend({}, msg, {"body": body, "transient": true}));
 				}
 			}
 		});

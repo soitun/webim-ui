@@ -29,6 +29,7 @@ test("webim.ui", 1, function() {
 			disable_user: true,
 			disable_group: true
 		});
+		ui.addApp("visitorstatus");
 		//ui.addApp("setting", {"data": webim.setting.defaults.data});
 		ui.render();
 		//im.autoOnline() && im.online();

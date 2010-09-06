@@ -78,7 +78,11 @@ webim.ui.i18n.store('zh-TW',{
 	"dnd": "忙碌",
 	"away": "離開",
 	"invisible": "隱身",
-	"unavailable": "離線"
+	"unavailable": "離線",
+	"online support": "在線支持",
+	"location": "正在",
+	"from": "來自"
+
 });
 
 webim.ui.i18n.store('zh-TW',{

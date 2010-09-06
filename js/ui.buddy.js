@@ -112,7 +112,7 @@ widget("buddy",{
 	tpl_li: '<li title=""><a href="<%=url%>" rel="<%=id%>" class="ui-helper-clearfix"><em class="webim-icon webim-icon-<%=show%>" title="<%=human_show%>"><%=show%></em><img width="25" src="<%=pic_url%>" defaultsrc="<%=default_pic_url%>" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" /><strong><%=nick%></strong><span><%=status%></span></a></li>'
 },{
 	_init: function(){
-		var self = this;
+		var self = this, options = self.options;
 		self.groups = {
 		};
 		self.li = {
@@ -120,6 +120,9 @@ widget("buddy",{
 		self.li_group = {
 		};
 		self.size = 0;
+		if(options.disable_group){
+			addClass(self.element, "webim-buddy-hidegroup");
+		}
 
 	},
 	_initEvents: function(){

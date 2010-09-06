@@ -90,6 +90,15 @@
         float:left;
         margin-left: -2.5em;
 }
+
+#webim-buddy.webim-buddy-hidegroup ul h4{
+	display: none;
+}
+
+#webim-buddy.webim-buddy-hidegroup ul .webim-line{
+	display: none;
+}
+
 /*fuck ie6  why ?*/
 * html  #webim-buddy ul li a img{
         position: fixed;

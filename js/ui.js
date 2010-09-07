@@ -26,7 +26,7 @@ extend(webimUI.prototype, objectExtend, {
 	},
 	_init: function(){
 		var self = this,
-		im = self.im = new webim(),
+		im = self.im = new webim(null, self.options.imOptions),
 		options = self.options,
 		layout = self.layout = new webimUI.layout(null,extend({
 			chatAutoPop: im.setting.get("msg_auto_pop")

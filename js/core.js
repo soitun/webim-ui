@@ -37,6 +37,10 @@ function isUrl(str){
 	return /^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/.test(str);
 }
 
+function stripHTML(str){
+	return str ? str.replace(/<(?:.|\s)*?>/g, "") : "";
+}
+
 function subVisibleLength(cont,start,length){
 	if(!cont) return cont;
 	var l = 0,a =[],c = cont.split(''),ln=c.length;

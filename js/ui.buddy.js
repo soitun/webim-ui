@@ -233,7 +233,7 @@ self.trigger("offline");
 		el = el.nextSibling;
 		el.innerHTML = info.nick;
 		el = el.nextSibling;
-		el.innerHTML = info.status || "&nbsp;";
+		el.innerHTML = stripHTML(info.status) || "&nbsp;";
 		return el;
 	},
 	_addOne:function(info, end){
@@ -241,7 +241,7 @@ self.trigger("offline");
 		if(!li[id]){
 			self.size++;
 			if(!info.default_pic_url)info.default_pic_url = "";
-			info.status = info.status || "&nbsp;";
+			info.status = stripHTML(info.status) || "&nbsp;";
 			info.show = info.show || "available";
 			info.human_show = i18n(info.show);
 			info.pic_url = info.pic_url || "";

@@ -237,7 +237,7 @@ widget("chat",{
 				$.userPic.firstChild.setAttribute("src", info.pic_url || info.default_pic_url);
 			}
 		},100);
-		$.userStatus.innerHTML = info.status || "&nbsp";
+		$.userStatus.innerHTML = stripHTML(info.status) || "&nbsp";
 		self.window.title(info.nick, info.show);
 	},
 	insert:function(value, isCursorPos){

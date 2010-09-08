@@ -54,4 +54,10 @@
 .webim .webim-user-status{
 	font-size: .8em;
         display: block;
+	height: 2.8em;
+	overflow: hidden;
+}
+
+.webim .webim-panels .webim-user-status{
+	height: 4.2em;
 }

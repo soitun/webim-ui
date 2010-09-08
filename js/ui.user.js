@@ -65,7 +65,7 @@ widget("user",{
 	update: function(info){
 		var self = this, type = info.show || "unavailable", $ = self.$;
 		self.options.info = info;
-		$.userStatus.innerHTML = info.status || "&nbsp;";
+		$.userStatus.innerHTML =  stripHTML(info.status) || "&nbsp;";
 		$.userNick.innerHTML = info.nick || "";
 		$.userPic.setAttribute("href", info.url);
 		$.userPic.firstChild.setAttribute("defaultsrc", info.default_pic_url ? info.default_pic_url : "");

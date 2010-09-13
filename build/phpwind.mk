@@ -18,5 +18,6 @@ CSS_APP_FILES = ${CSS_SRC_DIR}/buddy.css\
 	${CSS_SRC_DIR}/menu.css\
 	${APP_SRC_DIR}/chatlink.css\
 	${APP_SRC_DIR}/notification.css\
+	${APP_SRC_DIR}/phpwind.css\
 
 include build/include.mk

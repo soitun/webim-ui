@@ -175,7 +175,8 @@ widget("chat",{
 				return true;
 			}else{
 				var el = target(e), val = el.value;
-				if (trim(val)) {
+				// "0" will false
+				if (trim(val).length) {
 					self._sendMsg(val);
 					el.value = "";
 					preventDefault(e);

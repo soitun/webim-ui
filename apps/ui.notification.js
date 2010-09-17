@@ -15,7 +15,9 @@ app("notification", {
 	init: function(options){
 		var ui = this, im = ui.im, layout = ui.layout;
 		var notificationUI = ui.notification = new webimUI.notification(null, options);
-		var notification = im.notification = new webim.notification();
+		var notification = im.notification = new webim.notification(null, {
+			jsonp: im.options.jsonp
+		});
 		layout.addWidget(notificationUI, {
 			title: i18n("notification"),
 			icon: "notification",

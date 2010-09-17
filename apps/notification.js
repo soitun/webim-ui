@@ -15,6 +15,13 @@ data
 model("notification",{
 	url: "webim/notifications"
 },{
+	_init: function(){
+		var self = this;
+		if(self.options.jsonp)
+			self.request = jsonp;
+		else
+			self.request = ajax;
+	},
 	grep: function(val, n){
 		return val && val.text;
 	},
@@ -25,7 +32,7 @@ model("notification",{
 	},
 	load: function(){
 		var self = this, options = self.options;
-		ajax({
+		self.request({
 			url: options.url,
 			cache: false,
 			dataType: "json",

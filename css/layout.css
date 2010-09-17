@@ -53,6 +53,12 @@
 .webim-layout-minimize{
         left: auto;
 }
+
+/** The layout will max width in IE 6,7 */
+.webim-layout-minimize .webim-layout-r{
+	float: left;
+}
+
 .webim-layout .webim-bgiframe{
 	height: 2.6em;
 	top: -1px;
@@ -346,8 +352,6 @@
 * html  .webim-layout-minimize .webim-ui{
 	display: inline;
 }
-* html  .webim-layout-minimize .webim-layout-r{
-	float: left;
-}
 /* end */
+
 

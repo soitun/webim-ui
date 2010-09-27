@@ -21,7 +21,7 @@ extend(webimUI.prototype, objectExtend, {
 	render:function(){
 		var self = this, layout = self.layout;
 		// Use insertBefore instead of appendChild  to circumvent an IE6 bug.
-		self.element.insertBefore( layout.element, layout.element.firstChild );
+		self.element.insertBefore( layout.element, self.element.firstChild );
 		setTimeout(function(){self.initSound()}, 1000);
 		layout.buildUI();
 	},

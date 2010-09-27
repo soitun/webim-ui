@@ -81,10 +81,12 @@ webim.ui.i18n.store('en',{
 	"unavailable": "Unavailable",
 	"online support": "online support",
 	"location": "location",
-	"from": "from"
+	"from": "from",
+	"download history": "Download histories",
+	"font color": "Font color"
 });
 
-webim.ui.i18n.store('zh-CN',{
+webim.ui.i18n.store('en',{
 	"doing": "Record",
 	"album": "Photo",
 	"blog": "Note",

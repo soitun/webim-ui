@@ -43,6 +43,14 @@
 
  }
 
+ .webim-icon-fontcolor{
+	 background-position:-32px -32px;
+ }
+
+ .webim-icon-download{
+	 background-position:-48px -32px;
+ }
+
 .webim-icon-available{
 	 background-position:0 -80px;
 }

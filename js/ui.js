@@ -206,6 +206,8 @@ extend(webimUI.prototype, objectExtend, {
 			chat.bind("sendMsg", function(msg){
 				im.sendMsg(msg);
 				history.handle(msg);
+			}).bind("downloadHistory", function(info){
+				history.download("multicast", info.id);
 			}).bind("select", function(info){
 				buddy.online(info.id);//online
 				self.addChat("buddy", info.id, null, null, info.nick);
@@ -239,6 +241,8 @@ extend(webimUI.prototype, objectExtend, {
 				im.sendStatus(msg);
 			}).bind("clearHistory", function(info){
 				history.clear("unicast", info.id);
+			}).bind("downloadHistory", function(info){
+				history.download("unicast", info.id);
 			});
 		}
 	},

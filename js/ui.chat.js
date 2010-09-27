@@ -316,6 +316,29 @@ widget("chat",{
 	plugins: {}
 });
 
+/*
+webimUI.chat.defaults.fontcolor = true;
+plugin.add("chat","fontcolor",{
+	init:function(e, ui){
+		var chat = ui.self;
+		var fontcolor = new webimUI.fontcolor();
+		fontcolor.bind("select",function(alt){
+			chat.focus();
+			chat.setStyle("color", alt);
+		});
+		var trigger = createElement(tpl('<a href="#chat-fontcolor" title="<%=font color%>"><em class="webim-icon webim-icon-fontcolor"></em></a>'));
+		addEvent(trigger,"click",function(e){
+			preventDefault(e);
+			fontcolor.toggle();
+		});
+		ui.$.toolContent.appendChild(fontcolor.element);
+		ui.$.tools.appendChild(trigger);
+	},
+	send:function(e, ui){
+	}
+});
+*/
+
 webimUI.chat.defaults.emot = true;
 plugin.add("chat","emot",{
 	init:function(e, ui){
@@ -337,6 +360,7 @@ plugin.add("chat","emot",{
 	send:function(e, ui){
 	}
 });
+
 webimUI.chat.defaults.clearHistory = true;
 plugin.add("chat","clearHistory",{
 	init:function(e, ui){
@@ -404,5 +428,18 @@ plugin.add("chat","member",{
 		$.member = els.ul;
 		$.memberCount = els.memberCount;
 		$.content.parentNode.insertBefore(member, $.content);
+	}
+});
+
+webimUI.chat.defaults.downloadHistory = true;
+plugin.add("chat","downloadHistory",{
+	init:function(e, ui){
+		var chat = ui.self;
+		var trigger = createElement(tpl('<a style="float: right;" href="#chat-downloadHistory" title="<%=download history%>"><em class="webim-icon webim-icon-download"></em></a>'));
+		addEvent(trigger,"click",function(e){
+			preventDefault(e);
+			chat.trigger("downloadHistory",[chat.options.info]);
+		});
+		ui.$.tools.appendChild(trigger);
 	}
 });

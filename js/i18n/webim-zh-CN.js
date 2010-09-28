@@ -84,6 +84,7 @@ webim.ui.i18n.store('zh-CN',{
 	"download history": "下载历史记录",
 	"font color": "文字颜色",
 	"Not Found" : "连接网络失败",
+	"Forbidden": "不允许登录",
 	"Not Authorized" : "登录失败",
 	"IM Server Not Found": "未找到IM服务器",
         "IM Server Not Authorized": "登录IM服务器失败",

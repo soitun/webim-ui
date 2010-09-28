@@ -84,6 +84,7 @@ webim.ui.i18n.store('zh-TW',{
 	"download history": "下載歷史記錄",
 	"font color": "文字顏色",
 	"Not Found" : "連接網絡失敗",
+	"Forbidden": "不允許登錄",
 	"Not Authorized" : "登錄失敗",
 	"IM Server Not Found": "未找到IM服務器",
 	"IM Server Not Authorized": "登錄IM服務器失敗",

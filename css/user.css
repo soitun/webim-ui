@@ -36,6 +36,7 @@
 .webim .webim-user-show p{
 	position: absolute;
 	z-index: 2;
+	margin-top: -60px;
 }
 
 .webim .webim-user-show p a{

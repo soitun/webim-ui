@@ -1,0 +1,31 @@
+/*webim login*/
+
+.webim .webim-login{
+	padding: 0 1em;
+}
+.webim .webim-login p{
+	overflow: hidden;
+	margin: 1em 0;
+}
+.webim .webim-login form label{
+	float: left;
+	width: 33%;
+}
+.webim .webim-login form input
+,.webim .webim-login form select{
+	float: left;
+	width: 60%;
+	color: inherit;
+}
+.webim .webim-login form .webim-login-submit{
+	float: none;
+	padding: .2em 0;
+}
+
+.webim .webim-login-notice{
+}
+
+.webim .webim-login-error{
+	padding: .2em .5em;
+	margin: .5em 0;
+}

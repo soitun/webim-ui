@@ -26,7 +26,7 @@ app("buddy", {
 		var ui = this, im = ui.im, buddy = im.buddy, layout = ui.layout;
 		var buddyUI = ui.buddy = new webimUI.buddy(null, extend({
 			title: i18n("buddy")
-		}, options));
+		}, options ) );
 
 		layout.addWidget(buddyUI, extend({
 			title: i18n("buddy"),
@@ -37,9 +37,15 @@ app("buddy", {
 			isMinimize: !im.status.get("b"),
 			titleVisibleLength: 19
 		}, options.windowOptions));
-		if(!options.disable_user){
-			ui.addApp("user");
-			buddyUI.window.subHeader(ui.user.element);
+		if(!options.disable_user) {
+			ui.addApp( "user", options.userOptions );
+			if( options.is_login ) {
+				buddyUI.window.subHeader( ui.user.element );
+				ui.user._initElement = true;
+			}
+		}
+		if( !options.is_login && !options.disable_login ) {
+			ui.addApp("login", extend( { container: buddyUI.$.content }, options.loginOptions ) );
 		}
 		//buddy events
 		im.setting.bind("update",function(key, val){
@@ -49,8 +55,6 @@ app("buddy", {
 		buddyUI.bind("select", function(info){
 			ui.addChat("buddy", info.id);
 			ui.layout.focusChat("buddy", info.id);
-		}).bind("online",function(){
-			im.online();
 		});
 		buddyUI.window.bind("displayStateChange",function(type){
 			if(type != "minimize"){
@@ -62,9 +66,6 @@ app("buddy", {
 				buddy.option("active", false);
 			}
 		});
-		function count_buddy(){
-			return buddy.count({presence:"online"}) - buddy.count({presence:"online", show: "invisible"});
-		}
 
 		var mapId = function(a){ return isObject(a) ? a.id : a };
 		var grepVisible = function(a){ return a.show != "invisible" && a.presence == "online"};
@@ -91,19 +92,26 @@ app("buddy", {
 	},
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		ui.user && !ui.user._initElement && buddyUI.window.subHeader(ui.user.element);
 		buddyUI.titleCount();
+		hide( buddyUI.$.logo );
+		buddyUI.hideError();
 	},
-	stop: function(type){
+	stop: function(type, msg){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		buddyUI.offline();
-		type && buddyUI.notice(type);
+		if ( type == "online" || type == "connect" ) {
+			buddyUI.showError( msg );
+		}
 	}
 });
 
 widget("buddy",{
 	template: '<div id="webim-buddy" class="webim-buddy">\
 		<div id=":search" class="webim-buddy-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
-			<div class="webim-buddy-content">\
+			<div class="webim-buddy-content" id=":content">\
+				<div id=":logo" class="webim-buddy-logo">&nbsp;</div>\
+				<div class="ui-state-error webim-login-error ui-corner-all" style="display: none;" id=":error"></div>\
 				<div id=":empty" class="webim-buddy-empty"><%=empty buddy%></div>\
 					<ul id=":ul"></ul>\
 						</div>\
@@ -209,14 +217,15 @@ self.trigger("offline");
 	online: function(){
 		var self = this, $ = self.$, win = self.window;
 		self.notice("connect");
-		show($.empty);
+		hide( $.empty );
 	},
 	offline: function(){
 		var self = this, $ = self.$, win = self.window;
-		self.notice("offline");
-		show($.empty);
 		self.scroll(false);
 		self.removeAll();
+		hide( $.empty );
+		show( $.logo );
+		self.notice("offline");
 	},
 	_updateInfo:function(el, info){
 		el = el.firstChild;
@@ -326,6 +335,14 @@ self.trigger("offline");
 		var self = this, el = self.li[id];
 		el && el.firstChild.click();
 		return el;
+	},
+	hideError: function() {
+		hide( this.$.error );
+	},
+	showError: function( msg ) {
+		var er = this.$.error;
+		er.innerHTML = i18n( msg );
+		show( er );
 	},
 	destroy: function(){
 	}

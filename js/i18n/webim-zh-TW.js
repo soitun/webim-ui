@@ -52,9 +52,8 @@ webim.ui.i18n.store('zh-TW',{
 	"chat with":"和{{name}}聊天",
 	"chat with me":"和我聊天",
 	"new message":"有新消息",
-	"connect error":"連接失敗",
-	"disconnect":"連接斷開",
-	"online error":"登錄失敗",
+	"Connect Error":"連接失敗",
+	"Disconnect":"連接斷開",
 	"play_sound": "收到新消息時播放提示音",
 	"buddy_sticky": "保持聊天窗口始終打開",
 	"msg_auto_pop": "新消息時自動彈出聊天窗口",
@@ -83,7 +82,16 @@ webim.ui.i18n.store('zh-TW',{
 	"location": "正在",
 	"from": "來自",
 	"download history": "下載歷史記錄",
-	"font color": "文字顏色"
+	"font color": "文字顏色",
+	"Not Found" : "連接網絡失敗",
+	"Not Authorized" : "登錄失敗",
+	"IM Server Not Found": "未找到IM服務器",
+	"IM Server Not Authorized": "登錄IM服務器失敗",
+	"username": "用戶名",
+	"password": "密碼",
+	"question": "問題",        
+	"answer": "答案",
+	"login": "登錄"
 });
 
 webim.ui.i18n.store('zh-TW',{

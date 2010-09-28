@@ -1,11 +1,23 @@
 #webim-buddy{
 	padding: .3em 0;
 }
+
+#webim-buddy .webim-buddy-error{
+	padding: .2em .5em;
+	margin: .5em 0;
+}
+
+#webim-buddy .webim-buddy-logo{
+	background: url("../images/logo.png") no-repeat center;
+	height: 100px;
+}
+
 #webim-buddy .webim-buddy-search{
         padding: 0em 1.6em 0em 0em;
         margin: .3em .5em .5em;
 	display: none;
 }
+
 #webim-buddy .webim-buddy-search input{
         border: none;
         background: none;
@@ -16,11 +28,13 @@
 	/*
 	*/
 }
+
 #webim-buddy .webim-buddy-search em{
         float: right;
 	display: inline;
         margin: .1em -1.5em 0 0;
 }
+
 #webim-buddy .webim-buddy-online{
         padding: 1em;
         text-align: center;
@@ -30,10 +44,12 @@
 #webim-buddy .webim-buddy-online a{
         padding: 1em 2em;
 }
+
 #webim-buddy .webim-buddy-content{
         padding: .2em .5em .3em;
         position:relative;
 }
+
 /*fuck ie6  why ?*/
 * html  #webim-buddy .webim-buddy-content{
         position: fixed;

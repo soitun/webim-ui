@@ -52,9 +52,8 @@ webim.ui.i18n.store('en',{
 	"chat with":"Chat with {{name}}",
 	"chat with me":"Chat with me",
 	"new message":"New Message",
-	"connect error":"Connect error",
-	"disconnect":"Disconnect",
-	"online error":"Failed to online",
+	"Connect Error":"Connect error",
+	"Disconnect":"Disconnect",
 	"play_sound": "Play sound for new messages",
 	"buddy_sticky": "Keep friends window open",
 	"msg_auto_pop": "Auto pop-up window for new message",
@@ -83,7 +82,16 @@ webim.ui.i18n.store('en',{
 	"location": "location",
 	"from": "from",
 	"download history": "Download histories",
-	"font color": "Font color"
+	"font color": "Font color",
+	"Not Found": "Not Found",
+	"Not Authorized" : "Not Authorized",
+	"IM Server Not Found": "IM Server Not Found",
+	"IM Server Not Authorized": "IM Server Not Authorized",
+	"username": "Username",
+	"password": "Password",
+	"question": "Question",        
+	"answer": "Answer",
+	"login": "Login"
 });
 
 webim.ui.i18n.store('en',{

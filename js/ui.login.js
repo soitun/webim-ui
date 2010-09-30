@@ -28,13 +28,13 @@ widget("login", {
 			<div class="webim-login-notice" id=":notice"></div>\
 			<div class="ui-state-error webim-login-error ui-corner-all" style="display: none;" id=":error"></div>\
 			<form id=":form">\
-				<p><label for=":username"><%=username%></label><input name="username" id=":username" type="text" /></p>\
-				<p><label for=":password"><%=password%></label><input name="password" id=":password" type="password" /></p>\
+				<p class="ui-helper-clearfix"><label for=":username"><%=username%></label><input name="username" id=":username" type="text" /></p>\
+				<p class="ui-helper-clearfix"><label for=":password"><%=password%></label><input name="password" id=":password" type="password" /></p>\
 				<div id=":more">\
-				<p><label for=":question"><%=question%></label><select name="question" id=":question" ></select></p>\
-				<p><label for=":answer"><%=answer%></label><input name="answer" id=":answer" type="text" /></p>\
+				<p class="ui-helper-clearfix"><label for=":question"><%=question%></label><select name="question" id=":question" ></select></p>\
+				<p class="ui-helper-clearfix"><label for=":answer"><%=answer%></label><input name="answer" id=":answer" type="text" /></p>\
 				</div>\
-				<p><input name="submit" id=":submit" class="ui-state-default ui-corner-all webim-login-submit" value="<%=login%>" type="submit" /></p>\
+				<p class="ui-helper-clearfix"><input name="submit" id=":submit" class="ui-state-default ui-corner-all webim-login-submit" value="<%=login%>" type="submit" /></p>\
 			</form>\
 		</div>'
 },{

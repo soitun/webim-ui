@@ -88,13 +88,13 @@ app("buddy", {
 	},
 	ready: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		hide( buddyUI.$.logo );
 		buddyUI.online();
 	},
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		ui.user && !ui.user._initElement && buddyUI.window.subHeader(ui.user.element);
 		buddyUI.titleCount();
-		hide( buddyUI.$.logo );
 		buddyUI.hideError();
 	},
 	stop: function(type, msg){

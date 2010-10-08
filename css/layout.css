@@ -335,8 +335,10 @@
 
 /*****ie 6 *********/
 *  html{
-	background:url(blank) fixed; /*To prevent the jitter.*/
+	background-image: url(blank);
+        background-attachment: fixed; /*To prevent the jitter.*/
 }
+
 * html  .webim-layout{
 	position: absolute; 
 	bottom: auto;

@@ -1,11 +1,17 @@
 
 /**/
+
+.webim .webim-chat {
+}
+
 .webim .webim-chat .webim-chat-header{
 	border-left-width:0;
 	border-right-width:0;
 }
 .webim .webim-chat-content{
         height: 16em;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
         overflow-y:auto;
         overflow-x:visible;
         *background:url(about:blank);
@@ -64,6 +70,7 @@
 
 /*member*/
 .webim .webim-member{
+	display: none;
 	margin-top:  -.1em;
 	height: 16em;
 	width: 7em;

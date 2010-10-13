@@ -70,3 +70,15 @@ a .webim-icon, a .ui-icon{
 	*margin: -7px 0;
 	display:block;
 }
+
+.ui-widget{
+        font-size: 1.2em !important;
+}
+
+.ui-widget input, .ui-widget textarea{
+        font-size: 1em;
+}
+
+.webim-hide{
+	display: none !important;
+}

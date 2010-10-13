@@ -18,18 +18,23 @@
  sendStatus
 
  */
- 
-function ieCacheSelection(e){
-        document.selection && (this.caretPos = document.selection.createRange());
-}
+
+app( "chat", function( options ) {
+	options = options || {};
+	var ui = this, im = ui.im;
+	var chatUI = new webimUI.chat( null, extend( {
+	}, options ) );
+	return chatUI;
+} );
+
 widget("chat",{
 	tpl_header: '<div><div id=":user" class="webim-user"> \
 			<a id=":userPic" class="webim-user-pic ui-corner-all ui-state-active" href="#id"><img width="50" height="50" src="" defaultsrc="" onerror="var d=this.getAttribute(\'defaultsrc\');if(d && this.src!=d)this.src=d;" class="ui-corner-all"></a> \
 			<span id=":userStatus" title="" class="webim-user-status">&nbsp;</span> \
 		     </div></div>',
-        template:'<div class="webim-chat"> \
+        template:'<div class="webim-chat webim-box webim-flex"> \
 				<div class="webim-chat-notice-wrap"><div id=":notice" class="webim-chat-notice ui-state-highlight"></div></div> \
-                                                <div id=":content" class="webim-chat-content"> \
+                                                <div id=":content" class="webim-chat-content webim-flex"> \
                                                                                                                 <div id=":status" class="webim-chat-status webim-gray"></div> \
                                                 </div> \
                                                 <div id=":actions" class="webim-chat-actions"> \
@@ -51,7 +56,7 @@ widget("chat",{
                                         </div>'
 },{
 	_init: function(){
-		var self = this, element = self.element, options = self.options, win = self.window = options.window;
+		var self = this, element = self.element, options = self.options, win = options.window;
 		var history = self.history = new webimUI.history(null,{
 			user: options.user,
 			info: options.info
@@ -61,10 +66,7 @@ widget("chat",{
 		extend(self.$, mapElements(self.header));
 		//self._initEvents();
 		if(win){
-			win.subHeader(self.header);
-			win.html(element);
-			self._bindWindow();
-			//self._fitUI();
+			self.setWindow( win );
 		}
 		if(options.simple){
 			hide(self.header);
@@ -73,6 +75,13 @@ widget("chat",{
 		history.add(options.history);
 		plugin.call(self, "init", [null, self.ui()]);
 		self._adjustContent();
+	},
+	setWindow: function( win ) {
+		var self = this;
+		self.window = win;
+		win.subHeader( self.header );
+		win.html( self.element );
+		self._bindWindow();
 	},
 	update: function(info){
 		var self = this;
@@ -239,7 +248,7 @@ widget("chat",{
 			}
 		},100);
 		$.userStatus.innerHTML = stripHTML(info.status) || "&nbsp";
-		self.window.title(info.nick, info.show);
+		self.window && self.window.title(info.nick, info.show);
 	},
 	insert:function(value, isCursorPos){
 		//http://hi.baidu.com/beileyhu/blog/item/efe29910f31fd505203f2e53.html
@@ -443,3 +452,7 @@ plugin.add("chat","downloadHistory",{
 		ui.$.tools.appendChild(trigger);
 	}
 });
+
+function ieCacheSelection(e){
+        document.selection && (this.caretPos = document.selection.createRange());
+}

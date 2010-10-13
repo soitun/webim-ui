@@ -1,12 +1,8 @@
-/*theme extend*/
+/*
+ * layout
+ */
 
-.ui-widget{
-        font-size: 1.2em !important;
-}
-
-.ui-widget input, .ui-widget textarea{
-        font-size: 1em;
-}
+/* Theme extend*/
 
 .ui-toolbar{ 
 	opacity:0.75;
@@ -20,14 +16,6 @@
 .webim-layout .webim-window-tab-wrap .ui-state-default{
 	background: none;
 }
-.ui-widget-subheader { 
-        border: 1px solid #ccc; 
-        background:#eee; color: gray; 
-}
-/*
- * layout
- */
-
 /*
  * ie z-index bgiframe http://hi.baidu.com/pcbbt/blog/item/47405e2259148df9d7cae25c.html
  */
@@ -355,5 +343,3 @@
 	display: inline;
 }
 /* end */
-
-

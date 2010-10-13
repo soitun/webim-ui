@@ -1,8 +1,10 @@
 /*webim user*/
-.webim .webim-user{
+
+.webim .webim-user {
         margin-left: 5.4em;
-	height: 3.1em;
+	height: 3.7em;
 }
+
 .webim .webim-user-pic{
         float: left;
 	position: static !important;
@@ -14,8 +16,10 @@
 	height: 50px;
 	padding: 1px;
 }
+
 .webim .webim-user-pic img{
 }
+
 .webim .webim-user-show{
 }
 
@@ -26,9 +30,11 @@
 	line-height: 1.4;
 	width: 100%;
 }
+
 .webim .webim-user-show h4 *{
 	float: left;
 }
+
 .webim .webim-user-show h4 strong{
 	padding-right: .5em;
 }
@@ -36,7 +42,6 @@
 .webim .webim-user-show p{
 	position: absolute;
 	z-index: 2;
-	margin-top: -60px;
 }
 
 .webim .webim-user-show p a{

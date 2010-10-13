@@ -29,3 +29,9 @@
 	padding: .2em .5em;
 	margin: .5em 0;
 }
+
+.webim .webim-login-logo{
+	background: url("../images/icon128x128.png") no-repeat center;
+	padding: 2em;
+	height: 128px;
+}

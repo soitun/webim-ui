@@ -161,11 +161,15 @@ function target(event){
 function enableSelection(obj) {
 	obj.setAttribute("unselectable","off");
 	obj.style.MozUserSelect = '';
+	obj.style.WebkitUserSelect = '';
+	obj.style.OUserSelect = '';
 	removeEvent(obj,'selectstart', returnFalse);
 }
 function disableSelection(obj) {
 	obj.setAttribute("unselectable","on");
 	obj.style.MozUserSelect = 'none';
+	obj.style.OUserSelect = 'none';
+	obj.style.WebkitUserSelect = 'none';
 	addEvent(obj,'selectstart', returnFalse);
 }
 

@@ -2,22 +2,20 @@
 * ui.login:
 *
 */
-app("login", {
-	init: function(options){
-		options = options || {};
-		var ui = this, im = ui.im;
-		var loginUI = ui.login = new webimUI.login(null, options);
-		options.container && options.container.appendChild( loginUI.element );
-		loginUI.bind( "login", function( params ){
-			im.online( params );
-		});
-	},
-	go: function() {
-		this.login.hide();
-	},
-	stop: function( type, msg ) {
-		//type == "online" && this.login.showError( msg );
-	}
+app("login", function( options ) {
+	options = options || {};
+	var ui = this, im = ui.im;
+	var loginUI = new webimUI.login(null, options);
+	options.container && options.container.appendChild( loginUI.element );
+	loginUI.bind( "login", function( params ){
+		im.online( params );
+	});
+	im.bind("go", function() {
+		loginUI.hide();
+	}).bind("stop", function( type, msg ) {
+		type == "online" && loginUI.showError( msg );
+	});
+	return loginUI;
 });
 
 widget("login", {
@@ -25,6 +23,7 @@ widget("login", {
 	notice: "",
 	template: '<div>  \
 		<div id=":login" class="webim-login"> \
+			<div class="webim-login-logo" id=":logo"></div>\
 			<div class="webim-login-notice" id=":notice"></div>\
 			<div class="ui-state-error webim-login-error ui-corner-all" style="display: none;" id=":error"></div>\
 			<form id=":form">\

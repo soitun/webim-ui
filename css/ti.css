@@ -1,0 +1,94 @@
+
+input:focus, select:focus, textarea:focus{
+	outline: none;
+}
+
+.webim-box{
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: stretch;
+	display: -moz-box;
+	-moz-box-orient: vertical;
+	-moz-box-align: stretch;
+}
+
+.webim-flex{
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+}
+
+/** window */
+html, body, .webim, .webim-window {
+	overflow: hidden;
+	margin:0;
+	padding:0;
+	height: 100%;
+}
+
+.webim{
+	font-family: Helvetica,Arial,sans-serif;
+}
+
+.webim-window-window {
+	position: relative;
+	height: 100%;
+}
+
+.webim-window .webim-window-header {
+	/*cursor: pointer;*/
+	font-weight: normal;
+	padding: .2em .5em;
+}
+
+.webim-window-header .webim-window-actions {
+	float: right;
+}
+
+.webim-window-header .webim-window-actions a {
+	float:left;
+	background: none;
+	border: none;
+	margin: 0 .1em;
+}
+
+.webim-window-header h4 {
+	margin: 0;
+	font-weight: bold;
+	font-size: 12px;
+	text-align: center;
+	text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.webim-window-header *{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+.webim-window .webim-window-content {
+	border-top-width: 0px;
+}
+
+.webim-window .webim-window-resize {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	padding: 1px;
+}
+
+.webim-widgets {
+}
+
+/** Borwser test*/
+.webim-browser.webim-layout-window{
+	width: 240px;
+	height: 500px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.webim-browser.webim-chat-window{
+	width: 480px;
+	height: 480px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}

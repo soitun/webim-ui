@@ -2,30 +2,28 @@
 * ui.user:
 *
 */
-app("user", {
-	init: function(options){
-		options = options || {};
-		var ui = this, im = ui.im;
-		var userUI = ui.user = new webimUI.user();
-		options.container && options.container.appendChild(userUI.element);
-		userUI.bind("online", function(params){
-			im.online(params);
-		}).bind("offline", function(){
-			im.offline();
-		}).bind("presence", function(params){
-			im.sendPresence(params);
-		});
-		userUI.update(im.data.user);
-	},
-	ready: function(){
-	},
-	go: function(){
-		this.user.update(this.im.data.user);
-	},
-	stop: function(type){
-		this.user.show("unavailable");
-	}
-});
+app( "user", function( options ) {
+	options = options || {};
+	var ui = this, im = ui.im;
+	var userUI = new webimUI.user();
+	hide( userUI.element );
+	options.container && options.container.appendChild( userUI.element );
+	userUI.bind("online", function( params ) {
+		im.online( params );
+	}).bind("offline", function(){
+		im.offline();
+	}).bind("presence", function( params ) {
+		im.sendPresence( params );
+	} );
+	userUI.update( im.data.user );
+	im.bind( "go", function() {
+		show( userUI.element );
+		userUI.update( im.data.user );
+	}).bind( "stop", function( type ) {
+		userUI.show( "unavailable" );
+	});
+	return userUI;
+} );
 
 widget("user",{
 	template: '<div>  \
@@ -76,7 +74,7 @@ widget("user",{
 		},100);
 		self.show(type);
 	},
-	show: function(type){
+	show: function( type ) {
 		var self = this, t = i18n(type);
 		self.$.userShow.innerHTML = "<em class=\"webim-icon webim-icon-"+type+"\">"+t+"</em>"+t;
 	},
@@ -89,10 +87,10 @@ widget("user",{
 				//self.show(type);
 				self.trigger("online", [{show: type}]);
 			}
-		}else if(info.show != type){
+		}else if(info.show != type) {
 			if(type == "unavailable"){
-				self.trigger("offline", []);
-			}else if(info.show == "unavailable"){
+				self.trigger( "offline", [] );
+			}else if( info.show == "unavailable" ) {
 				self.trigger("online", [{show: type}]);
 			}else{
 				self.trigger("presence", [{show: type, status: info.status}]);

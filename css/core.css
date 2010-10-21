@@ -11,6 +11,8 @@
 
 body {
         margin: 0;
+	/** Fix the font size in google chrome. http://www.mangguo.org/google-chrome-chinese-minimum-font-size/ */
+	-webkit-text-size-adjust: none;
 }
 
 /* some sites removes and neutralizes the inconsistent default styling of HTML elements. */
@@ -71,8 +73,8 @@ a .webim-icon, a .ui-icon{
 	display:block;
 }
 
-.ui-widget{
-        font-size: 1.2em !important;
+.webim .ui-widget{
+        font-size: 1.2em;
 }
 
 .ui-widget input, .ui-widget textarea{

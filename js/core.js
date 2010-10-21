@@ -136,6 +136,17 @@ function removeEvent( obj, type, fn ) {
 		obj[type+fn] = null;
 	}
 }
+
+function triggerEvent( obj, type ) {
+	if ( document.createEvent ) {
+		var evt = document.createEvent( 'HTMLEvents' );
+		evt.initEvent( type, true, true );
+		obj.dispatchEvent( evt );
+	}
+	if ( obj.fireEvent )
+		obj.fireEvent( 'on' + type );
+}
+
 function stopPropagation(e){
 	if(!e)return;
 	e.stopPropagation && e.stopPropagation();

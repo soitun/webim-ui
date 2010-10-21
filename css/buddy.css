@@ -47,6 +47,7 @@
 
 #webim-buddy .webim-buddy-content{
         padding: .2em .5em .3em;
+        overflow-y: auto;
         position:relative;
 }
 
@@ -56,8 +57,7 @@
 }
 
 #webim-buddy.webim-buddy-scroll .webim-buddy-content{
-        height: 25em;
-        overflow-y: auto;
+        /* height: 25em; */
 }
 #webim-buddy.webim-buddy-scroll .webim-buddy-search{
         display: block;

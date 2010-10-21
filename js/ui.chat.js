@@ -1,29 +1,85 @@
 //
 /* ui.chat:
- *
- options:
- window
- history
+*
+options:
+window
+history
 
- methods:
- update(info)
- status(type)
- insert(text, isCursorPos)
- focus
- notice(text, timeOut)
- destroy()
+methods:
+update(info)
+status(type)
+insert(text, isCursorPos)
+focus
+notice(text, timeOut)
+destroy()
 
- events: 
- sendMsg
- sendStatus
+events: 
+sendMsg
+sendStatus
 
- */
+*/
 
 app( "chat", function( options ) {
 	options = options || {};
-	var ui = this, im = ui.im;
-	var chatUI = new webimUI.chat( null, extend( {
-	}, options ) );
+	var ui = this, 
+	im = ui.im,
+	buddy = im.buddy,
+	room = im.room,
+	history = im.history,
+	info = options.info,
+	id = info.id,
+	type = options.type;
+	if( type == "room" ) {
+		info.presence = "online";
+		var h = history.get( "multicast", id );
+		if( !h )
+			history.load( "multicast", id );
+		extend( options, { history: h, block: true, emot: true, clearHistory: false, member: true, msgType: "multicast" } );
+		var chatUI = new webimUI.chat( null, options );
+		chatUI.bind( "sendMsg", function( msg ) {
+			im.sendMsg( msg );
+			history.handle( msg );
+		}).bind("downloadHistory", function( info ){
+			history.download( "multicast", info.id );
+		}).bind("select", function( info ) {
+			info.presence = "online";
+			buddy.presence( info );//online
+			self.addChat( "buddy", info.id, info.nick );
+			layout.focusChat( "buddy", info.id );
+		}).bind("block", function( d ){
+			room.block( d.id );
+		}).bind("unblock", function( d ) {
+			room.unblock( d.id );
+		}).bind( "destroy", function() {
+			chatUI.options.info.blocked && room.leave(id);
+		});
+		setTimeout( function(){
+			if( chatUI.options.info.blocked )
+				room.join( id );
+			else room.initMember( id );
+		}, 500 );
+		isArray( info.members ) && each( info.members, function( n, info ){
+			chatUI.addMember( info.id, info.nick, info.id == im.data.user.id );
+		} );
+
+	} else {
+		var h = history.get( "unicast", id );
+		if( !h )
+			history.load( "unicast", id );
+		extend( options, { history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast" } );
+		var chatUI = new webimUI.chat( null, options );
+
+		chatUI.bind("sendMsg", function( msg ) {
+			im.sendMsg( msg );
+			history.handle( msg );
+		}).bind("sendStatus", function( msg ) {
+			im.sendStatus( msg );
+		}).bind("clearHistory", function( info ){
+			history.clear( "unicast", info.id );
+		}).bind("downloadHistory", function( info ) {
+			history.download( "unicast", info.id );
+		});
+	}
 	return chatUI;
 } );
 
@@ -81,6 +137,7 @@ widget("chat",{
 		self.window = win;
 		win.subHeader( self.header );
 		win.html( self.element );
+		win.title( self.options.info.nick );
 		self._bindWindow();
 	},
 	update: function(info){
@@ -134,7 +191,8 @@ widget("chat",{
 	},
 	_adjustContent: function(){
 		var content = this.$.content;
-		content.scrollTop = content.scrollHeight;
+		if ( content.scrollHeight - content.scrollTop < 200 )
+			content.scrollTop = content.scrollHeight;
 	},
 	_fitUI: function(e){
 		var self = this, win = self.window, $ = self.$;
@@ -150,6 +208,8 @@ widget("chat",{
 				//self.$.input.focus();
 				self._adjustContent();
 			}
+		}).bind("close", function(){
+			self.destroy();
 		});
 		//win.bind("resize",{self: self}, self._fitUI);
 	},
@@ -248,7 +308,7 @@ widget("chat",{
 			}
 		},100);
 		$.userStatus.innerHTML = stripHTML(info.status) || "&nbsp";
-		self.window && self.window.title(info.nick, info.show);
+		self.window && self.window.title( info.nick, info.show );
 	},
 	insert:function(value, isCursorPos){
 		//http://hi.baidu.com/beileyhu/blog/item/efe29910f31fd505203f2e53.html
@@ -312,7 +372,7 @@ widget("chat",{
 			}, 10000);
 	},
 	destroy: function(){
-		this.window.close();
+		this.trigger( "destroy" );
 	},
 	ui:function(ext){
 		var self = this;

@@ -20,61 +20,51 @@ offline
 online
 
 */
-app("room",{
-	init: function(){
-		var ui = this, im = ui.im, room = im.room, setting = im.setting,u = im.data.user, layout = ui.layout;
-		var roomUI = ui.room = new webim.ui.room(null).bind("select",function(info){
-			ui.addChat("room", info.id);
-			ui.layout.focusChat("room", info.id);
-		});
-		layout.addWidget(roomUI, {
-			title: i18n("room"),
-			icon: "room",
-			sticky: im.setting.get("buddy_sticky"),
-			onlyIcon: true,
-			isMinimize: true
-		}, "notification");
-		//
-		im.setting.bind("update",function(key, val){
-			if(key == "buddy_sticky")roomUI.window.option("sticky", val);
-		});
-		room.bind("join",function(info){
-			updateRoom(info);
-		}).bind("leave", function(rooms){
+app("room", function( options ) {
+	var ui = this, im = ui.im, room = im.room, setting = im.setting,u = im.data.user, layout = ui.layout;
+	var roomUI = ui.room = new webim.ui.room(null).bind("select",function(info){
+		ui.addChat("room", info.id);
+		ui.layout.focusChat("room", info.id);
+	});
+	layout.addWidget( roomUI, {
+		container: "tab",
+		title: i18n( "room" ),
+		icon: "room"
+	} );
+	//
+	im.setting.bind("update",function(key, val){
+		if(key == "buddy_sticky")roomUI.window.option("sticky", val);
+	});
+	room.bind("join",function(info){
+		updateRoom(info);
+	}).bind("leave", function(rooms){
 
-		}).bind("block", function(id, list){
-			setting.set("blocked_rooms",list);
-			updateRoom(room.get(id));
-			room.leave(id);
-		}).bind("unblock", function(id, list){
-			setting.set("blocked_rooms",list);
-			updateRoom(room.get(id));
-			room.join(id);
-		}).bind("addMember", function(room_id, info){
-			updateRoom(room.get(room_id));
-		}).bind("removeMember", function(room_id, info){
-			updateRoom(room.get(room_id));
-		});
-		//room
-		function updateRoom(info){
-			var nick = info.nick;
-			info = extend({},info,{group:"group", nick: nick + "(" + (parseInt(info.count) + "/"+ parseInt(info.all_count)) + ")"});
-			layout.updateChat(info);
-			info.blocked && (info.nick = nick + "(" + i18n("blocked") + ")");
-			roomUI.li[info.id] ? roomUI.update(info) : roomUI.add(info);
-		}
-	},
-	ready: function(){
-	},
-	go: function(){
-	},
-	stop: function(){
+	}).bind("block", function(id, list){
+		setting.set("blocked_rooms",list);
+		updateRoom(room.get(id));
+		room.leave(id);
+	}).bind("unblock", function(id, list){
+		setting.set("blocked_rooms",list);
+		updateRoom(room.get(id));
+		room.join(id);
+	}).bind("addMember", function(room_id, info){
+		updateRoom(room.get(room_id));
+	}).bind("removeMember", function(room_id, info){
+		updateRoom(room.get(room_id));
+	});
+	//room
+	function updateRoom(info){
+		var nick = info.nick;
+		info = extend({},info,{group:"group", nick: nick + "(" + (parseInt(info.count) + "/"+ parseInt(info.all_count)) + ")"});
+		layout.updateChat(info);
+		info.blocked && (info.nick = nick + "(" + i18n("blocked") + ")");
+		roomUI.li[info.id] ? roomUI.update(info) : roomUI.add(info);
 	}
 });
 widget("room",{
-	template: '<div id="webim-room" class="webim-room">\
+	template: '<div id="webim-room" class="webim-room webim-flex webim-box">\
 		<div id=":search" class="webim-room-search ui-state-default ui-corner-all"><em class="ui-icon ui-icon-search"></em><input id=":searchInput" type="text" value="" /></div>\
-			<div class="webim-room-content">\
+			<div class="webim-room-content webim-flex">\
 				<div id=":empty" class="webim-room-empty"><%=empty room%></div>\
 					<ul id=":ul"></ul>\
 						</div>\

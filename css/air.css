@@ -1,179 +1,117 @@
-.webim input[type=text], .webim input[type=password] {
-        padding:.3em;
+
+input:focus, select:focus, textarea:focus{
+	outline: none;
 }
 
-.webim input[type=submit], .webim input[type=button]{
-        padding:.3em .6em;
+
+.webim-box{
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: stretch;
+	display: -moz-box;
+	-moz-box-orient: vertical;
+	-moz-box-align: stretch;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
-.webim p{
-        margin:1em;
+.webim-flex{
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
 }
 
-#wrapper{
-}
-#welcome{
-}
-
-#login-panel{
-        width:20em;
-        margin:3em auto;
-        font-size:1.1em;
-}
-
-body,html,.webim{
-        background:transparent;
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
-}
-.webim-air {
-
-}
-.webim-air .webim-ui{
+/** window */
+html, body, .webim, .webim-window {
+	overflow: hidden;
+	margin:0;
+	padding:0;
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
-/*
- * 
- */
-.webim-shortcut{
-}
-.webim-apps{
-	position:relative;
+.webim{
+	font-family: Helvetica,Arial,sans-serif;
 }
 
-.webim-panels{
-	display: none;
-}
-/*
- * webim tabs
- */
-.webim-tabs{
-}
-.webim-tabs .webim-tabs-nav{
-        padding:0.2em 0.2em 0;
-        position:relative;
-        background:none;
-        border-right-width:0;
-        border-top-width:0;
-        border-left-width:0;
-}
-.webim-tabs .webim-tabs-content{
-        overflow-x: hidden;
-        overflow-y: auto;
-}
-.webim-tabs .webim-tabs-nav li{
-        border-bottom-width:0 !important;
-        float:left;
-        margin:0 0.2em -1px 0;
-        padding:0;
-        position:relative;
-}
-.webim-tabs .webim-tabs-nav li.webim-tabs-selected{
-        padding-bottom: 1px;
-}
-.webim-tabs .webim-tabs-nav li a {
-        float:left;
-        padding:0.4em 1em .2em;
-        text-decoration:none;
-}
-.webim-tabs .webim-tabs-hide{
-        display:none;
+.webim-window{
+	padding: 0 8px 12px 4px;
 }
 
-/*
- * webim resize
- */
-.webim-resizable{
-        position: relative;
-}
-.webim-resizable-handle{
-        position: absolute;
-        z-index:1000;
-        width:;
-}
-.webim-resizable-e{
-        cursor:e-resize;
-        height:100%;
-        right:-3px;
-        top:0;
-        width:6px;
-}
-.webim-resizable-s{
-        bottom:-3px;
-        cursor:s-resize;
-        height:6px;
-        left:0;
-        width:100%;
-}
-.webim-resizable-se{
-        right: 1px;
-        bottom: 1px;
-        cursor: se-resize;
-}
-/*
- * webim window
- */
-.webim-air .webim-window{
-        position: relative;
-        height:100%;
-}
-.webim-air .webim-window-tab {
-        display: none;
-} 
-.webim-air .webim-window-content {
-        height: 90%;
+.webim-window-window {
+	height: 100%;
+	position: relative;
+	/*-moz-box-shadow:0 20px 40px rgba(0, 0, 0, 0.4);*/
+	/*
+	-moz-box-shadow:0 10px 20px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow:0 10px 20px rgba(0, 0, 0, 0.4);
+	*/
 }
 
-.webim-air .webim-window-header {
-    cursor: pointer;
-    text-align: center;
-    padding: .2em .5em;
+.webim-window .webim-window-header {
+	/*cursor: pointer;*/
+	font-weight: normal;
+	padding: .2em .5em;
 }
 
-.webim-air .webim-window-actions{
+.webim-window-header .webim-window-actions {
 	float: right;
 }
-.webim-air .webim-window-actions a{
-        float:left;
-        margin: 0 .1em;
-}
-.webim-air .webim-window-header h4{
-	margin: 0;
-	font-weight:normal;
+
+.webim-window-header .webim-window-actions a {
+	float:left;
+	background: none;
+	border: none;
+	margin: 0 .1em;
 }
 
-.webim-air  .webim-titletip {
-    background: transparent url(../images/dark_pointer.gif) no-repeat scroll right bottom;
-    bottom: 27px;
-    display: none;
-    padding-bottom: 4px;
-    position: absolute;
-    right: 12px;
-    z-index: 3;
+.webim-window-header h4 {
+	margin: 0;
+	font-weight: bold;
+	font-size: 12px;
+	text-align: center;
+	text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);
 }
-.webim-air  .webim-count {
-    font-size: 10px;
-    font-weight: bold;
-    height: 20px;
-    width: 20px;
-    padding-top: 1px;
-    position: absolute;
-    right: 0px;
-    top: -2px;
-    text-align: center;
-    overflow: hidden;
-    line-height: 1.2;
-    display: none;
+.webim-window-header *{
+	-webkit-user-select: none;
+	-moz-user-select: none;
 }
-.webim-air .webim-titletip strong {
-    background: #282828;
-    color: #FFFFFF;
-    display: block;
-    font-weight: normal;
-    margin: 0 -5px 0 0;
-    padding: 3px 8px;
-    text-align: center;
-    white-space: nowrap;
+
+.webim-window .webim-window-resize {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	padding: 1px;
+}
+
+.webim-widgets {
+}
+
+.webim-window .webim-shortcut{
+	min-height: 1.8em;
+	border-width: 0;
+	border-top-width: 1px;
+}
+
+/** Borwser test*/
+.webim-browser.webim-layout-window{
+	width: 240px;
+	height: 500px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.webim-browser.webim-chat-window{
+	width: 480px;
+	height: 480px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.webim-window .webim-window-content {
+	border-top-width: 0px;
 }
 

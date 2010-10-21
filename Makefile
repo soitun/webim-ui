@@ -1,4 +1,4 @@
-all: uchome discuzX discuz service phpbb  phpwind
+all: uchome discuzX discuz service phpbb phpwind air
 
 uchome:
 	@@echo "Build webim for uchome"
@@ -48,6 +48,14 @@ clean_phpwind:
 	@@echo "Clean phpwind"
 	@@$(MAKE) clean -f build/phpwind.mk
 
+air:
+	@@echo "Build webim for air"
+	@@$(MAKE) -f build/air.mk
 
-clean: clean_uchome clean_discuzX clean_discuz clean_service clean_phpbb clean_phpwind
+clean_air:
+	@@echo "Clean air"
+	@@$(MAKE) clean -f build/air.mk
+
+
+clean: clean_uchome clean_discuzX clean_discuz clean_service clean_phpbb clean_phpwind clean_air
 

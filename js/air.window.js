@@ -1,10 +1,12 @@
 /* webim ui window */
 
-widget("window", {
+widget( "window", {
 	main: false,
         isMinimized: false,
         minimizable: true,
         maximizable: false,
+	layoutUrl: "app:/test/air.window.html",
+	iconUrl: "app:/images/logo128.png",
         closeable: true,
         count: 0, // notifyUser if count > 0
 	//A box with position:absolute next to a float may disappear
@@ -28,37 +30,48 @@ widget("window", {
                                             </div></div>'
 },
 {
-	html: function(obj){
-		return this.$.content.appendChild(obj);
+	html: function( obj ) {
+		return this.$.content.appendChild( obj );
 	},
 	subHeader: function( obj ){
 		//this.$.subHeader.innerHTML = "";
-		return this.$.subHeader.appendChild(obj);
+		return this.$.subHeader.appendChild( obj );
 	},
 	_init: function( element, options ) {
 		var self = this, options = self.options, $ = self.$;
 		element = self.element;
 		options.name && addClass( element, "webim-" + options.name + "-window" );
-		if ( window.Titanium ) {
+		if ( window.runtime ) {
 			if ( !options.main ) {
-				var win = Titanium.UI.createWindow( { 
-					url: "app://ti.window.html",
-						transparentBackground: true,
-					height: 480,
-					width: 480
+				var visibleBounds = air.Screen.mainScreen.visibleBounds;
+				var bounds = new air.Rectangle(
+					/* left */ (visibleBounds.width - 480)/2, 
+					/* top */ (visibleBounds.height - 480)/2, 
+					/* width */ 480,
+					/* height */ 480
+				);
+				var op = new air.NativeWindowInitOptions();
+				op.transparent = true;
+				//op.type = air.NativeWindowType.LIGHTWEIGHT;
+				op.systemChrome = air.NativeWindowSystemChrome.NONE;
+				var loader = air.HTMLLoader.createRootWindow(  true, op, false, bounds );
+				//loader.placeLoadStringContentInApplicationSandbox = true;
+				//loader.paintsDefaultBackground = false;
+				loader.navigateInSystemBrowser = true;
+				//loader.stage.nativeWindow.alwaysInFront = true;
+				//loader.stage.nativeWindow.title = "sdfwe";
+				loader.load( new air.URLRequest( self.options.layoutUrl ) );
+				var ready = false;
+				addEvent( loader, air.Event.COMPLETE, function() {
+					if ( !ready ) {
+						ready = true;
+						self.window = loader.window;
+						self.__initEvents();
+						loader.window.document.body.appendChild( element );
+					}
 				} );
-				win.setUsingChrome( false );
-				win.setMinHeight( 400 );
-				win.setMinWidth( 400 );
-				addEvent( win, Titanium.PAGE_INITIALIZED, function() {
-					var doc = win.getWindow().document;
-					self.__initEvents();
-					doc.body.appendChild( element );
-				} );
-				win.open();
-				self.window = win;
 			} else {
-				self.window = Titanium.UI.getCurrentWindow();
+				self.window = window;
 				self.__initEvents();
 			}
 		} else {
@@ -74,18 +87,13 @@ widget("window", {
 		!options.minimizable && hide( $.minimize );
 		!options.maximizable && hide( $.maximize );
 		!options.closeable && hide( $.close );
-		if(options.isMinimized){
-			self.minimize();
-		}else{
-			self.restore();
-		}
 		options.count && self.notifyUser( "information", options.count );
 	},
-	notifyUser: function(type, count) {
+	notifyUser: function( type, count ) {
 		var self = this, $ = self.$;
-		if(type == "information"){
+		if( type == "information" ) {
 			if( self.isMinimized() ) {
-				Titanium.UI.setBadge( count ? count.toString() : null );
+				//Titanium.UI.setBadge( count ? count.toString() : null );
 			}
 		}
 	},
@@ -100,36 +108,26 @@ widget("window", {
 		replaceClass( el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className );
 		this.trigger( "displayStateChange", [state] );
 	},
-	active: function(){
-		return hasClass( this.element, "webim-window-active" );
-	},
 	maximize: function(){
-		var self = this, win = self.window;
+		var self = this, win = self.window.nativeWindow;
 		if( self.isMaximized() ) {
-			win.unmaximize();
-			self._changeState( "restore" );
+			self.restore();
 		} else {
-			win.maximize();
+			win.maximize(); 
 			self._changeState( "maximize" );
 		}
 	},
-	restore: function(){
-		var self = this, win = self.window;
-		if ( self.isMaximized() ) {
-			win.unmaximize();
-		} else if ( self.isMinimized() ) {
-			win.unminimize();
-		}
+	restore: function() {
+		var self = this, win = self.window.nativeWindow;
+		win && win.restore();
 		if(hasClass(self.element, "webim-window-normal"))return;
 		self._changeState("restore");
 	},
 	minimize: function() {
-		var self = this, win = self.window;
+		var self = this, win = self.window.nativeWindow;
 		if( self.isMinimized() ) {
-			//win.unminimize();
-			//self._changeState( "restore" );
 		} else {
-			win.minimize();
+			win.minimize(); 
 			self._changeState( "minimize" );
 		}
 	},
@@ -138,48 +136,36 @@ widget("window", {
 	close: function(){
 		var self = this;
 		if ( self.options.main ) {
-			self.window.show();
-			self.window.hide();
+			self.window.nativeWindow.visible = false;
 		} else {
-			self.trigger("close");
-			self.window.close();
+			self.window.nativeWindow.close();
 		}
 	},
-	__initEvents: function(){
+	__initEvents: function() {
 		var self = this, element = self.element, $ = self.$;
 		var stop = function(e){
 			stopPropagation(e);
 			preventDefault(e);
 		};
 
-		each( children( $.actions ), function(n,el){
+		each( children( $.actions ), function( n ,el ){
 			hoverClass(el, "ui-state-hover");
 		});
 
-		each(["minimize", "maximize", "close", "resize"], function(n,v){
-			addEvent($[v], "click", function(e){
-				if(!this.disabled)self[v]();
+		each(["minimize", "maximize", "close", "resize"], function( n ,v ) {
+			addEvent($[v], "click", function( e ){
+				if(!this.disabled) self[v]();
 				stop(e);
 			});
 			addEvent($[v],"mousedown",stop);
 		});
-		if ( window.Titanium ) {
-			var screenX = 0, screenY = 0,
-			dragging = false, _x = 0, _y = 0,
-			resizing = false, width = 0, height = 0,
-			win = self.window, doc = self.window.getWindow().document,
-			plat = Titanium.getPlatform();
-			addClass( doc.body, plat );
-			addEvent( doc, "mousemove", function( event ) {
-				if ( dragging ) {
-					win.setX( _x + event.screenX - screenX );
-					win.setY( _y + event.screenY - screenY );
-				} else if ( resizing ) {
-					win.setWidth( width + event.screenX - screenX );
-					win.setHeight( height + event.screenY - screenY );
-				}
-			} );
-
+		if ( window.runtime ) {
+			var win = self.window.nativeWindow, doc = self.window.document,
+			plat = "osx";
+			self.window.htmlLoader.filters = window.runtime.Array(
+				new window.runtime.flash.filters.DropShadowFilter(6, 75, 0, .4, 12, 12)
+			);
+			//addClass( doc.body, plat );
 
 			addEvent( doc, "keydown", function( event ) {
 				/* Close
@@ -187,17 +173,17 @@ widget("window", {
 				* win32: alt+f4
 				* Minmize
 				* osx: cmd+m metaKey+77
-				*/
+				**/
 				return;
 				if ( event.metaKey && event.keyCode == 87 ) {
 					self.close();
 				} else if ( event.metaKey && event.keyCode == 77 ) {
 					self.minimize();
 				}
-			});
+			} );
 
-			addEvent( $.header, "dblclick", function() {
-				if ( plat == "osx" ) {
+			addEvent( $.headerTitle, "dblclick", function() {
+				if ( self._os.mac ) {
 					self.minimize();
 				} else {
 					self.maximize();
@@ -205,43 +191,67 @@ widget("window", {
 			} );
 
 			addEvent( $.header, "mousedown", function( event ) {
-				dragging = true;
-				_x = win.getX();
-				_y = win.getY();
-				screenX = event.screenX;
-				screenY = event.screenY;
+				if( self.isMaximized() ) return false;
+				win.startMove();
 			});
 
 			addEvent( $.resize, "mousedown", function( event ) {
-				resizing = true;
-				width = win.getWidth();
-				height = win.getHeight();
-				screenX = event.screenX;
-				screenY = event.screenY;
+				win.startResize( air.NativeWindowResize.BOTTOM_RIGHT );
 			});
 
-			addEvent( doc, "mouseup", function( event ) {
-				dragging = false;
-				resizing = false;
-			});
 			if ( self.options.main ) {
-				addEvent( win, win.FOCUSED, function() {
-					win.setVis;
+				//Show window when activate the application.
+				var active = function(){
+					!win.visible && ( win.visible = true );
+				};
+				//addEvent( air.NativeApplication.nativeApplication, air.Event.ACTIVATE, active );
+				addEvent( air.NativeApplication.nativeApplication, air.InvokeEvent.INVOKE, active );
+				//Set application icon
+				var loader = new air.Loader();
+				addEvent(loader.contentLoaderInfo, air.Event.COMPLETE, function( e ){
+					air.NativeApplication.nativeApplication.icon.bitmaps = new runtime.Array(e.target.content.bitmapData);
 				});
+				loader.load(new air.URLRequest( self.options.iconUrl ) );
 			}
+			//Bind events
+			addEvent( win, air.NativeWindowBoundsEvent.RESIZE, function( e ) {
+				self.trigger( "resize", e );
+			});
+
+			addEvent( win, air.NativeWindowBoundsEvent.MOVE, function( e ) {
+				self.trigger( "move", e );
+			});
+
+			addEvent( win, air.Event.ACTIVATE, function( e ) {
+				self.trigger( "activate", e );
+			});
+			addEvent( win, air.Event.DEACTIVATE, function( e ) {
+				self.trigger( "deactivate", e );
+			});
+			addEvent( win, air.Event.CLOSE, function( e ) {
+				self.trigger( "close", e );
+			});
 		}
 	},
-	height:function(){
-		return this.window.getHeight();
+	activate: function() {
+		return this.window && this.window.nativeWindow.activate();
 	},
-	isActive: function(){
-		return this.window && this.window.isActive();
+	isActive: function() {
+		return this.window && this.window.nativeWindow.active;
 	},
-	isMaximized: function(){
-		return this.window && this.window.isMaximized();
+	isMaximized: function() {
+		return this.window && this.window.nativeWindow.displayState == air.NativeWindowDisplayState.MAXIMIZED;
 	},
-	isMinimized: function(){
-		return this.window && this.window.isMinimized();
-	}
+	isMinimized: function() {
+		return this.window && this.window.nativeWindow.displayState == air.NativeWindowDisplayState.MINIMIZED;
+	},
+	_os: ( function(){
+		var s = window.runtime && air.Capabilities.os;
+		return {
+			mac: /Mac/i.test(s),
+			win: /Windows/i.test(s),
+			linux: /Linux/i.test(s)
+		}
+	} )()
 });
 

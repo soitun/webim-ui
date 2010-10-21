@@ -56,8 +56,8 @@ widget("login", {
 		var self = this, $ = self.$;
 		hoverClass( $.submit, "ui-state-hover" );
 		addEvent( $.form, "submit", function( e ) {
-			self.trigger( "login", [{ username: $.username.value,  password: $.password.value, question: $.question.value, answer: $.answer.value }] );
 			preventDefault( e );
+			self.trigger( "login", [{ username: $.username.value,  password: $.password.value, question: $.question.value, answer: $.answer.value }] );
 		} );
 	},
 	hide: function() {

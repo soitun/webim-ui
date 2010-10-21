@@ -33,10 +33,7 @@ app("buddy", function( options ){
 		icon: "buddy"
 	} );
 
-	//buddy events
-	im.setting.bind("update",function(key, val){
-		if(key == "buddy_sticky")buddyUI.window.option("sticky", val);
-	});
+
 	//select a buddy
 	buddyUI.bind("select", function(info){
 		ui.addChat("buddy", info.id);
@@ -67,17 +64,17 @@ app("buddy", function( options ){
 		buddyUI.remove(map(data, mapId));
 	});
 	//some information has been modified.
-	buddy.bind("update", function(data){
+	buddy.bind( "update", function(data){
 		buddyUI.add(grep(data, grepVisible));
 		buddyUI.update(grep(data, grepVisible));
 		buddyUI.remove(map(grep(data, grepInvisible), mapId));
-	});
+	} );
 	buddyUI.offline();
 	im.bind( "ready", function(){
 		buddyUI.online();
 	}).bind("go", function() {
 		buddyUI.titleCount();
-	}).bind("stop", function(type, msg){
+	}).bind( "stop", function( type, msg ) {
 		buddyUI.offline();
 		if ( type == "connect" ) {
 		}
@@ -242,7 +239,7 @@ self.trigger("offline");
 			var groups = self.groups, group_name = i18n(info["group"] || "friend"), group = groups[group_name];
 			if(!group){
 				var g_el = createElement(tpl(self.options.tpl_group));
-				hide(g_el);
+				hide( g_el );
 				if(group_name == i18n("stranger")) end = true;
 				if(end) ul.appendChild(g_el);
 				else ul.insertBefore(g_el, ul.firstChild);

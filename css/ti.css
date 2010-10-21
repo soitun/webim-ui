@@ -3,6 +3,7 @@ input:focus, select:focus, textarea:focus{
 	outline: none;
 }
 
+
 .webim-box{
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -10,6 +11,9 @@ input:focus, select:focus, textarea:focus{
 	display: -moz-box;
 	-moz-box-orient: vertical;
 	-moz-box-align: stretch;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .webim-flex{
@@ -23,6 +27,8 @@ html, body, .webim, .webim-window {
 	margin:0;
 	padding:0;
 	height: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .webim{
@@ -62,9 +68,6 @@ html, body, .webim, .webim-window {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 }
-.webim-window .webim-window-content {
-	border-top-width: 0px;
-}
 
 .webim-window .webim-window-resize {
 	position: absolute;
@@ -92,3 +95,18 @@ html, body, .webim, .webim-window {
 	top: 0;
 	left: 0;
 }
+
+.webim-window .webim-window-content {
+	border-top-width: 0px;
+}
+
+
+.osx .webim-window-header{
+	border-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.osx .webim-window-content{
+	border-width: 0px;
+}
+

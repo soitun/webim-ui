@@ -17,9 +17,9 @@ widget( "window", {
                                                     <div id=":header" class="webim-window-header ui-widget-header ui-corner-top">\
                                                     	<a id=":resize" title="<%=resize%>" class="webim-window-resize" href="#resize"><em class="ui-icon ui-icon-grip-diagonal-se"><%=resize%></em></a>\
                                                             <span id=":actions" class="webim-window-actions">\
-                                                                    <a id=":maximize" title="<%=maximize%>" class="webim-window-maximize" href="#maximize"><em class="ui-icon ui-icon-plus"><%=maximize%></em></a>\
-                                                                    <a id=":minimize" title="<%=minimize%>" class="webim-window-minimize" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\
-                                                                    <a id=":close" title="<%=close%>" class="webim-window-close" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
+                                                                    <a id=":maximize" title="<%=maximize%>" class="webim-window-maximize ui-state-default ui-corner-all" href="#maximize"><em class="ui-icon ui-icon-plus"><%=maximize%></em></a>\
+                                                                    <a id=":minimize" title="<%=minimize%>" class="webim-window-minimize ui-state-default ui-corner-all" href="#minimize"><em class="ui-icon ui-icon-minus"><%=minimize%></em></a>\
+                                                                    <a id=":close" title="<%=close%>" class="webim-window-close ui-state-default ui-corner-all" href="#close"><em class="ui-icon ui-icon-close"><%=close%></em></a>\
                                                             </span>\
                                                             <h4 id=":headerTitle"><%=title%></h4>\
                                                             <div id=":subHeader" class="webim-window-subheader"></div>\

@@ -191,7 +191,8 @@ widget("chat",{
 	},
 	_adjustContent: function(){
 		var content = this.$.content;
-		if ( content.scrollHeight - content.scrollTop < 200 )
+		//Don't auto scroll when user view history.
+		if ( content.scrollHeight - content.scrollTop - content.clientHeight < 200 )
 			content.scrollTop = content.scrollHeight;
 	},
 	_fitUI: function(e){

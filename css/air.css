@@ -59,8 +59,6 @@ html, body, .webim, .webim-window {
 
 .webim-window-header .webim-window-actions a {
 	float:left;
-	background: none;
-	border: none;
 	margin: 0 .1em;
 }
 
@@ -97,8 +95,8 @@ html, body, .webim, .webim-window {
 	width: 240px;
 	height: 500px;
 	position: absolute;
-	right: 0;
-	top: 0;
+	right: 120px;
+	top: 30px;
 }
 
 .webim-browser.webim-chat-window{

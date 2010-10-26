@@ -36,17 +36,15 @@ html, body, .webim, .webim-window {
 }
 
 .webim-window{
-	padding: 0 8px 12px 4px;
+	padding: 10px 20px 30px;
 }
 
 .webim-window-window {
 	height: 100%;
 	position: relative;
 	/*-moz-box-shadow:0 20px 40px rgba(0, 0, 0, 0.4);*/
-	/*
 	-moz-box-shadow:0 10px 20px rgba(0, 0, 0, 0.4);
 	-webkit-box-shadow:0 10px 20px rgba(0, 0, 0, 0.4);
-	*/
 }
 
 .webim-window .webim-window-header {

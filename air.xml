@@ -3,9 +3,10 @@ http://help.adobe.com/en_US/air/reference/html/index.html
 http://help.adobe.com/en_US/air/build/WS5b3ccc516d4fbf351e63e3d118666ade46-7ff1.html
 -->
 <?xml version="1.0" encoding="utf-8" ?>
-<application xmlns="http://ns.adobe.com/air/application/2.0">
+<application xmlns="http://ns.adobe.com/air/application/2.5">
 	<id>cn.webim20.nextim</id>
-	<version>0.1.0</version>
+	<versionNumber>0.1.0</versionNumber>
+	<versionLabel>v0.1</versionLabel>
 	<filename>nextim</filename>
 	<name>nextim test</name>
 	<description>nextim 20</description>
@@ -23,9 +24,9 @@ http://help.adobe.com/en_US/air/build/WS5b3ccc516d4fbf351e63e3d118666ade46-7ff1.
 		<minimizable>true</minimizable>
 		<maximizable>false</maximizable>
 		<resizable>true</resizable>
-		<width>252</width>
-		<height>512</height> 
-		<minSize>252 512</minSize>
+		<width>280</width>
+		<height>540</height> 
+		<minSize>280 540</minSize>
 	</initialWindow>
 	<icon> 
 		<image16x16>images/logo16.png</image16x16>

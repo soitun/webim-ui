@@ -162,9 +162,9 @@ widget( "window", {
 		if ( window.runtime ) {
 			var win = self.window.nativeWindow, doc = self.window.document,
 			plat = "osx";
-			self.window.htmlLoader.filters = window.runtime.Array(
-				new window.runtime.flash.filters.DropShadowFilter(6, 75, 0, .4, 12, 12)
-			);
+			//self.window.htmlLoader.filters = window.runtime.Array(
+			//	new window.runtime.flash.filters.DropShadowFilter(6, 75, 0, .4, 12, 12)
+			//);
 			//addClass( doc.body, plat );
 
 			addEvent( doc, "keydown", function( event ) {

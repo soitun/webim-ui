@@ -6,7 +6,8 @@ function webimUI(element, options){
 	self.options = extend({}, webimUI.defaults, options);
 	self._init();
 }
-extend(webimUI.prototype, objectExtend, {
+ClassEvent.on( webimUI );
+extend(webimUI.prototype, {
 	init: function() {
 		var self = this, 
 		im = self.im, 
@@ -17,24 +18,24 @@ extend(webimUI.prototype, objectExtend, {
 		buddyUI = self.buddy, 
 		layout = self.layout, 
 		room = im.room;
-		buddy.bind("online", function( data ){
+		buddy.a("online", function( e, data ){
 			layout.updateChat( "buddy", data );
-		}).bind("offline", function( data ){
+		}).a("offline", function( e, data ){
 			layout.updateChat( "buddy", data );
-		}).bind("update", function( data ){
+		}).a("update", function( e, data ){
 			layout.updateChat( "buddy", data );
 		});
-		room.bind("addMember", function(room_id, info){
+		room.a("addMember", function(e, room_id, info){
 			var c = layout.chat( "room", room_id );
 			c && c.addMember && c.addMember( info.id, info.nick, info.id == im.data.user.id );
-		}).bind("removeMember", function( room_id, info ){
+		}).a("removeMember", function( e, room_id, info ){
 			var c = layout.chat( "room", room_id );
 			c && c.removeMember && c.removeMember( info.id, info.nick );
 		});
 
 		//all ready.
 		//message
-		im.bind( "message", function( data ){
+		im.a( "message", function( e, data ){
 			var show = false,
 			l = data.length, d, uid = im.data.user.id, id, c, count = "+1";
 			for(var i = 0; i < l; i++){
@@ -58,13 +59,13 @@ extend(webimUI.prototype, objectExtend, {
 				if(d.from != uid) show = true;
 			}
 			if( show ){
-				self.trigger( "newMessage" );
+				self.d( "newMessage" );
 				sound.play('msg');
 				titleShow(i18n("new message"), 5);
 			}
 		});
 
-		im.bind("status", function(data){
+		im.a("status", function( e, data ){
 			each(data,function(n,msg){
 				var userId = im.data.user.id;
 				var id = msg['from'];
@@ -78,21 +79,21 @@ extend(webimUI.prototype, objectExtend, {
 			});
 		});
 		//for test
-		history.bind("unicast", function( id, data){
+		history.a("unicast", function(  e, id, data ){
 			var c = layout.chat("unicast", id), count = "+" + data.length;
 			if(c){
 				c.history.add(data);
 			}
 			//(c ? c.history.add(data) : im.addChat(id));
 		});
-		history.bind("multicast", function(id, data){
+		history.a("multicast", function( e, id, data ){
 			var c = layout.chat("multicast", id), count = "+" + data.length;
 			if(c){
 				c.history.add(data);
 			}
 			//(c ? c.history.add(data) : im.addChat(id));
 		});
-		history.bind("clear", function(type, id){
+		history.a("clear", function( e, type, id ){
 			var c = layout.chat(type, id);
 			c && c.history.clear();
 		});
@@ -140,10 +141,10 @@ extend(webimUI.prototype, objectExtend, {
 	_initEvents: function() {
 		var self = this;
 		//im events
-		self.im.bind( "go", function( data ){
+		self.im.a( "online", function( e, data ){
 			date.init( data.server_time );
 			//setting.set(data.setting);
-		});
+		} );
 	}
 });
 
@@ -251,7 +252,8 @@ function widget(name, defaults, prototype){
 	}
 	m.defaults = defaults;// default options;
 	// add prototype
-	extend(m.prototype, objectExtend, widget.prototype, prototype);
+	ClassEvent.on( m );
+	extend(m.prototype, widget.prototype, prototype);
 	webimUI[name] = m;
 }
 

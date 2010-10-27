@@ -35,12 +35,12 @@ app("buddy", function( options ){
 
 
 	//select a buddy
-	buddyUI.bind("select", function(info){
+	buddyUI.a("select", function(e, info){
 		ui.addChat("buddy", info.id);
 		ui.layout.focusChat("buddy", info.id);
 	});
 	/*
-	buddyUI.window.bind("displayStateChange",function(type){
+	buddyUI.window.a("displayStateChange",function(type){
 		if(type != "minimize"){
 			buddy.option("active", true);
 			im.status.set("b", 1);
@@ -56,25 +56,25 @@ app("buddy", function( options ){
 	var grepVisible = function(a){ return a.show != "invisible" && a.presence == "online"};
 	var grepInvisible = function(a){ return a.show == "invisible"; };
 	//some buddies online.
-	buddy.bind("online", function(data){
+	buddy.a("online", function( e, data){
 		buddyUI.add(grep(data, grepVisible));
 	});
 	//some buddies offline.
-	buddy.bind("offline", function(data){
+	buddy.a("offline", function( e, data){
 		buddyUI.remove(map(data, mapId));
 	});
 	//some information has been modified.
-	buddy.bind( "update", function(data){
+	buddy.a( "update", function( e, data){
 		buddyUI.add(grep(data, grepVisible));
 		buddyUI.update(grep(data, grepVisible));
 		buddyUI.remove(map(grep(data, grepInvisible), mapId));
 	} );
 	buddyUI.offline();
-	im.bind( "ready", function(){
+	im.a( "beforeOnline", function(){
 		buddyUI.online();
-	}).bind("go", function() {
+	}).a("online", function() {
 		buddyUI.titleCount();
-	}).bind( "stop", function( type, msg ) {
+	}).a( "offline", function( type, msg ) {
 		buddyUI.offline();
 		if ( type == "connect" ) {
 		}
@@ -135,12 +135,12 @@ widget("buddy",{
 var a = $.online.firstChild;
 addEvent(a, "click", function(e){
 preventDefault(e);
-self.trigger("online");
+self.d("online");
 });
 hoverClass(a, "ui-state-hover");
 addEvent($.offline.firstChild, "click", function(e){
 preventDefault(e);
-self.trigger("offline");
+self.d("offline");
 });
 */
 
@@ -232,7 +232,7 @@ self.trigger("offline");
 			var a = el.firstChild;
 			addEvent(a, "click",function(e){
 				preventDefault(e);
-				self.trigger("select", [info]);
+				self.d("select", [info]);
 				this.blur();
 			});
 

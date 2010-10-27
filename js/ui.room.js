@@ -22,7 +22,7 @@ online
 */
 app("room", function( options ) {
 	var ui = this, im = ui.im, room = im.room, setting = im.setting,u = im.data.user, layout = ui.layout;
-	var roomUI = ui.room = new webim.ui.room(null).bind("select",function(info){
+	var roomUI = ui.room = new webim.ui.room(null).a("select",function( e, info){
 		ui.addChat("room", info.id);
 		ui.layout.focusChat("room", info.id);
 	});
@@ -32,24 +32,24 @@ app("room", function( options ) {
 		icon: "room"
 	} );
 	//
-	im.setting.bind("update",function(key, val){
-		if(key == "buddy_sticky")roomUI.window.option("sticky", val);
+	im.setting.a("update",function(key, val){
+		//if(key == "buddy_sticky")roomUI.window.option("sticky", val);
 	});
-	room.bind("join",function(info){
+	room.a("join",function( e, info){
 		updateRoom(info);
-	}).bind("leave", function(rooms){
+	}).a("leave", function( e, rooms){
 
-	}).bind("block", function(id, list){
+	}).a("block", function( e, id, list){
 		setting.set("blocked_rooms",list);
 		updateRoom(room.get(id));
 		room.leave(id);
-	}).bind("unblock", function(id, list){
+	}).a("unblock", function( e, id, list){
 		setting.set("blocked_rooms",list);
 		updateRoom(room.get(id));
 		room.join(id);
-	}).bind("addMember", function(room_id, info){
+	}).a("addMember", function( e, room_id, info){
 		updateRoom(room.get(room_id));
-	}).bind("removeMember", function(room_id, info){
+	}).a("removeMember", function( e, room_id, info){
 		updateRoom(room.get(room_id));
 	});
 	//room
@@ -128,7 +128,7 @@ widget("room",{
 			var a = el.firstChild;
 			addEvent(a, "click",function(e){
 				preventDefault(e);
-				self.trigger("select", [info]);
+				self.d("select", [info]);
 				this.blur();
 			});
 			ul.appendChild(el);

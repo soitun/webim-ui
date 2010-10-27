@@ -6,7 +6,7 @@ widget("emot", {
 		each(element.firstChild.childNodes, function(i,v){
 			addEvent(v, "click", function(e){
 				removeClass(element, "webim-emot-show");
-				self.trigger('select', this.firstChild.getAttribute('rel'));
+				self.d('select', this.firstChild.getAttribute('rel'));
 			});
 		});
         },

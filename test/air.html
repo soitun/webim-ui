@@ -10,16 +10,15 @@
 		<script type="text/javascript" src="../assets/AIRIntrospector.js" ></script>
 
 		<!-- base start -->
-		<script type="text/javascript" src="../im/src/core.js" ></script>
-		<script type="text/javascript" src="../im/src/objectExtend.js" ></script>
+		<script type="text/javascript" src="../im/src/ClassEvent.js" ></script>
 		<script type="text/javascript" src="../im/src/ajax.js" ></script>
-		<script type="text/javascript" src="../im/src/jsonp.js" ></script>
-		<script type="text/javascript" src="../im/src/json.js" ></script>
 		<script type="text/javascript" src="../im/src/comet.js" ></script>
 		<script type="text/javascript" src="../im/src/cookie.js" ></script>
+		<script type="text/javascript" src="../im/src/json.js" ></script>
 		<script type="text/javascript" src="../im/src/log.js" ></script>
 		<!-- base end -->
 		<!-- webim start -->
+		<script type="text/javascript" src="../im/src/core.js" ></script>
 		<script type="text/javascript" src="../im/src/webim.js" ></script>
 		<script type="text/javascript" src="../im/src/setting.js" ></script>
 		<script type="text/javascript" src="../im/src/status.js" ></script>
@@ -101,7 +100,7 @@
 		ui.render();
 		is_login && im.autoOnline() && im.online();
 		//im.online();
-		im.bind("go", function(data){
+		im.a("online", function(e, data){
 			data.connection.server = "http://test.com/project/webim/ui/im/test/" + data.connection.server;
 		});
 

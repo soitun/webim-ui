@@ -12,10 +12,9 @@ inArray = webim.inArray,
 grep = webim.grep,
 JSON = webim.JSON,
 ajax = webim.ajax,
-jsonp = webim.jsonp,
 comet = webim.comet,
 model = webim.model,
-objectExtend = webim.objectExtend,
+ClassEvent = webim.ClassEvent,
 map = webim.map;
 
 function returnFalse(){

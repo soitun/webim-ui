@@ -106,7 +106,7 @@ widget( "window", {
 	_changeState:function(state){
 		var el = this.element, className = state == "restore" ? "normal" : state;
 		replaceClass( el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className );
-		this.trigger( "displayStateChange", [state] );
+		this.d( "displayStateChange", [state] );
 	},
 	maximize: function(){
 		var self = this, win = self.window.nativeWindow;
@@ -215,21 +215,21 @@ widget( "window", {
 			}
 			//Bind events
 			addEvent( win, air.NativeWindowBoundsEvent.RESIZE, function( e ) {
-				self.trigger( "resize", e );
+				self.d( "resize", e );
 			});
 
 			addEvent( win, air.NativeWindowBoundsEvent.MOVE, function( e ) {
-				self.trigger( "move", e );
+				self.d( "move", e );
 			});
 
 			addEvent( win, air.Event.ACTIVATE, function( e ) {
-				self.trigger( "activate", e );
+				self.d( "activate", e );
 			});
 			addEvent( win, air.Event.DEACTIVATE, function( e ) {
-				self.trigger( "deactivate", e );
+				self.d( "deactivate", e );
 			});
 			addEvent( win, air.Event.CLOSE, function( e ) {
-				self.trigger( "close", e );
+				self.d( "close", e );
 			});
 		}
 	},

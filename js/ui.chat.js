@@ -36,21 +36,21 @@ app( "chat", function( options ) {
 			history.load( "multicast", id );
 		extend( options, { history: h, block: true, emot: true, clearHistory: false, member: true, msgType: "multicast" } );
 		var chatUI = new webimUI.chat( null, options );
-		chatUI.bind( "sendMsg", function( msg ) {
+		chatUI.a( "sendMsg", function( e, msg ) {
 			im.sendMsg( msg );
 			history.handle( msg );
-		}).bind("downloadHistory", function( info ){
+		}).a("downloadHistory", function( e, info ){
 			history.download( "multicast", info.id );
-		}).bind("select", function( info ) {
+		}).a("select", function( e, info ) {
 			info.presence = "online";
 			buddy.presence( info );//online
 			self.addChat( "buddy", info.id, info.nick );
 			layout.focusChat( "buddy", info.id );
-		}).bind("block", function( d ){
+		}).a("block", function( e, d ){
 			room.block( d.id );
-		}).bind("unblock", function( d ) {
+		}).a("unblock", function( e, d ) {
 			room.unblock( d.id );
-		}).bind( "destroy", function() {
+		}).a( "destroy", function() {
 			chatUI.options.info.blocked && room.leave(id);
 		});
 		setTimeout( function(){
@@ -69,14 +69,14 @@ app( "chat", function( options ) {
 		extend( options, { history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast" } );
 		var chatUI = new webimUI.chat( null, options );
 
-		chatUI.bind("sendMsg", function( msg ) {
+		chatUI.a("sendMsg", function( e, msg ) {
 			im.sendMsg( msg );
 			history.handle( msg );
-		}).bind("sendStatus", function( msg ) {
+		}).a("sendStatus", function( e, msg ) {
 			im.sendStatus( msg );
-		}).bind("clearHistory", function( info ){
+		}).a("clearHistory", function( e, info ){
 			history.clear( "unicast", info.id );
-		}).bind("downloadHistory", function( info ) {
+		}).a("downloadHistory", function( e, info ) {
 			history.download( "unicast", info.id );
 		});
 	}
@@ -143,8 +143,8 @@ widget("chat",{
 	update: function(info){
 		var self = this;
 		if(info){
-			self.option("info", info);
-			self.history.option("info", info);
+			self.options.info = info;
+			self.history.options.info = info;
 			self._updateInfo(info);
 		}
 		var userOn = self.options.user.presence == "online";
@@ -202,17 +202,17 @@ widget("chat",{
 	},
 	_bindWindow: function(){
 		var self = this, win = self.window;
-		win.bind("displayStateChange", function(type){
+		win.a("displayStateChange", function(e, type){
 			if(type != "minimize"){
         //fix firefox
         window.setTimeout(function(){self.$.input.focus();},0);
 				//self.$.input.focus();
 				self._adjustContent();
 			}
-		}).bind("close", function(){
+		}).a("close", function(){
 			self.destroy();
 		});
-		//win.bind("resize",{self: self}, self._fitUI);
+		//win.a("resize",{self: self}, self._fitUI);
 	},
 	_inputAutoHeight:function(){
 		var el = this.$.input, scrollTop = el[0].scrollTop;
@@ -234,7 +234,7 @@ widget("chat",{
 			body: val
 		};
 		plugin.call(self, "send", [null, self.ui({msg: msg})]);
-		self.trigger('sendMsg', msg);
+		self.d('sendMsg', msg);
 		//self.sendStatus("");
 	},
 	_inputkeypress: function(e){
@@ -270,9 +270,9 @@ widget("chat",{
 	_initEvents: function(){
 		var self = this, options = self.options, $ = self.$, placeholder = i18n("input notice"), gray = "webim-gray", input = $.input;
 
-		self.history.bind("update", function(){
+		self.history.a("update", function(){
 			self._adjustContent();
-		}).bind("clear", function(){
+		}).a("clear", function(){
 			self.notice(i18n("clear history notice"), 3000);
 		});
 		//输入法中，进入输入法模式时keydown,keypress触发，离开输入法模式时keyup事件发生。
@@ -343,7 +343,7 @@ widget("chat",{
 		var self = this;
 		if (!show || show == self._statusText || self.options.info.presence == "offline") return;
 		self._statusText = show;
-		self.trigger('sendStatus', {
+		self.d('sendStatus', {
 			to: self.options.info.id,
 			show: show
 		});
@@ -373,7 +373,7 @@ widget("chat",{
 			}, 10000);
 	},
 	destroy: function(){
-		this.trigger( "destroy" );
+		this.d( "destroy" );
 	},
 	ui:function(ext){
 		var self = this;
@@ -392,7 +392,7 @@ plugin.add("chat","fontcolor",{
 	init:function(e, ui){
 		var chat = ui.self;
 		var fontcolor = new webimUI.fontcolor();
-		fontcolor.bind("select",function(alt){
+		fontcolor.a("select",function(e, alt){
 			chat.focus();
 			chat.setStyle("color", alt);
 		});
@@ -414,7 +414,7 @@ plugin.add("chat","emot",{
 	init:function(e, ui){
 		var chat = ui.self;
 		var emot = new webimUI.emot();
-		emot.bind("select",function(alt){
+		emot.a("select",function( e, alt){
      
 			chat.focus();
 			chat.insert(alt, true);
@@ -438,7 +438,7 @@ plugin.add("chat","clearHistory",{
 		var trigger = createElement(tpl('<a href="#chat-clearHistory" title="<%=clear history%>"><em class="webim-icon webim-icon-clear"></em></a>'));
 		addEvent(trigger,"click",function(e){
 			preventDefault(e);
-			chat.trigger("clearHistory",[chat.options.info]);
+			chat.d("clearHistory",[chat.options.info]);
 		});
 		ui.$.tools.appendChild(trigger);
 	}
@@ -455,13 +455,13 @@ plugin.add("chat","block",{
 			preventDefault(e);
 			hide(block);
 			show(unblock);
-			chat.trigger("block",[chat.options.info]);
+			chat.d("block",[chat.options.info]);
 		});
 		addEvent(unblock,"click",function(e){
 			preventDefault(e);
 			hide(unblock);
 			show(block);
-			chat.trigger("unblock",[chat.options.info]);
+			chat.d("unblock",[chat.options.info]);
 		});
 		ui.$.tools.appendChild(block);
 		ui.$.tools.appendChild(unblock);
@@ -475,7 +475,7 @@ extend(webimUI.chat.prototype, {
 		var el = createElement('<li><a class="'+ (disable ? 'ui-state-disabled' : '') +'" href="'+ id +'">'+ nick +'</a></li>');
 		addEvent(el.firstChild,"click",function(e){
 			preventDefault(e);
-			disable || self.trigger("select", [{id: id, nick: nick}]);
+			disable || self.d("select", [{id: id, nick: nick}]);
 		});
 		li[id] = el;
 		self.$.member.appendChild(el);
@@ -508,7 +508,7 @@ plugin.add("chat","downloadHistory",{
 		var trigger = createElement(tpl('<a style="float: right;" href="#chat-downloadHistory" title="<%=download history%>"><em class="webim-icon webim-icon-download"></em></a>'));
 		addEvent(trigger,"click",function(e){
 			preventDefault(e);
-			chat.trigger("downloadHistory",[chat.options.info]);
+			chat.d("downloadHistory",[chat.options.info]);
 		});
 		ui.$.tools.appendChild(trigger);
 	}

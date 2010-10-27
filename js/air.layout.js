@@ -4,7 +4,7 @@ app( "layout", function( options ) {
 	layoutUI = new webimUI.layout( options.layout, options.layoutOptions );
 	ui.addApp( "login", extend( { container: layoutUI.element }, options.loginOptions ) );
 	ui.addApp( "user", extend( { container: layoutUI.window.$.subHeader }, options.userOptions ) );
-	im.bind( "go", function(){
+	im.a( "online", function(){
 		layoutUI.showContent();
 	});
 	layoutUI.window.subHeader( layoutUI.tabs.element );
@@ -58,13 +58,13 @@ widget("layout", {
 		addEvent($.expand, "click", function(){
 			if(!self.isMinimize()) return false;
 			self.expand();
-			self.trigger("expand");
+			self.d("expand");
 			return false;
 		});
 		addEvent($.collapse, "click", function(){
 			if(self.isMinimize()) return false;
 			self.collapse();
-			self.trigger("collapse");
+			self.d("collapse");
 			return false;
 		});
 		hoverClass($.collapse, "ui-state-hover", "ui-state-default");
@@ -93,7 +93,7 @@ widget("layout", {
 			self.tabs.select( options.title );
 		}
 		//self.$[container ? container : "widgets"].insertBefore(win.element, before && self.widgets[before] ? self.widgets[before].window.element : null);
-		//win.bind("displayStateChange", function(state){ self._widgetStateChange(this, state);});
+		//win.a("displayStateChange", function(state){ self._widgetStateChange(this, state);});
 	},
 	showWidget: function( widget_name ) {
 		var self = this;
@@ -133,7 +133,7 @@ widget("layout", {
 				title: "webim",
 				maximizable: true,
 				icon: ""
-			} ).bind( "close", function() {
+			} ).a( "close", function() {
 				delete self.chatWindows[ id ];
 				delete self.chats[ id ];
 			} );

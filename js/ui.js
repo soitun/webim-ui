@@ -55,7 +55,7 @@ extend(webimUI.prototype, objectExtend, {
 			layout.changeState("ready");
 		}).bind("go",function(data){
 			layout.changeState("active");
-			layout.option("user", data.user);
+			layout.option.user = data.user;
 			date.init(data.server_time);
 			self._initStatus();
 			//setting.set(data.setting);
@@ -69,7 +69,7 @@ extend(webimUI.prototype, objectExtend, {
 			switch(key){
 				case "play_sound": (val ? sound.enable() : sound.disable() ); 
 				break;
-				case "msg_auto_pop": layout.option("chatAutoPop", val); 
+				case "msg_auto_pop": layout.options.chatAutoPop = val; 
 				break;
 				case "minimize_layout": 
 				(val ? layout.collapse() : layout.expand()); 

@@ -135,8 +135,8 @@ widget("chat",{
 	setWindow: function( win ) {
 		var self = this;
 		self.window = win;
-		win.subHeader( self.header );
-		win.html( self.element );
+		win.header( self.header );
+		win.content( self.element );
 		win.title( self.options.info.nick );
 		self._bindWindow();
 	},

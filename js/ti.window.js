@@ -83,7 +83,7 @@ widget("window", {
 	},
 	notifyUser: function(type, count) {
 		var self = this, $ = self.$;
-		if(type == "information"){
+		if( type == "information" ) {
 			if( self.isMinimized() ) {
 				Titanium.UI.setBadge( count ? count.toString() : null );
 			}

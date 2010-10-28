@@ -1,18 +1,22 @@
-/* webim ui window */
+/* webim air window 
+*
+* http://help.adobe.com/en_US/air/reference/html/flash/desktop/NativeApplication.html#event:activate
+*
+*/
 
 widget( "window", {
 	main: false,
-        isMinimized: false,
+	visible: true,
+        maximizable: true,
         minimizable: true,
-        maximizable: false,
-	layoutUrl: "app:/test/air.window.html",
-	iconUrl: "app:/images/logo128.png",
         closeable: true,
-        count: 0, // notifyUser if count > 0
+	closeToHide: false,
+	layout: "app:/test/air.window.html",
+        //count: 0, // notifyUser if count > 0
 	//A box with position:absolute next to a float may disappear
 	//http://www.brunildo.org/test/IE_raf3.html
 	//here '<div><div id=":window"'
-        template:'<div class="webim"><div id=":webim-window" class="webim-window ui-widget">\
+        template: '<div class="webim"><div id=":webim-window" class="webim-window ui-widget">\
                                             <div id=":window" class="webim-window-window webim-box">\
                                                     <div id=":header" class="webim-window-header ui-widget-header ui-corner-top">\
                                                     	<a id=":resize" title="<%=resize%>" class="webim-window-resize" href="#resize"><em class="ui-icon ui-icon-grip-diagonal-se"><%=resize%></em></a>\
@@ -30,13 +34,6 @@ widget( "window", {
                                             </div></div>'
 },
 {
-	html: function( obj ) {
-		return this.$.content.appendChild( obj );
-	},
-	subHeader: function( obj ){
-		//this.$.subHeader.innerHTML = "";
-		return this.$.subHeader.appendChild( obj );
-	},
 	_init: function( element, options ) {
 		var self = this, options = self.options, $ = self.$;
 		element = self.element;
@@ -59,8 +56,8 @@ widget( "window", {
 				//loader.paintsDefaultBackground = false;
 				loader.navigateInSystemBrowser = true;
 				//loader.stage.nativeWindow.alwaysInFront = true;
-				//loader.stage.nativeWindow.title = "sdfwe";
-				loader.load( new air.URLRequest( self.options.layoutUrl ) );
+				loader.stage.nativeWindow.title = options.title;
+				loader.load( new air.URLRequest( self.options.layout ) );
 				var ready = false;
 				addEvent( loader, air.Event.COMPLETE, function() {
 					if ( !ready ) {
@@ -82,64 +79,12 @@ widget( "window", {
 			self.__initEvents();
 		}
 
-		options.subHeader && self.subHeader( options.subHeader );
-		self.title( options.title, options.icon );
+		options.subHeader && self.header( options.subHeader );
+		self.title( options.title );
 		!options.minimizable && hide( $.minimize );
 		!options.maximizable && hide( $.maximize );
 		!options.closeable && hide( $.close );
-		options.count && self.notifyUser( "information", options.count );
-	},
-	notifyUser: function( type, count ) {
-		var self = this, $ = self.$;
-		if( type == "information" ) {
-			if( self.isMinimized() ) {
-				//Titanium.UI.setBadge( count ? count.toString() : null );
-			}
-		}
-	},
-	_count: function(){
-	},
-	title: function(title, icon){
-		var self = this, $ = self.$;
-		$.headerTitle.innerHTML = title;
-	},
-	_changeState:function(state){
-		var el = this.element, className = state == "restore" ? "normal" : state;
-		replaceClass( el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className );
-		this.d( "displayStateChange", [state] );
-	},
-	maximize: function(){
-		var self = this, win = self.window.nativeWindow;
-		if( self.isMaximized() ) {
-			self.restore();
-		} else {
-			win.maximize(); 
-			self._changeState( "maximize" );
-		}
-	},
-	restore: function() {
-		var self = this, win = self.window.nativeWindow;
-		win && win.restore();
-		if(hasClass(self.element, "webim-window-normal"))return;
-		self._changeState("restore");
-	},
-	minimize: function() {
-		var self = this, win = self.window.nativeWindow;
-		if( self.isMinimized() ) {
-		} else {
-			win.minimize(); 
-			self._changeState( "minimize" );
-		}
-	},
-	resize: function(){
-	},
-	close: function(){
-		var self = this;
-		if ( self.options.main ) {
-			self.window.nativeWindow.visible = false;
-		} else {
-			self.window.nativeWindow.close();
-		}
+		!options.resizable && hide( $.resize );
 	},
 	__initEvents: function() {
 		var self = this, element = self.element, $ = self.$;
@@ -197,44 +142,117 @@ widget( "window", {
 
 			addEvent( $.resize, "mousedown", function( event ) {
 				win.startResize( air.NativeWindowResize.BOTTOM_RIGHT );
-			});
+			} );
 
 			if ( self.options.main ) {
 				//Show window when activate the application.
-				var active = function(){
-					!win.visible && ( win.visible = true );
-				};
-				//addEvent( air.NativeApplication.nativeApplication, air.Event.ACTIVATE, active );
-				addEvent( air.NativeApplication.nativeApplication, air.InvokeEvent.INVOKE, active );
-				//Set application icon
-				var loader = new air.Loader();
-				addEvent(loader.contentLoaderInfo, air.Event.COMPLETE, function( e ){
-					air.NativeApplication.nativeApplication.icon.bitmaps = new runtime.Array(e.target.content.bitmapData);
-				});
-				loader.load(new air.URLRequest( self.options.iconUrl ) );
 			}
+
 			//Bind events
 			addEvent( win, air.NativeWindowBoundsEvent.RESIZE, function( e ) {
 				self.d( "resize", e );
-			});
+			} );
 
 			addEvent( win, air.NativeWindowBoundsEvent.MOVE, function( e ) {
 				self.d( "move", e );
-			});
+			} );
 
 			addEvent( win, air.Event.ACTIVATE, function( e ) {
 				self.d( "activate", e );
-			});
+			} );
 			addEvent( win, air.Event.DEACTIVATE, function( e ) {
 				self.d( "deactivate", e );
-			});
+			} );
+			addEvent( win, air.Event.CLOSING, function( e ) {
+				if ( self.options.closeToHide ) {
+					self.hide();
+					e.preventDefault();
+				}
+			} );
 			addEvent( win, air.Event.CLOSE, function( e ) {
-				self.d( "close", e );
-			});
+					self.d( "close", e );
+			} );
+			addEvent( win, air.NativeWindowDisplayStateEvent.DISPLAY_STATE_CHANGE, function( e ) {
+				self.d( "displayStateChange", e );
+			} );
+		}
+	},
+	content: function( obj ) {
+		obj ? this.$.content.appendChild( obj ) : this.$.content.innerHTML = "";
+	},
+	header: function( obj ) {
+		obj ? this.$.subHeader.appendChild( obj ) : this.$.subHeader.innerHTML = "";
+	},
+	title: function( title ) {
+		var self = this;
+		self.$.headerTitle.innerHTML = title;
+		self.options.title = title;
+		//Set air window title
+		self.window && ( self.window.nativeWindow.title = title );
+	},
+	icon: function( url ) {
+		var self = this;
+		self.options.title = title;
+	},
+	notifyUser: function( type ) {
+		//air.NotificationType.INFORMATIONAL: informational
+		//air.NotificationType.CRITICAL: critical
+		var self = this;
+		// Mac os is not support notification.
+		air.NativeWindow.supportsNotification && self.window && self.window.notifyUser( type );
+	},
+	show: function() {
+		this.window && ( this.window.nativeWindow.visible = true );
+	},
+	hide: function() {
+		this.window && ( this.window.nativeWindow.visible = false );
+	},
+	_changeState: function( state ) {
+		var el = this.element, className = state == "restore" ? "normal" : state;
+		replaceClass( el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className );
+		//this.d( "displayStateChange", [state] );
+	},
+	maximize: function() {
+		var self = this;
+		if( self.isMaximized() ) {
+			self.restore();
+		} else {
+			self.window && self.window.nativeWindow && self.window.nativeWindow.maximize(); 
+			self._changeState( "maximize" );
+		}
+	},
+	restore: function() {
+		var self = this;
+		self.window && self.window.nativeWindow && self.window.nativeWindow.restore(); 
+		self._changeState("restore");
+	},
+	minimize: function() {
+		var self = this;
+		if( !self.isMinimized() ) {
+			self.window && self.window.nativeWindow && self.window.nativeWindow.minimize(); 
+			self._changeState( "minimize" );
+		}
+	},
+	close: function() {
+		var self = this;
+		if ( self.options.closeToHide ) {
+			self.hide();
+		} else {
+			self.window && self.window.nativeWindow && self.window.nativeWindow.close(); 
 		}
 	},
 	activate: function() {
-		return this.window && this.window.nativeWindow.activate();
+		var win = this.window && this.window.nativeWindow;
+		win && win.activate();
+/*
+if ( win ) {
+self.show();
+win.restore();
+win && win.activate();
+win.orderToFront();
+air.NativeApplication.nativeApplication.activate( win );
+}
+*/
 	},
 	isActive: function() {
 		return this.window && this.window.nativeWindow.active;

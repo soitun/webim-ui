@@ -7,7 +7,7 @@ app( "layout", function( options ) {
 	im.a( "online", function(){
 		layoutUI.showContent();
 	});
-	layoutUI.window.subHeader( layoutUI.tabs.element );
+	layoutUI.window.header( layoutUI.tabs.element );
 	return layoutUI;
 } );
 
@@ -23,6 +23,7 @@ widget("layout", {
 		extend( self, {
 			window: new webimUI.window( null, {
 				main: true,
+				closeToHide: true,
 				name: "layout",
 				title: "webim",
 				maximizable: true,
@@ -36,7 +37,54 @@ widget("layout", {
 			chatWindows : {}
 		} );
 		addClass( self.tabs.element, "webim-hide" );
-		self.window.html( self.element );
+		self.window.content( self.element );
+		if ( window.runtime ) {
+			//Get icons
+			var supportIcon = false,
+			na = air.NativeApplication,
+			nan = na.nativeApplication,
+			winIcon = nan.icon,
+			iconUrl,
+			xmlobject = ( new DOMParser() ).parseFromString( nan.applicationDescriptor, "text/xml" ),
+			showWin = function() {
+				self.window.show();
+			};
+			addEvent( nan, air.Event.EXITING, function( e ) {
+				self.window.options.closeToHide = false;
+			} );
+			if( na.supportsSystemTrayIcon ) {
+				supportIcon = true;
+				iconUrl = xmlobject.getElementsByTagName("image16x16")[0].textContent;
+				addEvent( winIcon, 'click', showWin );
+				winIcon.tooltip = self.window.options.title;
+			} else if ( na.supportsDockIcon ) { //Mac
+				supportIcon = true;
+				iconUrl = xmlobject.getElementsByTagName("image128x128")[0].textContent;
+				addEvent( nan, air.InvokeEvent.INVOKE, showWin );
+				self._badge = window.runtime.de && window.runtime.de.mattesgroeger.air.icon.AirIconBadge;
+			}
+			if ( supportIcon ) {
+				var loader = new air.Loader();
+				addEvent( loader.contentLoaderInfo, air.Event.COMPLETE, function( e ){
+					var d = e.target.content.bitmapData;
+					winIcon.bitmaps = new runtime.Array( d );
+					try {
+						self._badge && ( self._badge.customIcon =  new runtime.flash.display.Bitmap( d ) );
+					} catch(e){
+					}
+				} );
+				loader.load( new air.URLRequest( "app:/" + iconUrl ) );
+				if ( !na.supportsDockIcon ) {
+					var menu = new air.NativeMenu(),
+					logout = new air.NativeMenuItem( i18n("logout") );
+					addEvent( logout, air.Event.SELECT, function( e ) {
+						nan.exit();
+					} );
+					menu.addItem( logout );
+					winIcon.menu = menu;
+				}
+			}
+		}
 	},
 	_initEvents: function(){
 		var self = this, win = self.window, $ = self.$;
@@ -86,7 +134,7 @@ widget("layout", {
 		widget.widget_title = options.title;
 		if ( container == "window" ) {
 			win = new webimUI.window(null, winOptions);
-			win.html( el );
+			win.content( el );
 			widget.container = win;
 		} else if ( container == "tab" ) {
 			self.tabs.add( widget.element, options.title, options.icon );
@@ -159,6 +207,14 @@ widget("layout", {
 		removeClass( this.$.widgets, "webim-hide" );
 		removeClass( this.tabs.element, "webim-hide" );
 		removeClass( this.$.shortcut, "webim-hide" );
+	},
+	setBadge: function( num ) {
+		try {
+			this._badge.label = num.toString();
+		} catch (e) {}
+	},
+	notifyUser: function( type ) {
+		window.runtime && air.NativeApplication.supportsDockIcon && air.NativeApplication.nativeApplication.icon.bounce( type );
 	}
 } );
 

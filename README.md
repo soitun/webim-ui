@@ -78,7 +78,11 @@ title( content )
 
 icon( url )
 
-header( content )
+header( element )
+
+content( element )
+
+notifyUser( type )
 
 show()
 
@@ -100,8 +104,6 @@ isMaximized()
 
 isMinimized()
 
-notifyUser()
-
 ####Events
 
 close
@@ -109,6 +111,8 @@ close
 activate
 
 deactivate
+
+displayStateChange
 
 resize
 

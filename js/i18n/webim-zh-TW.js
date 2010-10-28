@@ -92,7 +92,8 @@ webim.ui.i18n.store('zh-TW',{
 	"password": "密碼",
 	"question": "問題",        
 	"answer": "答案",
-	"login": "登錄"
+	"login": "登錄",
+	"exit": "退出"
 });
 
 webim.ui.i18n.store('zh-TW',{

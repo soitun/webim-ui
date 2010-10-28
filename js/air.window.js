@@ -10,6 +10,7 @@ widget( "window", {
         maximizable: true,
         minimizable: true,
         closeable: true,
+	resizable: true,
 	closeToHide: false,
 	layout: "app:/test/air.window.html",
         //count: 0, // notifyUser if count > 0
@@ -80,7 +81,6 @@ widget( "window", {
 		}
 
 		options.subHeader && self.header( options.subHeader );
-		self.title( options.title );
 		!options.minimizable && hide( $.minimize );
 		!options.maximizable && hide( $.maximize );
 		!options.closeable && hide( $.close );
@@ -88,6 +88,7 @@ widget( "window", {
 	},
 	__initEvents: function() {
 		var self = this, element = self.element, $ = self.$;
+		self.title( self.options.title );
 		var stop = function(e){
 			stopPropagation(e);
 			preventDefault(e);
@@ -128,7 +129,7 @@ widget( "window", {
 			} );
 
 			addEvent( $.headerTitle, "dblclick", function() {
-				if ( self._os.mac ) {
+				if ( os == 'mac' ) {
 					self.minimize();
 				} else {
 					self.maximize();
@@ -170,9 +171,10 @@ widget( "window", {
 				}
 			} );
 			addEvent( win, air.Event.CLOSE, function( e ) {
-					self.d( "close", e );
+				self.d( "close", e );
 			} );
 			addEvent( win, air.NativeWindowDisplayStateEvent.DISPLAY_STATE_CHANGE, function( e ) {
+				replaceClass( el, "webim-window-normal webim-window-maximized webim-window-minimized", "webim-window-" + e.afterDisplayState );
 				self.d( "displayStateChange", e );
 			} );
 		}
@@ -199,7 +201,7 @@ widget( "window", {
 		//air.NotificationType.CRITICAL: critical
 		var self = this;
 		// Mac os is not support notification.
-		air.NativeWindow.supportsNotification && self.window && self.window.notifyUser( type );
+		window.runtime && air.NativeWindow.supportsNotification && self.window && self.window.notifyUser( type );
 	},
 	show: function() {
 		this.window && ( this.window.nativeWindow.visible = true );
@@ -207,30 +209,22 @@ widget( "window", {
 	hide: function() {
 		this.window && ( this.window.nativeWindow.visible = false );
 	},
-	_changeState: function( state ) {
-		var el = this.element, className = state == "restore" ? "normal" : state;
-		replaceClass( el, "webim-window-normal webim-window-maximize webim-window-minimize", "webim-window-" + className );
-		//this.d( "displayStateChange", [state] );
-	},
 	maximize: function() {
 		var self = this;
 		if( self.isMaximized() ) {
 			self.restore();
 		} else {
 			self.window && self.window.nativeWindow && self.window.nativeWindow.maximize(); 
-			self._changeState( "maximize" );
 		}
 	},
 	restore: function() {
 		var self = this;
 		self.window && self.window.nativeWindow && self.window.nativeWindow.restore(); 
-		self._changeState("restore");
 	},
 	minimize: function() {
 		var self = this;
 		if( !self.isMinimized() ) {
 			self.window && self.window.nativeWindow && self.window.nativeWindow.minimize(); 
-			self._changeState( "minimize" );
 		}
 	},
 	close: function() {
@@ -262,14 +256,8 @@ air.NativeApplication.nativeApplication.activate( win );
 	},
 	isMinimized: function() {
 		return this.window && this.window.nativeWindow.displayState == air.NativeWindowDisplayState.MINIMIZED;
-	},
-	_os: ( function(){
-		var s = window.runtime && air.Capabilities.os;
-		return {
-			mac: /Mac/i.test(s),
-			win: /Windows/i.test(s),
-			linux: /Linux/i.test(s)
-		}
-	} )()
-});
+	}
+} );
 
+var os = window.runtime && air.Capabilities.os;
+os = /Mac/i.test( os ) ? "mac" : ( /Windows/i.test( os ) ? "win" : (/Linux/i.test( os ) ? "linux" : "unknown" ) );

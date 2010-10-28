@@ -92,7 +92,8 @@ webim.ui.i18n.store('zh-CN',{
 	"password": "密码",
 	"question": "问题",
 	"answer": "答案",
-	"login": "登录"
+	"login": "登录",
+	"exit": "退出"
 });
 
 webim.ui.i18n.store('zh-CN',{

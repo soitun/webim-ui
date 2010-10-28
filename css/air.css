@@ -3,7 +3,6 @@ input:focus, select:focus, textarea:focus{
 	outline: none;
 }
 
-
 .webim-box{
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
@@ -14,6 +13,15 @@ input:focus, select:focus, textarea:focus{
 	width: 100%;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+}
+
+.webim-box-h{
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	-webkit-box-align: stretch;
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	-moz-box-align: stretch;
 }
 
 .webim-flex{
@@ -37,6 +45,10 @@ html, body, .webim, .webim-window {
 
 .webim-window{
 	padding: 10px 20px 30px;
+}
+
+.webim-window-maximized .webim-window{
+	padding: 0;
 }
 
 .webim-window-window {

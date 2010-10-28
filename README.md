@@ -22,6 +22,8 @@ newMessage
 
 render()
 
+notifyUser( type )
+
 chat( type, id )
 
 updateChat( type, infos )

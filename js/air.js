@@ -9,94 +9,7 @@ function webimUI(element, options){
 ClassEvent.on( webimUI );
 extend(webimUI.prototype, {
 	init: function() {
-		var self = this, 
-		im = self.im, 
-		buddy = im.buddy, 
-		history = im.history, 
-		status = im.status, 
-		setting = im.setting, 
-		buddyUI = self.buddy, 
-		layout = self.layout, 
-		room = im.room;
-		buddy.a("online", function( e, data ){
-			layout.updateChat( "buddy", data );
-		}).a("offline", function( e, data ){
-			layout.updateChat( "buddy", data );
-		}).a("update", function( e, data ){
-			layout.updateChat( "buddy", data );
-		});
-		room.a("addMember", function(e, room_id, info){
-			var c = layout.chat( "room", room_id );
-			c && c.addMember && c.addMember( info.id, info.nick, info.id == im.data.user.id );
-		}).a("removeMember", function( e, room_id, info ){
-			var c = layout.chat( "room", room_id );
-			c && c.removeMember && c.removeMember( info.id, info.nick );
-		});
 
-		//all ready.
-		//message
-		im.a( "message", function( e, data ){
-			var show = false,
-			l = data.length, d, uid = im.data.user.id, id, c, count = "+1";
-			for(var i = 0; i < l; i++){
-				d = data[i];
-				id = d["id"], type = d["type"];
-				c = layout.chat( type, id );
-				c && c.status("");//clear status
-				if(!c){	
-					if (d.type === "unicast"){
-						self.addChat( type, id, d.nick );
-					}else{
-						self.addChat( type, id );  
-					}
-					c = layout.chat( type, id );
-				}
-				c && setting.get("msg_auto_pop") && !layout.activeTabId && layout.focusChat(id);
-				c.window.notifyUser("information", count);
-				var p = c.window.pos;
-				(p == -1) && layout.setNextMsgNum(count);
-				(p == 1) && layout.setPrevMsgNum(count);
-				if(d.from != uid) show = true;
-			}
-			if( show ){
-				self.d( "newMessage" );
-				sound.play('msg');
-				titleShow(i18n("new message"), 5);
-			}
-		});
-
-		im.a("status", function( e, data ){
-			each(data,function(n,msg){
-				var userId = im.data.user.id;
-				var id = msg['from'];
-				if (userId != msg.to && userId != msg.from) {
-					id = msg.to; //群消息
-					var nick = msg.nick;
-				}else{
-					var c = layout.chat("buddy", id);
-					c && c.status(msg['show']);
-				}
-			});
-		});
-		//for test
-		history.a("unicast", function(  e, id, data ){
-			var c = layout.chat("unicast", id), count = "+" + data.length;
-			if(c){
-				c.history.add(data);
-			}
-			//(c ? c.history.add(data) : im.addChat(id));
-		});
-		history.a("multicast", function( e, id, data ){
-			var c = layout.chat("multicast", id), count = "+" + data.length;
-			if(c){
-				c.history.add(data);
-			}
-			//(c ? c.history.add(data) : im.addChat(id));
-		});
-		history.a("clear", function( e, type, id ){
-			var c = layout.chat(type, id);
-			c && c.history.clear();
-		});
 	},
 
 	render:function() {
@@ -269,8 +182,7 @@ function _tr_type(type){
 function app( name, init ) {
 	webimUI.apps[name] = init;
 }
-
-extend(webimUI,{
+extend( webimUI, {
 	version: "@VERSION",
 	widget: widget,
 	app: app,
@@ -281,6 +193,6 @@ extend(webimUI,{
 	createElement: createElement,
 	defaults: {},
 	apps:{}
-});
+} );
 webim.ui = webimUI;
 

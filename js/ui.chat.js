@@ -14,7 +14,7 @@ notice(text, timeOut)
 destroy()
 
 events: 
-sendMsg
+sendMessage
 sendStatus
 
 */
@@ -34,11 +34,11 @@ app( "chat", function( options ) {
 		var h = history.get( "multicast", id );
 		if( !h )
 			history.load( "multicast", id );
-		extend( options, { history: h, block: true, emot: true, clearHistory: false, member: true, msgType: "multicast" } );
+		extend( options, { history: h, block: true, emot: true, clearHistory: false, member: true, type: type, downloadHistory: false } );
 		var chatUI = new webimUI.chat( null, options );
-		chatUI.a( "sendMsg", function( e, msg ) {
-			im.sendMsg( msg );
-			history.handle( msg );
+		chatUI.a( "sendMessage", function( e, msg ) {
+			im.sendMessage( msg );
+			history.set( msg );
 		}).a("downloadHistory", function( e, info ){
 			history.download( "multicast", info.id );
 		}).a("select", function( e, info ) {
@@ -66,12 +66,12 @@ app( "chat", function( options ) {
 		var h = history.get( "unicast", id );
 		if( !h )
 			history.load( "unicast", id );
-		extend( options, { history: h, block: false, emot:true, clearHistory: true, member: false, msgType: "unicast" } );
+		extend( options, { history: h, block: false, emot:true, clearHistory: true, member: false, type: type, downloadHistory: false } );
 		var chatUI = new webimUI.chat( null, options );
 
-		chatUI.a("sendMsg", function( e, msg ) {
-			im.sendMsg( msg );
-			history.handle( msg );
+		chatUI.a("sendMessage", function( e, msg ) {
+			im.sendMessage( msg );
+			history.set( msg );
 		}).a("sendStatus", function( e, msg ) {
 			im.sendStatus( msg );
 		}).a("clearHistory", function( e, info ){
@@ -90,8 +90,8 @@ widget("chat",{
 		     </div></div>',
         template:'<div class="webim-chat webim-box webim-flex"> \
 				<div class="webim-chat-notice-wrap"><div id=":notice" class="webim-chat-notice ui-state-highlight"></div></div> \
-                                                <div id=":content" class="webim-chat-content webim-flex"> \
-                                                                                                                <div id=":status" class="webim-chat-status webim-gray"></div> \
+                                                <div id=":content" class="webim-chat-content webim-flex webim-box-h"> \
+                                                                                                                <div class="webim-flex webim-box"><div id=":main" class="webim-chat-main webim-flex"><div id=":status" class="webim-chat-status webim-gray"></div></div></div><div id=":sidebar" class="webim-chat-sidebar webim-box"></div> \
                                                 </div> \
                                                 <div id=":actions" class="webim-chat-actions"> \
                                                         <div id=":toolContent" class="webim-chat-tool-content"></div>\
@@ -117,15 +117,16 @@ widget("chat",{
 			user: options.user,
 			info: options.info
 		});
-		self.$.content.insertBefore(history.element, self.$.content.firstChild);
-		self.header = createElement(tpl(options.tpl_header));
-		extend(self.$, mapElements(self.header));
+		addClass( element, "webim-chat-" + options.type );
+		self.$.main.insertBefore(history.element, self.$.main.firstChild);
+		self.header = createElement( tpl( options.tpl_header ) );
+		extend( self.$, mapElements( self.header ) );
 		//self._initEvents();
-		if(win){
+		if( win ) {
 			self.setWindow( win );
 		}
-		if(options.simple){
-			hide(self.header);
+		if( options.simple ) {
+			hide( self.header );
 		}
 		self.update(options.info);
 		history.add(options.history);
@@ -190,10 +191,10 @@ widget("chat",{
 		}
 	},
 	_adjustContent: function(){
-		var content = this.$.content;
+		var main = this.$.main;
 		//Don't auto scroll when user view history.
-		if ( content.scrollHeight - content.scrollTop - content.clientHeight < 200 )
-			content.scrollTop = content.scrollHeight;
+		if ( main.scrollHeight - main.scrollTop - main.clientHeight < 200 )
+			main.scrollTop = main.scrollHeight;
 	},
 	_fitUI: function(e){
 		var self = this, win = self.window, $ = self.$;
@@ -221,10 +222,10 @@ widget("chat",{
 			if(h> 32 && h < 100) el.height(h + scrollTop);
 		}
 	},
-	_sendMsg: function(val){
+	_sendMessage: function(val){
 		var self = this, options = self.options, info = options.info;
 		var msg = {
-			type: options.msgType,
+			type: options.type == "room" ? "multicast" : "unicast",
 			to: info.id,
 			from: options.user.id,
 			nick: options.user.nick,
@@ -234,7 +235,7 @@ widget("chat",{
 			body: val
 		};
 		plugin.call(self, "send", [null, self.ui({msg: msg})]);
-		self.d('sendMsg', msg);
+		self.d('sendMessage', msg);
 		//self.sendStatus("");
 	},
 	_inputkeypress: function(e){
@@ -247,7 +248,7 @@ widget("chat",{
 				var el = target(e), val = el.value;
 				// "0" will false
 				if (trim(val).length) {
-					self._sendMsg(val);
+					self._sendMessage( val );
 					el.value = "";
 					preventDefault(e);
 				}
@@ -296,7 +297,7 @@ widget("chat",{
 		addEvent(input,'keypress',function(e){
 			self._inputkeypress(e);
 		});
-		addEvent($.content, "click", function(e){self._onFocusInput(e)});
+		addEvent($.main, "click", function(e){self._onFocusInput(e)});
 
 	},
 	_updateInfo:function(info){
@@ -490,16 +491,16 @@ extend(webimUI.chat.prototype, {
 		}
 	}
 });
-plugin.add("chat","member",{
+plugin.add( "chat", "member", {
 	init:function(e, ui){
 		var chat = ui.self, $ = ui.$;
 		chat.memberLi = {};
-		var member = createElement(tpl('<div class="webim-member ui-widget-content ui-corner-left"><iframe id=":bgiframe" class="webim-bgiframe" frameborder="0" tabindex="-1" src="about:blank;" ></iframe><h4><%=room member%>(<span id=":memberCount">0</span>)</h4><ul id=":ul"></ul></div>')), els = mapElements(member);
+		var member = createElement(tpl('<div class="webim-box webim-flex  webim-member ui-widget-content"><h4><%=room member%>(<span id=":memberCount">0</span>)</h4><ul id=":ul" class="webim-flex"></ul></div>')), els = mapElements(member);
 		$.member = els.ul;
 		$.memberCount = els.memberCount;
-		$.content.parentNode.insertBefore(member, $.content);
+		$.sidebar.appendChild( member );
 	}
-});
+} );
 
 webimUI.chat.defaults.downloadHistory = true;
 plugin.add("chat","downloadHistory",{

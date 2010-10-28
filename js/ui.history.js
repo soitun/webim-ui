@@ -14,7 +14,7 @@
  update
 
  */
-widget("history",{
+widget("history", {
         user: {},
         info: {},
         template:'<div class="webim-history">\

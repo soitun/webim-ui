@@ -201,10 +201,15 @@ widget( "window", {
 		//air.NotificationType.CRITICAL: critical
 		var self = this;
 		// Mac os is not support notification.
-		window.runtime && air.NativeWindow.supportsNotification && self.window && self.window.notifyUser( type );
+		window.runtime && air.NativeWindow.supportsNotification && self.window && self.window.nativeWindow.notifyUser( type );
 	},
 	show: function() {
-		this.window && ( this.window.nativeWindow.visible = true );
+		var win = this.win;
+		if ( win ) {
+			win.nativeWindow.visible = true;
+			//Restore when window is minimized
+			self.isMinimized() && win.nativeWindow.restore();
+		}
 	},
 	hide: function() {
 		this.window && ( this.window.nativeWindow.visible = false );

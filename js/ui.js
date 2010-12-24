@@ -209,7 +209,7 @@ extend(webimUI.prototype, objectExtend, {
 			}).bind("downloadHistory", function(info){
 				history.download("multicast", info.id);
 			}).bind("select", function(info){
-				buddy.online(info.id);//online
+				buddy.presence(info);//online
 				self.addChat("buddy", info.id, null, null, info.nick);
 				layout.focusChat("buddy", info.id);
 			}).bind("block", function(d){

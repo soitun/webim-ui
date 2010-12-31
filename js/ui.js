@@ -210,6 +210,7 @@ extend(webimUI.prototype, objectExtend, {
 				history.download("multicast", info.id);
 			}).bind("select", function(info){
 				buddy.presence(info);//online
+				buddy.complete();//Load info.
 				self.addChat("buddy", info.id, null, null, info.nick);
 				layout.focusChat("buddy", info.id);
 			}).bind("block", function(d){

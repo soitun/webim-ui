@@ -20,6 +20,8 @@ offline
 online
 
 */
+
+var _buddyIMOnline = false;
 app("buddy", {
 	init: function(options){
 		options = options || {};
@@ -56,13 +58,14 @@ app("buddy", {
 			ui.addChat("buddy", info.id);
 			ui.layout.focusChat("buddy", info.id);
 		});
+		//Bug... 如果用户还没登录，点击， status.set 会清理掉正在聊天的session
 		buddyUI.window.bind("displayStateChange",function(type){
 			if(type != "minimize"){
 				buddy.option("active", true);
-				im.status.set("b", 1);
+				_buddyIMOnline && im.status.set("b", 1);
 				buddy.complete();
 			}else{
-				im.status.set("b", 0);
+				_buddyIMOnline && im.status.set("b", 0);
 				buddy.option("active", false);
 			}
 		});
@@ -94,11 +97,13 @@ app("buddy", {
 	go: function(){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
 		ui.user && !ui.user._initElement && buddyUI.window.subHeader(ui.user.element);
+		_buddyIMOnline = true;
 		buddyUI.titleCount();
 		buddyUI.hideError();
 	},
 	stop: function(type, msg){
 		var ui = this, im = ui.im, buddy = im.buddy, buddyUI = ui.buddy;
+		_buddyIMOnline = false;
 		buddyUI.offline();
 		if ( type == "online" || type == "connect" ) {
 			buddyUI.showError( msg );

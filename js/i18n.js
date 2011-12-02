@@ -19,9 +19,7 @@ function i18n(name, args, options){
 
 	if (args) {
 		i18nArgs = args;
-		for (var key in args) {
-			str = str.replace(/\{\{(.*?)\}\}/g, i18nRe);
-		}
+		str = str.replace(/\{\{(.*?)\}\}/g, i18nRe);
 	}
 	return str;
 };
